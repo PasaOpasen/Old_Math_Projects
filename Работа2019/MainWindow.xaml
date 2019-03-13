@@ -1,0 +1,27 @@
+﻿<Window x:Class="Работа2019.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Работа2019"
+        mc:Ignorable="d"
+        Title="2019Job" Height="598.739" Width="1083.614" Background="#FF96B292" ResizeMode="CanMinimize">
+
+    <Grid>
+        <Grid.Background>
+            <ImageBrush TileMode="None" ImageSource="Resources/Bez_imeni.png"/>
+        </Grid.Background>
+    
+    <StackPanel Margin="3">
+        <StackPanel.Background>
+            <ImageBrush/>
+        </StackPanel.Background>
+        <StackPanel HorizontalAlignment="Left" Height="326" Margin="900,100,0,0" Width="170" RenderTransformOrigin="0.503,0.509">
+            <Button x:Name="DispButton" HorizontalAlignment="Left" Margin="5,5,0,5" VerticalAlignment="Top" Width="99" Height="49" RenderTransformOrigin="-3.263,-3.143" Click="Button_Click_1" Content="Дисперсионки"/>
+            <Button x:Name="uriButton" HorizontalAlignment="Left" Margin="5,5,0,5" VerticalAlignment="Top" Width="99" Height="49" RenderTransformOrigin="-3.263,-3.143" Click="Button_Click_2" Content="Функции urj,uzj"/>
+            <Button x:Name="CloseButton" HorizontalAlignment="Left" Margin="5,5,0,5" VerticalAlignment="Top" Width="99" Height="49" RenderTransformOrigin="-3.263,-3.143" Click="Button_Click" Content="Закрыть"/>
+        </StackPanel>
+    </StackPanel>
+    
+    </Grid>
+</Window>
