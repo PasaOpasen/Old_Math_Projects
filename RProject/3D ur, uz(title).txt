@@ -1,1 +1,0 @@
-circle = ((1; 1), r = 1), w = 3, (xmin, xmax, xcount, ymin, ymax, ycount) = (-3, 5, 30, -3, 5, 30)

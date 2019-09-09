@@ -8,8 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Библиотека_графики;
-using МатКлассы2018;
-using static МатКлассы2018.Number;
+using МатКлассы;
+using static МатКлассы.Number;
 
 namespace Практика_с_фортрана
 {

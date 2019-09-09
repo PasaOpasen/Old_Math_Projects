@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using МатКлассы2018;
-using static МатКлассы2018.FuncMethods.ODU;
+using МатКлассы;
+using static МатКлассы.FuncMethods.ODU;
 
 namespace Задача_Штурма_Лиувилля
 {

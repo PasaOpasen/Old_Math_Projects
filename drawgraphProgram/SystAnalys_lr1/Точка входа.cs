@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using МатКлассы2018;
+using МатКлассы;
 
 namespace SystAnalys_lr1
 {

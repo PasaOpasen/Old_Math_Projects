@@ -32,8 +32,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MathNet.Numerics, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.7.0\lib\net461\MathNet.Numerics.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,8 +49,17 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Классы, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Code\Классы\bin\Release\Классы.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BiharmonicEquation.cs" />
+    <Compile Include="CurveK.cs" />
+    <Compile Include="IntegralClass.cs" />
+    <Compile Include="KursMethods.TestFuncAndCurve.cs" />
+    <Compile Include="SLAUpok.cs" />
     <Compile Include="Модальная форма.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -58,8 +72,8 @@
     <Compile Include="Код главной формы.Designer.cs">
       <DependentUpon>Код главной формы.cs</DependentUpon>
     </Compile>
-    <Compile Include="Точка входа в визуальное приложение.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Точка входа в визуальное приложение.cs" />
     <EmbeddedResource Include="Модальная форма.resx">
       <DependentUpon>Модальная форма.cs</DependentUpon>
     </EmbeddedResource>
@@ -75,6 +89,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -89,7 +104,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Библиотека графики\Библиотека графики.csproj">
+    <ProjectReference Include="..\..\Code\Библиотека графики\Библиотека графики.csproj">
       <Project>{ce3c0ed7-208c-4043-89a9-19e93f1e2e46}</Project>
       <Name>Библиотека графики</Name>
     </ProjectReference>

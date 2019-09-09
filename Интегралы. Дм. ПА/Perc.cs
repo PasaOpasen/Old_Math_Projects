@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using МатКлассы2018;
+using МатКлассы;
 
 namespace Интегралы.Дм.ПА
 {

@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using МатКлассы2018;
-using static МатКлассы2018.FuncMethods;
+using МатКлассы;
+using static МатКлассы.FuncMethods;
 using JR.Utils.GUI.Forms;
 
 namespace Решение_ОДУ.Дм.ПА
@@ -130,8 +130,8 @@ namespace Решение_ОДУ.Дм.ПА
                 {
                     Searchfunc = (double x) => 0;
                 }
-                double[] values = МатКлассы2018.Point.PointsY(Searchfunc, 100, beg, end);
-                chart1.Series[8].Points.DataBindXY(МатКлассы2018.Point.PointsX(Searchfunc, 100, beg, end), values); list.AddRange(values);
+                double[] values = МатКлассы.Point.PointsY(Searchfunc, 100, beg, end);
+                chart1.Series[8].Points.DataBindXY(МатКлассы.Point.PointsX(Searchfunc, 100, beg, end), values); list.AddRange(values);
                 chart1.Series[8].IsVisibleInLegend = true;
 
                 button6.Show();

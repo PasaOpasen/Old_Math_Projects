@@ -84,9 +84,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ДОПОЛНЕНИЯ\Demo_For_FlexibleMessageBox-noexe\Demo_For_FlexibleMessageBox\Demo_For_FlexibleMessageBox.csproj">
+    <ProjectReference Include="..\..\Code\ДОПОЛНЕНИЯ\Demo_For_FlexibleMessageBox-noexe\Demo_For_FlexibleMessageBox\Demo_For_FlexibleMessageBox.csproj">
       <Project>{f1fd937b-c84e-4f6c-b533-4982bd43914f}</Project>
       <Name>Demo_For_FlexibleMessageBox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Code\Классы\Классы %28библиотека%29.csproj">
+      <Project>{cd3eefde-74ed-48da-8e82-1e6abab1a140}</Project>
+      <Name>Классы %28библиотека%29</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,1 +1,0 @@
-source("C://Users//крендель//Desktop//Численные методы//RProject//работа2019.R", echo = TRUE, encoding = "windows-1251")

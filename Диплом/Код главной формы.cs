@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using МатКлассы2018;
+using МатКлассы;
 using System.IO;
-using Point = МатКлассы2018.Point;
+using Point = МатКлассы.Point;
 
 namespace Курсач
 {
@@ -21,8 +21,8 @@ namespace Курсач
             InitializeComponent();
 
             radioButton1.Checked = true;
-            checkBox1.Checked = true;
-            checkBox6.Checked = true;
+            //checkBox1.Checked = true;
+            //checkBox6.Checked = true;
 
             textBox1.Text = "1";
             textBox2.Text = "1";
@@ -61,6 +61,8 @@ namespace Курсач
             KursMethods.LMAX_RADIUS = Convert.ToDouble(textBox10.Text);
 
             Program.FORM.ShowDialog();
+
+            Program.Form1.Hide();
             //Program.FORM.Show();
             
             //if(radioButton1.Checked)

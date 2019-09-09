@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using МатКлассы2018;
+using МатКлассы;
 using System.IO;
-using Point = МатКлассы2018.Point;
+using Point = МатКлассы.Point;
 
 namespace Курсач
 {

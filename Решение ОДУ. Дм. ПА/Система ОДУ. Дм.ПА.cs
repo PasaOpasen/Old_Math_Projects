@@ -7,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using МатКлассы2018;
-using static МатКлассы2018.FuncMethods;
-using static МатКлассы2018.FuncMethods.ODU;
+using МатКлассы;
+using static МатКлассы.FuncMethods;
+using static МатКлассы.FuncMethods.ODU;
 using JR.Utils.GUI.Forms;
-using VectorNetFunc = System.Collections.Generic.List<System.Tuple<double, МатКлассы2018.Vectors>>;
+using VectorNetFunc = System.Collections.Generic.List<System.Tuple<double, МатКлассы.Vectors>>;
 
 namespace Решение_ОДУ.Дм.ПА
 {
@@ -209,8 +209,8 @@ namespace Решение_ОДУ.Дм.ПА
                     };
                 }
                 RealFunc tmp = (double x) => Searchfunc(x)[0];
-                double[] values = МатКлассы2018.Point.PointsY(tmp, 200, beg, end);
-                chart1.Series[8].Points.DataBindXY(МатКлассы2018.Point.PointsX(tmp, 200, beg, end), values); //list.AddRange(values);
+                double[] values = МатКлассы.Point.PointsY(tmp, 200, beg, end);
+                chart1.Series[8].Points.DataBindXY(МатКлассы.Point.PointsX(tmp, 200, beg, end), values); //list.AddRange(values);
                 chart1.Series[8].IsVisibleInLegend = true;
 
                 button6.Show();
@@ -451,8 +451,8 @@ namespace Решение_ОДУ.Дм.ПА
 
             int k = (int)numericUpDown3.Value-1;
             RealFunc tmp = (double x) => Searchfunc(x)[k];
-            double[] values = МатКлассы2018.Point.PointsY(tmp, 200, beg, end);
-            chart1.Series[8].Points.DataBindXY(МатКлассы2018.Point.PointsX(tmp, 200, beg, end), values); //list.AddRange(values);
+            double[] values = МатКлассы.Point.PointsY(tmp, 200, beg, end);
+            chart1.Series[8].Points.DataBindXY(МатКлассы.Point.PointsX(tmp, 200, beg, end), values); //list.AddRange(values);
             chart1.Series[8].IsVisibleInLegend = true;
 
             if (checkBox1.Checked)

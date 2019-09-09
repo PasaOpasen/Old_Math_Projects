@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static МатКлассы2018.Coding;
-using МатКлассы2018;
+using static МатКлассы.Coding;
+using МатКлассы;
 using JR.Utils.GUI.Forms;
 
 namespace КодировкаДекодировка

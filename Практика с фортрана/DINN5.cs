@@ -66,7 +66,7 @@ namespace Практика_с_фортрана
             РабКонсоль.eps = Convert.ToDouble(textBox7.Text);
             РабКонсоль.pr = Convert.ToDouble(textBox8.Text);
             РабКонсоль.gr = Convert.ToDouble(textBox9.Text);
-            МатКлассы2018.FuncMethods.DefInteg.Residue.eps = РабКонсоль.eps;
+            МатКлассы.FuncMethods.DefInteg.Residue.eps = РабКонсоль.eps;
         }
     }
 }

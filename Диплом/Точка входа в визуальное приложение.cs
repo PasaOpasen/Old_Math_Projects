@@ -1,18 +1,20 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using МатКлассы2018;
+using МатКлассы;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
-using Point = МатКлассы2018.Point;
-using Complex= МатКлассы2018.Number.Complex;
-using static МатКлассы2018.FuncMethods.DefInteg;
+using Point = МатКлассы.Point;
+using Complex = МатКлассы.Number.Complex;
+using static МатКлассы.FuncMethods.DefInteg;
 using Библиотека_графики;
+using MathNet.Numerics;
 
 
 namespace Курсач
@@ -41,12 +43,14 @@ namespace Курсач
     /// <summary>
     /// Методы курсача
     /// </summary>
-    public class KursMethods
+    public partial class KursMethods
     {
+        static KursMethods() { }
+
         /// <summary>
         /// Массив базисных точек плоскости
         /// </summary>
-        public static BasisPoint[] masPoints;
+        public static Point[] masPoints;
         /// <summary>
         /// Граничная функция от точки
         /// </summary>
@@ -68,7 +72,7 @@ namespace Курсач
 
             for (int i = 1; i <= N; i++)
             {
-                sum += MySLAU.x[i - 1] * masPoints[i - 1].PotentialF((BasisPoint)a);
+                sum += MySLAU.x[i - 1] * masPoints[i - 1].PotentialF(a);
             }
             return sum;
         };
@@ -81,7 +85,7 @@ namespace Курсач
 
             for (int i = 1; i <= N; i++)
             {
-                sum += MySLAUQ.x[i - 1] * masPoints[i - 1].PotentialF((BasisPoint)a);
+                sum += MySLAUQ.x[i - 1] * masPoints[i - 1].PotentialF(a);
             }
             return sum;
         };
@@ -90,9 +94,103 @@ namespace Курсач
         /// </summary>
         public static Functional Approx = (Point x) =>
         {
-            Functional f = (Point y) => OldApprox((BasisPoint)y) * E(new Point(x.x - y.x, x.y - y.y));
-            return DoubleIntegral(f, myCurveQ, myCurveQ.S, Method.GaussKronrod15, 0.001, FuncMethods.DefInteg.countY);
+            //Functional f = (Point y) => OldApprox(y) * E(new Point(x.x - y.x, x.y - y.y));
+            //return DoubleIntegral(f, myCurveQ, myCurveQ.S, Method.GaussKronrod15, 0.001, FuncMethods.DefInteg.countY);
+
+            //return AreaMas[KursMethods.CIRCLE - 1].DInteg(f, 25, true);
+
+            double sum = 0;
+            for (int i = 1; i <= N; i++)
+            {
+                sum += MySLAUQ.x[i - 1] * mu(x, i - 1);
+            }
+            return sum;
         };
+
+        public static Functional M1Approx = (Point x) =>
+          {
+              Functional ro = (Point y) => OldApprox(y) * Exy(x, y);
+              return IntegralClass.Integral(ro, CIRCLE - 1) /*- ((!filtersDQ[CIRCLE-1](x))?right(x):0.0)*/;
+              //return DoubleIntegral(ro, myCurve, myCurve.S, FuncMethods.DefInteg.Method.GaussKronrod15, 0.001, FuncMethods.DefInteg.countY);
+          };
+
+        public static double otrval => MIN_RADIUS * 1.1;
+
+        public static Action<string, Func<Point, bool>> For3D = (string filename, Func<Point, bool> filt) => МатКлассы.ForScripts.MakeFilesForSurfaces(-otrval, otrval, -otrval, otrval, 120, filename, new Functional[] { fig, OldApproxQ }, filt);
+        public static Action<string, Func<Point, bool>> For3D2 = (string filename, Func<Point, bool> filt) => МатКлассы.ForScripts.MakeFilesForSurfaces(-MIN_RADIUS * 0.1, MIN_RADIUS * 1.1, -MIN_RADIUS * 0.1, MIN_RADIUS * 1.1, 100, filename, new Functional[] { fig, OldApproxQ }, filt);
+
+        public static Func<Point, bool> filt,
+            filt1 = (Point t) =>
+              {
+                  return Point.Eudistance(Point.Zero, t) <= MIN_RADIUS;
+              }
+        ,
+            filt2 = (Point t) =>
+            {
+                if (t.x >= 0 && t.y >= 0 && t.x <= MIN_RADIUS)
+                {
+                    if (t.x <= 0.5 * MIN_RADIUS)
+                        return t.y <= Math.Sqrt(3) * t.x;
+                    return t.y <= -Math.Sqrt(3) * t.x + MIN_RADIUS * Math.Sqrt(3);
+                }
+                return false;
+            }
+        ,
+            filt3 = (Point t) =>
+            {
+                return t.x >= 0 && t.y >= 0 && t.x <= MIN_RADIUS && t.y <= MIN_RADIUS;
+            }
+        ,
+            filt4 = (Point t) =>
+            {
+                if (t.x >= 0 && t.y >= 0 && t.x <= MIN_RADIUS)
+                {
+                    if (t.x <= 0.5 * MIN_RADIUS)
+                        return t.y <= Math.Sqrt(MIN_RADIUS.Sqr() - (t.x - MIN_RADIUS).Sqr());
+                    return t.y <= Math.Sqrt(MIN_RADIUS.Sqr() - (t.x).Sqr());
+                }
+                return false;
+            };
+        /// <summary>
+        /// Фильтры принадлежности точки к области
+        /// </summary>
+        public static Func<Point, bool>[] filters = new Func<Point, bool>[] { filt1, filt2, filt3, filt4 };
+
+        private static double epsQ=1e-12;
+        public static Func<Point, bool>[] filtersDQ = new Func<Point, bool>[] {
+                         (Point t) =>
+              {
+                  return Math.Abs(Point.Eudistance(Point.Zero, t)- MIN_RADIUS)<=epsQ;
+              }
+        ,
+             (Point t) =>
+            {
+                if (t.x >= 0 && t.y >= 0 && t.x <= MIN_RADIUS)
+                {
+                    if (t.x <= 0.5 * MIN_RADIUS)
+                        return Math.Abs(t.y  -Math.Sqrt(3) * t.x)<=epsQ;
+                    return Math.Abs(t.y-(-Math.Sqrt(3) * t.x + MIN_RADIUS * Math.Sqrt(3))) <= epsQ;
+                }
+                return false;
+            }
+        ,
+             (Point t) =>
+            {
+                return t.x <=epsQ || t.y <=epsQ ||Math.Abs( t.x-  MIN_RADIUS)<= epsQ|| Math.Abs(t.y-MIN_RADIUS) <= epsQ;
+            }
+        ,
+             (Point t) =>
+            {
+                if (t.x >= 0 && t.y >= 0 && t.x <= MIN_RADIUS)
+                {
+                    if (t.x <= 0.5 * MIN_RADIUS)
+                        return Math.Abs(t.y -(Math.Sqrt(MIN_RADIUS.Sqr() - (t.x - MIN_RADIUS).Sqr())))<=epsQ ;
+                    return Math.Abs(t.y- Math.Sqrt(MIN_RADIUS.Sqr() - (t.x).Sqr()))<=epsQ ;
+                }
+                return false;
+            }
+    };
+
 
         //списки для сохранения значений интегралов (но при замене потенциалов может наебнуться)
         private static List<Tuple<Point, int>> list1 = new List<Tuple<Point, int>>();
@@ -102,14 +200,19 @@ namespace Курсач
         /// Общий базисный потенциал
         /// </summary>
         public static Functional E = (Point x) => -Math.Log((new Complex(x.x, x.y)).Abs) /*/ 2 / Math.PI*/;
-        public static SeqPointFunc mu=(Point x, int k)=>
-        {
-            Functional f = (Point y) => masPoints[k].PotentialF((BasisPoint)y) * E(new Point(x.x-y.x,x.y-y.y));
-            double integ=DoubleIntegral(f, myCurveQ, myCurveQ.S, Method.GaussKronrod15, 0.001, FuncMethods.DefInteg.countY);
+        public static SeqPointFunc _mu = (Point x, int k) =>
+          {
+              Functional f = (Point y) => masPoints[k].PotentialF(y) * E(new Point(x.x - y.x, x.y - y.y));//f(new Point(1, 1)).Show();
+                                                                                                          //double integ=DoubleIntegral(f, myCurveQ, myCurveQ.S, Method.GaussKronrod15, 0.001, FuncMethods.DefInteg.countY);
+                                                                                                          //double integ = AreaMas[KursMethods.CIRCLE-1].DInteg(f, Method.GaussKronrod61,200);
+            double integ = IntegralClass.Integral(f, KursMethods.CIRCLE - 1);//AreaMas[KursMethods.CIRCLE - 1].DInteg(f, 30,true);
             list1.Add(new Tuple<Point, int>(x, k));
-            list2.Add(integ);
-            return integ;
-        };
+              list2.Add(integ);
+              return integ;
+          };
+        public static SeqPointFunc mu;
+
+
         public static double Density()
         {
             Functional f = (Point x) =>
@@ -117,7 +220,7 @@ namespace Курсач
                 double sum = OldApprox(x) - fig(x);
                 return sum * sum;
             };
-            return DoubleIntegral(f, myCurveQ, myCurveQ.S, Method.GaussKronrod61Empire/*GaussKronrod15*/, 0.001, FuncMethods.DefInteg.countY);
+            return IntegralClass.Integral(f, CIRCLE - 1);//DoubleIntegral(f, myCurveQ, myCurveQ.S, Method.GaussKronrod61Empire/*GaussKronrod15*/, 0.001, FuncMethods.DefInteg.countY);
         }
         public static double DensityQ()
         {
@@ -126,7 +229,7 @@ namespace Курсач
                 double sum = OldApproxQ(x) - fig(x);
                 return sum * sum;
             };
-            return DoubleIntegral(f, myCurveQ, myCurveQ.S, Method.GaussKronrod61Empire/*GaussKronrod15*/, 0.001, FuncMethods.DefInteg.countY);
+            return IntegralClass.Integral(f, CIRCLE - 1); //DoubleIntegral(f, myCurveQ, myCurveQ.S, Method.GaussKronrod61Empire/*GaussKronrod15*/, 0.001, FuncMethods.DefInteg.countY);
         }
 
         /// <summary>
@@ -151,7 +254,7 @@ namespace Курсач
         /// </summary>
         public static readonly int MAXCIRCLE = 4;
         public static readonly double EPS = 0.00001;
-        public static readonly double CONSTANT = 1;
+        public static readonly double CONSTANT = 1.5;
         public static readonly double pi = Math.PI;
         /// <summary>
         /// Точность аппроксимации
@@ -162,7 +265,7 @@ namespace Курсач
         /// </summary>
         public static int CountCircle => MAXCIRCLE;
 
-        public static string[] CircleName = new string[] { "КРУГ", "ТРЕУГОЛЬНИК", "КВАДРАТ", "ОСТРИЕ" };
+        public static string[] CircleName = new string[] { "CIRCLE", "TRIANGLE", "SQUARE", "EDGE" };
         public static string[] FuncName = new string[KGF];
 
         public static string dir_Curve_name = new string(new char[50]); //имя внутренней папки и подпапки
@@ -170,6 +273,8 @@ namespace Курсач
         public static string chstr = new string(new char[100]);
         public static string sl = "\\";
         public static string bstr = Program.Form1.DirectName;
+
+        public static string adress = "";//"Векторные" + sl;
 
         /// <summary>
         /// Радиус области
@@ -188,6 +293,23 @@ namespace Курсач
         /// </summary>
         public static double LMAX_RADIUS = 3;
 
+        private static AreaForDoubleInteg[] AreaMas;
+        private static void SetAreaMas() => AreaMas = new AreaForDoubleInteg[]
+{
+            new AreaForDoubleInteg(-MIN_RADIUS,MIN_RADIUS,(t)=>-Math.Sqrt(MIN_RADIUS*MIN_RADIUS-t*t),(t)=>Math.Sqrt(MIN_RADIUS*MIN_RADIUS-t*t)),
+            new AreaForDoubleInteg(0,MIN_RADIUS,(t)=>0,(t)=>{
+                if(t<=MIN_RADIUS/2)
+                    return t*Math.Sqrt(3);
+                return Math.Sqrt(3)*(MIN_RADIUS-t);
+            }),
+            new AreaForDoubleInteg(0,MIN_RADIUS,t=>0,t=>MIN_RADIUS),
+            new AreaForDoubleInteg(0,MIN_RADIUS,(t)=>0,(t)=>{
+                if(t<=MIN_RADIUS/2)
+                    return Math.Sqrt(MIN_RADIUS.Sqr()-(t-MIN_RADIUS).Sqr());
+                return Math.Sqrt(MIN_RADIUS.Sqr()-(t).Sqr());
+            })
+};
+
         /// <summary>
         /// Функция произведений базисных функций
         /// </summary>
@@ -195,7 +317,7 @@ namespace Курсач
         /// <param name="j"></param>
         /// <param name="z"></param>
         /// <returns></returns>
-        public static double OldBasisFuncPow(int i, int j, BasisPoint z)
+        public static double OldBasisFuncPow(int i, int j, Point z)
         {
             if ((i == N) && (j == N))
             {
@@ -218,7 +340,7 @@ namespace Курсач
         /// <param name="j"></param>
         /// <param name="z"></param>
         /// <returns></returns>
-        public static double BasisFuncPow(int i, int j, BasisPoint z)
+        public static double BasisFuncPow(int i, int j, Point z)
         {
             //$"вызов значения функции {++q}".Show();
             if ((i == N) && (j == N))
@@ -233,7 +355,7 @@ namespace Курсач
             {
                 return mu(z, i) * fi(z);
             }
-            return mu(z,i)*mu(z,j);
+            return mu(z, i) * mu(z, j);
         }
 
         /// <summary>
@@ -259,7 +381,7 @@ namespace Курсач
         /// </summary>
         /// <param name="i"></param>
         /// <param name="mett"></param>
-        public static void Method_des(int i, SLAUpok.Method mett,SLAUpok sys)
+        public static void Method_des(int i, SLAUpok.Method mett, SLAUpok sys)
         {
             switch (mett)
             {
@@ -292,11 +414,33 @@ namespace Курсач
             ForDesigion.Building(s); //чтение и работа с данными
             ForDesigion.Search(); //поиск решения и вывод погрешности
         }
-        public static void Desigion(int s, int g, int cu,bool QsystemISNeeded=true,SLAUpok SYSTEM=null,SLAUpok SYSTEMQ=null)
+        public static void Desigion(int s, int g, int cu, bool QsystemISNeeded = true, SLAUpok SYSTEM = null, SLAUpok SYSTEMQ = null)
         {
-            ForDesigion.Building(s, g, cu,SYSTEM,SYSTEMQ); //чтение и работа с данными
-            ForDesigion.Search(QsystemISNeeded,SYSTEM,SYSTEMQ); //поиск решения и вывод погрешности
+            ForDesigion.Building(s, g, cu, SYSTEM, SYSTEMQ); //чтение и работа с данными
+            ForDesigion.Search(QsystemISNeeded, SYSTEM, SYSTEMQ); //поиск решения и вывод погрешности
         }
+
+        /// <summary>
+        /// Кривые, в окрестности которых берутся точки
+        /// </summary>
+        public static CurveK[] curves = new CurveK[]
+        {
+        new CurveK(0, 2 * pi, TestFuncAndCurve.u1h, TestFuncAndCurve.v1h),//кривая, в окрестности которой эти точки берутся
+        new CurveK(0, 3 * MAX_RADIUS, TestFuncAndCurve.u2h, TestFuncAndCurve.v2h),
+        new CurveK(0, 4 * MAX_RADIUS, TestFuncAndCurve.u3h, TestFuncAndCurve.v3h),
+         new CurveK(0, 1.5 * MAX_RADIUS, TestFuncAndCurve.u4h, TestFuncAndCurve.v4h)
+    };
+        /// <summary>
+        /// Границы областей
+        /// </summary>
+        public static CurveK[] curvesQ = new CurveK[]
+{
+        new CurveK(0, 2 * pi, TestFuncAndCurve.u1, TestFuncAndCurve.v1),//кривая, в окрестности которой эти точки берутся
+        new CurveK(0, 3 * MIN_RADIUS, TestFuncAndCurve.u2, TestFuncAndCurve.v2),
+        new CurveK(0, 4 * MIN_RADIUS, TestFuncAndCurve.u3, TestFuncAndCurve.v3),
+         new CurveK(0, 1.5 * MIN_RADIUS, TestFuncAndCurve.u4, TestFuncAndCurve.v4)
+};
+
         public class ForDesigion
         {
             /// <summary>
@@ -332,6 +476,9 @@ namespace Курсач
                             break;
                     }
                     RandomSwapping(N * 2);
+                    var df = new Memoize<Tuple<Point, int>, double>((Tuple<Point, int> tt) => _mu(tt.Item1, tt.Item2)).Value;
+                    mu = (Point point, int kk) => df(new Tuple<Point, int>(point, kk));
+                    SetAreaMas();
                 }
                 else
                 {
@@ -352,48 +499,64 @@ namespace Курсач
             {
                 list1 = new List<Tuple<Point, int>>();
                 list2 = new List<double>();
-                GF = g;
-                if(SYSTEM==null)
+                GF = g% (KGF - 1);//-1, т.к. последняя функция не учитывается
+                
+                if (SYSTEM == null)
                 {
-                CIRCLE = cu;
-                Display(); //сопоставление первым двум числам из файла - области и граничной функции
-                "Display выполнен".Show();
-                CurveK c1 = new CurveK(0, 2 * pi, TestFuncAndCurve.u1h, TestFuncAndCurve.v1h); //кривая, в окрестности которой эти точки берутся
-                CurveK c2 = new CurveK(0, 3 * MAX_RADIUS, TestFuncAndCurve.u2h, TestFuncAndCurve.v2h);
-                CurveK c3 = new CurveK(0, 4 * MAX_RADIUS, TestFuncAndCurve.u3h, TestFuncAndCurve.v3h);
-                CurveK c4 = new CurveK(0, 1.5 * MAX_RADIUS, TestFuncAndCurve.u4h, TestFuncAndCurve.v4h);
+                    CIRCLE = cu;
+                    Display(); //сопоставление первым двум числам из файла - области и граничной функции
+                    "Display выполнен".Show();
+                    CurveK c1 = new CurveK(0, 2 * pi, TestFuncAndCurve.u1h, TestFuncAndCurve.v1h); //кривая, в окрестности которой эти точки берутся
+                    CurveK c2 = new CurveK(0, 3 * MAX_RADIUS, TestFuncAndCurve.u2h, TestFuncAndCurve.v2h);
+                    CurveK c3 = new CurveK(0, 4 * MAX_RADIUS, TestFuncAndCurve.u3h, TestFuncAndCurve.v3h);
+                    CurveK c4 = new CurveK(0, 1.5 * MAX_RADIUS, TestFuncAndCurve.u4h, TestFuncAndCurve.v4h);
 
-                switch (CIRCLE)
-                {
-                    case 1:
-                        FillMassiv(c1, t); //заполнить массив
-                        break;
-                    case 2:
-                        FillMassiv(c2, t); //заполнить массив
-                        break;
-                    case 3:
-                        FillMassiv(c3, t); //заполнить массив
-                        break;
-                    case 4:
-                        FillMassiv(c4, t); //заполнить массив
-                        break;
-                }
+                    switch (CIRCLE)
+                    {
+                        case 1:
+                            FillMassiv(c1, t); //заполнить массив
+                            filt = new Func<Point, bool>(filt1);
+                            break;
+                        case 2:
+                            FillMassiv(c2, t); //заполнить массив
+                            filt = new Func<Point, bool>(filt2);
+                            break;
+                        case 3:
+                            FillMassiv(c3, t); //заполнить массив
+                            filt = new Func<Point, bool>(filt3);
+                            break;
+                        case 4:
+                            FillMassiv(c4, t); //заполнить массив
+                            filt = new Func<Point, bool>(filt4);
+                            break;
+                    }
 
-                RandomSwapping(N * 2);
+                    RandomSwapping(N * 2);
+
+                    var df = new Memoize<Tuple<Point, int>, double>((Tuple<Point, int> tt) => _mu(tt.Item1, tt.Item2)).Value;
+                    mu = (Point point, int kk) => df(new Tuple<Point, int>(point, kk));
+                    SetAreaMas();
                 }
                 else
                 {
                     fi = (Point x) =>
                     {
-                        Functional f = (Point p) => TestFuncAndCurve.DFunctions[GF - 1](p) * E(new Point(x.x - p.x, x.y - p.y));
+                        Functional f = (Point p) => U(p) * E(new Point(x.x - p.x, x.y - p.y));
                         return DoubleIntegral(f, myCurveQ, myCurveQ.S, Method.GaussKronrod15, 0.001, FuncMethods.DefInteg.countY);
                     };
-                    fig = TestFuncAndCurve.DFunctions[GF - 1]; //граничная функция - функция с номером GF для кривой с номером CIRCLE
+                    fig = U; //граничная функция - функция с номером GF для кривой с номером CIRCLE
 
                     MySLAU.curve = SYSTEM.curve;
                     MySLAUQ.curve = SYSTEMQ.curve;
                 }
-                
+
+
+                if (g > KGF)
+                {
+                    fi = KursMethods.right;
+                    fig = U; //граничная функция - функция с номером GF для кривой с номером CIRCLE
+                }
+
             }
 
             public static void ReadDataFromFile()
@@ -413,7 +576,7 @@ namespace Курсач
                     k++; //пока координаты точек считываются, прибавлять к счётчику
                 }
                 N = k / 2; //вычисление мощности множества базисных точек
-                masPoints = new BasisPoint[N];
+                masPoints = new Point[N];
 
                 fin.Close();
                 fin = new StreamReader("input.txt"); //объявление объекта для чтения из файла
@@ -450,41 +613,69 @@ namespace Курсач
                 {
                     fi = (Point x) =>
                     {
-                        Functional f = (Point p) => TestFuncAndCurve.DFunctions[GF - 1](p) * E(new Point(x.x - p.x, x.y - p.y));
+                        Functional f = (Point p) => U(p) * E(new Point(x.x - p.x, x.y - p.y));
                         return DoubleIntegral(f, myCurveQ, myCurveQ.S, Method.GaussKronrod15, 0.001, FuncMethods.DefInteg.countY);
                     };
-                    fig = TestFuncAndCurve.DFunctions[GF - 1]; //граничная функция - функция с номером GF для кривой с номером CIRCLE
-                    CurveK c1 = new CurveK(0, 2 * pi, TestFuncAndCurve.u1, TestFuncAndCurve.v1,MIN_RADIUS,TestFuncAndCurve.U[0],TestFuncAndCurve.V[0],TestFuncAndCurve.T[0], TestFuncAndCurve.Ends[0]);
-                    CurveK c2 = new CurveK(0, 3 * MIN_RADIUS, TestFuncAndCurve.u2, TestFuncAndCurve.v2, MIN_RADIUS, TestFuncAndCurve.U[1], TestFuncAndCurve.V[1], TestFuncAndCurve.T[1], TestFuncAndCurve.Ends[1]);
-                    CurveK c3 = new CurveK(0, 4 * MIN_RADIUS, TestFuncAndCurve.u3, TestFuncAndCurve.v3, MIN_RADIUS, TestFuncAndCurve.U[2], TestFuncAndCurve.V[2], TestFuncAndCurve.T[2], TestFuncAndCurve.Ends[2]);
-                    CurveK c4 = new CurveK(0, 1.5 * MIN_RADIUS, TestFuncAndCurve.u4, TestFuncAndCurve.v4, MIN_RADIUS, TestFuncAndCurve.U[3], TestFuncAndCurve.V[3], TestFuncAndCurve.T[3], TestFuncAndCurve.Ends[3]);
-                    CurveK cc1 = new CurveK(0, 2 * pi, (double t)=>TestFuncAndCurve.U[0](t, LMIN_RADIUS), (double t) => TestFuncAndCurve.V[0](t, LMIN_RADIUS), LMIN_RADIUS, TestFuncAndCurve.U[0], TestFuncAndCurve.V[0], TestFuncAndCurve.T[0], TestFuncAndCurve.Ends[0]);
-                    CurveK cc2 = new CurveK(0, 3 * LMIN_RADIUS, (double t) => TestFuncAndCurve.U[1](t, LMIN_RADIUS), (double t) => TestFuncAndCurve.V[1](t, LMIN_RADIUS), LMIN_RADIUS, TestFuncAndCurve.U[1], TestFuncAndCurve.V[1], TestFuncAndCurve.T[1], TestFuncAndCurve.Ends[1]);
-                    CurveK cc3 = new CurveK(0, 4 * LMIN_RADIUS, (double t) => TestFuncAndCurve.U[2](t, LMIN_RADIUS), (double t) => TestFuncAndCurve.V[2](t, LMIN_RADIUS), LMIN_RADIUS, TestFuncAndCurve.U[2], TestFuncAndCurve.V[2], TestFuncAndCurve.T[2], TestFuncAndCurve.Ends[2]);
-                    CurveK cc4 = new CurveK(0, 1.5 * LMIN_RADIUS, (double t) => TestFuncAndCurve.U[3](t, LMIN_RADIUS), (double t) => TestFuncAndCurve.V[3](t, LMIN_RADIUS), LMIN_RADIUS, TestFuncAndCurve.U[3], TestFuncAndCurve.V[3], TestFuncAndCurve.T[3], TestFuncAndCurve.Ends[3]);
-                    switch (CIRCLE)
-                    {
-                        case 1:
-                            myCurve = cc1;
-                            myCurveQ = c1;
-                            break;
-                        case 2:
-                            myCurve = cc2;
-                            myCurveQ = c2;
-                            break;
-                        case 3:
-                            myCurve = cc3;
-                            myCurveQ = c3;
-                            break;
-                        case 4:
-                            myCurve = cc4;
-                            myCurveQ = c4;
-                            break;
-                    }
-                    MySLAU.curve = myCurve;
-                    MySLAUQ.curve = myCurveQ;
+                    fig = U; //граничная функция - функция с номером GF для кривой с номером CIRCLE
+                    CreateByCIRCLE();
                 }
 
+            }
+            public static void CreateByCIRCLE()
+            {
+                CurveK c1 = new CurveK(0, 2 * pi, TestFuncAndCurve.u1, TestFuncAndCurve.v1, MIN_RADIUS, TestFuncAndCurve.U[0], TestFuncAndCurve.V[0], TestFuncAndCurve.T[0], TestFuncAndCurve.Ends[0]);
+                CurveK c2 = new CurveK(0, 3 * MIN_RADIUS, TestFuncAndCurve.u2, TestFuncAndCurve.v2, MIN_RADIUS, TestFuncAndCurve.U[1], TestFuncAndCurve.V[1], TestFuncAndCurve.T[1], TestFuncAndCurve.Ends[1]);
+                CurveK c3 = new CurveK(0, 4 * MIN_RADIUS, TestFuncAndCurve.u3, TestFuncAndCurve.v3, MIN_RADIUS, TestFuncAndCurve.U[2], TestFuncAndCurve.V[2], TestFuncAndCurve.T[2], TestFuncAndCurve.Ends[2]);
+                CurveK c4 = new CurveK(0, 1.5 * MIN_RADIUS, TestFuncAndCurve.u4, TestFuncAndCurve.v4, MIN_RADIUS, TestFuncAndCurve.U[3], TestFuncAndCurve.V[3], TestFuncAndCurve.T[3], TestFuncAndCurve.Ends[3]);
+                CurveK cc1 = new CurveK(0, 2 * pi, (double t) => TestFuncAndCurve.U[0](t, LMIN_RADIUS), (double t) => TestFuncAndCurve.V[0](t, LMIN_RADIUS), LMIN_RADIUS, TestFuncAndCurve.U[0], TestFuncAndCurve.V[0], TestFuncAndCurve.T[0], TestFuncAndCurve.Ends[0]);
+                CurveK cc2 = new CurveK(0, 3 * LMIN_RADIUS, (double t) => TestFuncAndCurve.U[1](t, LMIN_RADIUS), (double t) => TestFuncAndCurve.V[1](t, LMIN_RADIUS), LMIN_RADIUS, TestFuncAndCurve.U[1], TestFuncAndCurve.V[1], TestFuncAndCurve.T[1], TestFuncAndCurve.Ends[1]);
+                CurveK cc3 = new CurveK(0, 4 * LMIN_RADIUS, (double t) => TestFuncAndCurve.U[2](t, LMIN_RADIUS), (double t) => TestFuncAndCurve.V[2](t, LMIN_RADIUS), LMIN_RADIUS, TestFuncAndCurve.U[2], TestFuncAndCurve.V[2], TestFuncAndCurve.T[2], TestFuncAndCurve.Ends[2]);
+                CurveK cc4 = new CurveK(0, 1.5 * LMIN_RADIUS, (double t) => TestFuncAndCurve.U[3](t, LMIN_RADIUS), (double t) => TestFuncAndCurve.V[3](t, LMIN_RADIUS), LMIN_RADIUS, TestFuncAndCurve.U[3], TestFuncAndCurve.V[3], TestFuncAndCurve.T[3], TestFuncAndCurve.Ends[3]);
+                switch (CIRCLE)
+                {
+                    case 1:
+                        myCurve = cc1;
+                        myCurveQ = c1;
+                        break;
+                    case 2:
+                        myCurve = cc2;
+                        myCurveQ = c2;
+                        break;
+                    case 3:
+                        myCurve = cc3;
+                        myCurveQ = c3;
+                        break;
+                    case 4:
+                        myCurve = cc4;
+                        myCurveQ = c4;
+                        break;
+                }
+                MySLAU.curve = myCurve;
+                MySLAUQ.curve = myCurveQ;
+            }
+
+            public static void CreateByCIRCLEllll()
+            {
+                CurveK cc1 = new CurveK(0, 2 * pi, (double t) => TestFuncAndCurve.U[0](t, LMIN_RADIUS), (double t) => TestFuncAndCurve.V[0](t, LMIN_RADIUS), LMIN_RADIUS, TestFuncAndCurve.U[0], TestFuncAndCurve.V[0], TestFuncAndCurve.T[0], TestFuncAndCurve.Ends[0]);
+                CurveK cc2 = new CurveK(0, 3 * LMIN_RADIUS, (double t) => TestFuncAndCurve.U[1](t, LMIN_RADIUS), (double t) => TestFuncAndCurve.V[1](t, LMIN_RADIUS), LMIN_RADIUS, TestFuncAndCurve.U[1], TestFuncAndCurve.V[1], TestFuncAndCurve.T[1], TestFuncAndCurve.Ends[1]);
+                CurveK cc3 = new CurveK(0, 4 * LMIN_RADIUS, (double t) => TestFuncAndCurve.U[2](t, LMIN_RADIUS), (double t) => TestFuncAndCurve.V[2](t, LMIN_RADIUS), LMIN_RADIUS, TestFuncAndCurve.U[2], TestFuncAndCurve.V[2], TestFuncAndCurve.T[2], TestFuncAndCurve.Ends[2]);
+                CurveK cc4 = new CurveK(0, 1.5 * LMIN_RADIUS, (double t) => TestFuncAndCurve.U[3](t, LMIN_RADIUS), (double t) => TestFuncAndCurve.V[3](t, LMIN_RADIUS), LMIN_RADIUS, TestFuncAndCurve.U[3], TestFuncAndCurve.V[3], TestFuncAndCurve.T[3], TestFuncAndCurve.Ends[3]);
+                switch (CIRCLE)
+                {
+                    case 1:
+                        myCurve = cc1;
+                        break;
+                    case 2:
+                        myCurve = cc2;
+                        break;
+                    case 3:
+                        myCurve = cc3;
+                        break;
+                    case 4:
+                        myCurve = cc4;
+                        break;
+                }
+                MySLAU.curve = myCurve;
             }
 
             /// <summary>
@@ -511,14 +702,14 @@ namespace Курсач
             public static void FillMassiv(CurveK c, int z)
             {
                 N = z;
-                masPoints = new BasisPoint[N];
+                masPoints = new Point[N];
                 for (int i = 0; i < z; i++)
                 {
                     masPoints[i] = c.Transfer(c.a + (c.b - c.a) * i / z);
-                    double l = GetRandomEps() / Math.Sqrt(2);
-                    masPoints[i].x += l;
-                    masPoints[i].y += l;
-
+                    //double l = GetRandomEps() / Math.Sqrt(2);
+                    //masPoints[i].x += l;
+                    //masPoints[i].y += l;
+                    masPoints[i] =new Point(masPoints[i]+ RandomNumbers.NextDouble2(-0.01, 0.01) * TestFuncAndCurve.Norm[CIRCLE - 1](masPoints[i]));
                 }
             }
 
@@ -536,11 +727,11 @@ namespace Курсач
             /// <param name="p"></param>
             public static void RandomSwapping(int p)
             {
-                for (int i = 1; i <= 5*p; i++)
+                for (int i = 1; i <= 5 * p; i++)
                 {
                     int a = RandomNumbers.NextNumber() % N;//a.Show();
                     int b = RandomNumbers.NextNumber() % N;//b.Show();"".Show();
-                    if(a!=b)Expendator.Swap<BasisPoint>(ref masPoints[a], ref masPoints[b]);
+                    if (a != b) Expendator.Swap<Point>(ref masPoints[a], ref masPoints[b]);
                 }
             }
 
@@ -549,7 +740,7 @@ namespace Курсач
             /// </summary>
             /// <param name="i"></param>
             /// <param name="a"></param>
-            public static void DeleteElement(int i, BasisPoint[] a)
+            public static void DeleteElement(int i, Point[] a)
             {
                 a[N - 1] = a[i];
                 for (int j = i; j < N - 1; j++) a[j] = a[j + 1];
@@ -560,7 +751,7 @@ namespace Курсач
             /// Отсеивание из массива повторяющихся элементов
             /// </summary>
             /// <param name="masPoints"></param>
-            public static void ExceptionMas(BasisPoint[] masPoints) //
+            public static void ExceptionMas(Point[] masPoints) //
             {
                 for (int i = 1; i < N; i++)
                 {
@@ -597,7 +788,7 @@ namespace Курсач
             /// </summary>
             /// <param name="x"></param>
             /// <param name="EPS"></param>
-            public static void WriteErrorDataInFile(double[] x, double EPS,double EPSQ)
+            public static void WriteErrorDataInFile(double[] x, double EPS, double EPSQ)
             {
                 //запись в файл
                 string buf = new string(new char[250]);
@@ -611,7 +802,7 @@ namespace Курсач
                 str = "Вектор решения и точность аппроксимации для функции " + d5 + " на кривой " + d6 + " методом " + d1 + " при числе функций " + d2 + $" Lradius = {LMIN_RADIUS} Qradius = {MIN_RADIUS}.txt";
                 buf = Convert.ToString(str);
 
-                StreamWriter fout = new StreamWriter(String.Concat(Program.Form1.DirectName,buf));//Console.SetOut(fout);MySLAU.Show();Console.SetOut(Console.Out);
+                StreamWriter fout = new StreamWriter(String.Concat(Program.Form1.DirectName, buf));//Console.SetOut(fout);MySLAU.Show();Console.SetOut(Console.Out);
                 fout.WriteLine("Вектор решения (" + N + " точек):");
                 for (int i = 0; i < N; i++)
                 {
@@ -659,13 +850,13 @@ namespace Курсач
 
                 "Ошибка записана".Show();
             }
-            public static void Search(bool QsystemIsNeeded=true, SLAUpok SYSTEM=null, SLAUpok SYSTEMQ = null, bool parallel = false)
+            public static void Search(bool QsystemIsNeeded = true, SLAUpok SYSTEM = null, SLAUpok SYSTEMQ = null, bool parallel = false)
             {
-                "Система начала заполняться".Show();
-                if(SYSTEM!=null)
+                $"Система для функции {FuncName[GF - 1]} на кривой {CircleName[CIRCLE - 1]} начала заполняться".Show();
+                if (SYSTEM != null)
                 {
-                KursMethods.MySLAU.Make(N,SYSTEM.A); //создать систему порядка, равного числу базисных точек
-                KursMethods.MySLAUQ.Make(N, SYSTEMQ.A);
+                    KursMethods.MySLAU.Make(N, SYSTEM.A); //создать систему порядка, равного числу базисных точек
+                    KursMethods.MySLAUQ.Make(N, SYSTEMQ.A);
                 }
                 else
                 {
@@ -675,9 +866,11 @@ namespace Курсач
 
 
                 //if (!parallel)
-                if(SYSTEM==null)
-                    for (int i = 0; i < N; i++) //заполнить систему
+                if (SYSTEM == null)
+                    Parallel.For(0, N, (int i) =>
                     {
+                        //for (int i = 0; i < N; i++) //заполнить систему
+                        //{
                         KursMethods.MySLAU.b[i] = myCurve.Firstkind(i, N);
                         KursMethods.MySLAU.A[i, i] = myCurve.Firstkind(i, i);
 
@@ -687,10 +880,11 @@ namespace Курсач
                             KursMethods.MySLAU.A[i, j] = tmp;
                             KursMethods.MySLAU.A[j, i] = tmp;
                         }
-                        $"Система на L ({(double)(i + 1) * (2 * N - i) / N / (N + 1) * 100}%)".Show();
+                        $"Система на L = {LMIN_RADIUS} ({(double)(i + 1) * (2 * N - i) / N / (N + 1) * 100}%)".Show();
                         MySLAU.Show();
                         "".Show();
-                    }
+                        //}
+                    });
                 else
                 {
                     //KursMethods.MySLAU.A = SYSTEM.A;
@@ -718,8 +912,8 @@ namespace Курсач
                 //        "".Show();
                 //    });
 
-               Method_des(N, baseMethod, MySLAU);
-               new Vectors(MySLAU.ErrorMasP).Show();
+                Method_des(N, baseMethod, MySLAU);
+                new Vectors(MySLAU.ErrorMasP).Show();
                 //MySLAU.Show();
                 //"".Show();
 
@@ -729,9 +923,11 @@ namespace Курсач
                     else
                     {
                         //if (!parallel)
-                        if(SYSTEMQ==null)
-                            for (int i = 0; i < N; i++) //заполнить систему
+                        if (SYSTEMQ == null)
+                            Parallel.For(0, N, (int i) =>
                             {
+                                //for (int i = 0; i < N; i++) //заполнить систему
+                                //{
                                 //KursMethods.MySLAU.x[i] = 1;
 
                                 KursMethods.MySLAUQ.b[i] = myCurveQ.Firstkind(i, N);
@@ -748,13 +944,14 @@ namespace Курсач
                                 $"Система на кривой Q ({(double)(i + 1) * (2 * N - i) / N / (N + 1) * 100}%)".Show();
                                 MySLAUQ.Show();
                                 "".Show();
-                            }
+                                //}
+                            });
                         else
                         {
-                
-                                //KursMethods.MySLAUQ.A = SYSTEMQ.A;
-                                for (int i = 0; i < N; i++) //заполнить систему                   
-                                    KursMethods.MySLAUQ.b[i] = myCurveQ.Firstkind(i, N);
+
+                            //KursMethods.MySLAUQ.A = SYSTEMQ.A;
+                            for (int i = 0; i < N; i++) //заполнить систему                   
+                                KursMethods.MySLAUQ.b[i] = myCurveQ.Firstkind(i, N);
                             "Система на Q с новым вектором".Show();
                             MySLAUQ.Show();
                             "".Show();
@@ -789,9 +986,9 @@ namespace Курсач
                 "".Show();
                 if (QsystemIsNeeded)
                 {
-                "На Q".Show();
-                MySLAUQ.Show();
-                "".Show();
+                    "На Q".Show();
+                    MySLAUQ.Show();
+                    "".Show();
                 }
 
                 //StreamWriter e = new StreamWriter("kf.txt");
@@ -811,21 +1008,21 @@ namespace Курсач
         /// <param name="x"></param>
         /// <param name="myCurve"></param>
         /// <param name="m"></param>
-        public static void Illustrating(bool parallel=true,int countpoint=150)
+        public static void Illustrating(bool parallel = true, int countpoint = 150)
         {
-            double ep = /*0.01*/(myCurve.b-myCurve.a)/countpoint;
+            double ep = /*0.01*/(myCurve.b - myCurve.a) / countpoint;
 
             Program.FORM.chart1.Series[0].Points.Clear();
             Program.FORM.chart1.Series[1].Points.Clear();
             Program.FORM.chart2.Series[0].Points.Clear();
             Program.FORM.chart2.Series[1].Points.Clear();
 
-            Program.FORM.chart1.Series[0].Name = $"Граничная функция {FuncName[GF-1]} на кривой {CircleName[CIRCLE-1]}";
+            Program.FORM.chart1.Series[0].Name = $"V(ρ={FuncName[GF - 1]}) на кривой {CircleName[CIRCLE - 1]}";
             Program.FORM.chart1.Series[0].Points.AddXY(myCurve.a, fi(myCurve.Transfer(myCurve.a))); // устанавливаем курсор на точку
-            Program.FORM.chart2.Series[0].Name = $"Плотность граничной функции {FuncName[GF-1]} на кривой {CircleName[CIRCLE-1]}";
+            Program.FORM.chart2.Series[0].Name = $"ρ = {FuncName[GF - 1]} на кривой {CircleName[CIRCLE - 1]}";
             Program.FORM.chart2.Series[0].Points.AddXY(myCurve.a, fig(myCurve.Transfer(myCurve.a))); // устанавливаем курсор на точку
 
-            List<double> mas = new List<double>(),mas2=new List<double>();
+            List<double> mas = new List<double>(), mas2 = new List<double>();
             List<double> mas21 = new List<double>(), mas22 = new List<double>();
             int y = 0;
             for (double i = myCurve.a + ep; i <= myCurve.b - ep; i += ep)
@@ -837,9 +1034,9 @@ namespace Курсач
                 Program.FORM.chart1.Series[0].Points.AddXY(i, mas[y++]);
             }
             // графики сумм m потенциальных функций
-            Program.FORM.chart1.Series[1].Name = $"Сумма {N} потенциалов от потенциальных функций";
-            Program.FORM.chart2.Series[1].Name = $"Сумма {N} потенциальных функций";
-            Program.FORM.textBox1.Text += $"Начинается рисование графика для области {CircleName[CIRCLE-1]} и граничной функции {FuncName[GF-1]}";
+            Program.FORM.chart1.Series[1].Name = $"Σcω n = {N}";
+            Program.FORM.chart2.Series[1].Name = $"Σcα n = {N}";
+            Program.FORM.textBox1.Text += $"Начинается рисование графика для области {CircleName[CIRCLE - 1]} и граничной функции {FuncName[GF - 1]}";
             Program.FORM.textBox1.Text += Environment.NewLine;
 
             "Вычисляется график аппроксимации".Show();
@@ -899,21 +1096,35 @@ namespace Курсач
             string d3 = Convert.ToString(N);
             str = bstr + sl + "График 1 граничной функции (" + d1 + ") и её приближения при числе базисных точек (" + d3 + ") на кривой (" + d2 + ").bmp";
             str2 = bstr + sl + "График (плотности) 1 граничной функции (" + d1 + ") и её приближения при числе базисных точек (" + d3 + ") на кривой (" + d2 + ").bmp";
-            
+
 
             buf = Convert.ToString(str);
             buf2 = Convert.ToString(str2);
             Program.FORM.chart1.SaveImage(buf, System.Drawing.Imaging.ImageFormat.Bmp);
             Program.FORM.chart2.SaveImage(buf2, System.Drawing.Imaging.ImageFormat.Bmp);
+            Program.FORM.chart1.SaveImage(adress + "График 1 граничной функции (" + d1 + ") и её приближения при числе базисных точек (" + d3 + ") на кривой (" + d2 + ").emf", System.Drawing.Imaging.ImageFormat.Emf);
+            Program.FORM.chart2.SaveImage(adress + "График 1 (плотности) граничной функции (" + d1 + ") и её приближения при числе базисных точек (" + d3 + ") на кривой (" + d2 + ").emf", System.Drawing.Imaging.ImageFormat.Emf);
 
             //List<Image> list = new List<Image>();
             //list.Add(Image.FromFile(buf2));list.Add(Image.FromFile(buf));
-            string str3= bstr + sl + "График 1 граничной функции (и плотности) (" + d1 + ") и её приближения при числе базисных точек (" + d3 + ") на кривой (" + d2 + ").bmp";
-            ImageActions.MergerOfImages(Image.FromFile(buf2), Image.FromFile(buf)).Save(str3, System.Drawing.Imaging.ImageFormat.Bmp);
+            string str3 = bstr + sl + "График 1 граничной функции (и плотности) (" + d1 + ") и её приближения при числе базисных точек (" + d3 + ") на кривой (" + d2 + ").bmp";
+            //ImageActions.MergerOfImages(Image.FromFile(buf2), Image.FromFile(buf)).Save(str3, System.Drawing.Imaging.ImageFormat.Bmp);
+
+            //ImageActions.SaveRastAndVec(buf, buf2, str3);
 
             //ImageL.Images.Add(Image.FromFile(buf));
             //Program.FORM.pictureBox1.Image = ImageL.Images[ImageL.Images.Count - 1];
             //Program.FORM.pictureBox1.Refresh();
+
+            if (CIRCLE == 1) For3D(adress + "", filt);
+            else For3D2(adress + "", filt);
+
+            StreamWriter st = new StreamWriter(adress + "info.txt");
+            st.WriteLine($"Circle = {CircleName[CIRCLE - 1]}, func = {FuncName[GF - 1]}, Qr = {MIN_RADIUS}, count = {d3}.pdf");
+            st.WriteLine($"Circle = {CircleName[CIRCLE - 1]}, func = {FuncName[GF - 1]}, Qr = {MIN_RADIUS}, count = {d3} (Diff).html");
+            st.Close();
+
+            Process.Start(adress + "Approx3D.R");
         }
         static ImageList ImageL = new ImageList();
 
@@ -938,7 +1149,7 @@ namespace Курсач
                 string d7 = Convert.ToString(baseMethod);
                 str1 = "Данные для кривой " + d6;
                 dir_Curve_name = str1;
-                Directory.CreateDirectory(Program.Form1.DirectName+dir_Curve_name); //создать папку для кривой
+                Directory.CreateDirectory(Program.Form1.DirectName + dir_Curve_name); //создать папку для кривой
 
                 for (KursMethods.GF = 1; KursMethods.GF <= KGF; KursMethods.GF++)
                 {
@@ -947,7 +1158,7 @@ namespace Курсач
                     d7 = Convert.ToString(baseMethod);
                     str2 = "При граничной функции " + d5;
                     dir_func_name = str2;
-                    bstr=Program.Form1.DirectName+str1+sl+str2;
+                    bstr = Program.Form1.DirectName + str1 + sl + str2;
                     chstr = bstr;
                     Directory.CreateDirectory(chstr); //создать в ней папку для функции
 
@@ -985,10 +1196,10 @@ namespace Курсач
             double[] ErrorsD = new double[N];
             double[] ErrorsQ = new double[N];
             double[] ErrorsDQ = new double[N];
-            ForFixity.Create(ref Errors,ref ErrorsD,ref ErrorsQ,ref ErrorsDQ); //заполнить массив ошибок
-            ForFixity.WriteMassiv(Errors,ErrorsD); //вывести погрешности
+            ForFixity.Create(ref Errors, ref ErrorsD, ref ErrorsQ, ref ErrorsDQ); //заполнить массив ошибок
+            ForFixity.WriteMassiv(Errors, ErrorsD); //вывести погрешности
             if (zero)
-                ForFixity.Show(Errors,ErrorsD, ErrorsQ, ErrorsDQ); //нарисовать ломанную ошибок
+                ForFixity.Show(Errors, ErrorsD, ErrorsQ, ErrorsDQ); //нарисовать ломанную ошибок
         }
 
         public static void Fixity(SLAUpok.Method A, SLAUpok.Method B)
@@ -1029,7 +1240,7 @@ namespace Курсач
             /// Рисование самого графика на основе массива точек
             /// </summary>
             /// <param name="Errors"></param>
-            public static void Show(double[] Errors,double[] ErrorsD,double[] ErrorsQ,double[] ErrorsDQ)
+            public static void Show(double[] Errors, double[] ErrorsD, double[] ErrorsQ, double[] ErrorsDQ)
             {
                 if (Array.IndexOf(Errors, 0) >= 0 || Array.IndexOf(ErrorsD, 0) >= 0 || Array.IndexOf(ErrorsQ, 0) >= 0 || Array.IndexOf(ErrorsDQ, 0) >= 0)
                     return;
@@ -1057,15 +1268,15 @@ namespace Курсач
 
                 Program.FORM.chart1.Series[0].Color = Color.Red; // задаем цвет линии (красный)
                 Program.FORM.chart1.Series[0].Points.AddXY(0, myCurve.Firstkind(N, N)); // устанавливаем курсор на точку
-                Program.FORM.chart1.Series[0].Name = $"Качество аппроксимации функции {FuncName[GF-1]} на области {CircleName[CIRCLE-1]} в зависимости от числа базисных функций {N} (L {LMIN_RADIUS})";
+                Program.FORM.chart1.Series[0].Name = $"Качество аппроксимации функции {FuncName[GF - 1]} на области {CircleName[CIRCLE - 1]} в зависимости от числа базисных функций {N} (L {LMIN_RADIUS})";
                 Program.FORM.chart2.Series[0].Color = Color.Green; // задаем цвет линии (красный)
                 Program.FORM.chart2.Series[0].Points.AddXY(0, DoubleIntegral(fig, myCurveQ, myCurveQ.S, Method.GaussKronrod15, 0.001, FuncMethods.DefInteg.countY)); // устанавливаем курсор на точку
-                Program.FORM.chart2.Series[0].Name = $"Качество аппроксимации плотности функции {FuncName[GF-1]} на области {CircleName[CIRCLE-1]} в зависимости от числа базисных функций {N} (L {LMIN_RADIUS})";
+                Program.FORM.chart2.Series[0].Name = $"Качество аппроксимации плотности функции {FuncName[GF - 1]} на области {CircleName[CIRCLE - 1]} в зависимости от числа базисных функций {N} (L {LMIN_RADIUS})";
 
                 Program.FORM.chart1.Series[1].Points.AddXY(0, myCurveQ.Firstkind(N, N)); // устанавливаем курсор на точку
-                Program.FORM.chart1.Series[1].Name = $"Качество аппроксимации функции {FuncName[GF-1]} на области {CircleName[CIRCLE-1]} в зависимости от числа базисных функций {N} (Q {MIN_RADIUS})";
+                Program.FORM.chart1.Series[1].Name = $"Качество аппроксимации функции {FuncName[GF - 1]} на области {CircleName[CIRCLE - 1]} в зависимости от числа базисных функций {N} (Q {MIN_RADIUS})";
                 Program.FORM.chart2.Series[1].Points.AddXY(0, DoubleIntegral(fig, myCurveQ, myCurveQ.S, Method.GaussKronrod15, 0.001, FuncMethods.DefInteg.countY)); // устанавливаем курсор на точку
-                Program.FORM.chart2.Series[1].Name = $"Качество аппроксимации плотности функции {FuncName[GF-1]} на области {CircleName[CIRCLE-1]} в зависимости от числа базисных функций {N} (Q {MIN_RADIUS})";
+                Program.FORM.chart2.Series[1].Name = $"Качество аппроксимации плотности функции {FuncName[GF - 1]} на области {CircleName[CIRCLE - 1]} в зависимости от числа базисных функций {N} (Q {MIN_RADIUS})";
 
                 for (int i = 0; i < N; i++)
                 {
@@ -1078,7 +1289,7 @@ namespace Курсач
 
 
                 string buf = new string(new char[250]);
-                string str, str2, buf2,str0;
+                string str, str2, buf2, str0;
                 //memset(buf, 0, sizeof(sbyte));
                 string d2 = Convert.ToString(N);
                 string d3 = Convert.ToString(GF);
@@ -1093,13 +1304,17 @@ namespace Курсач
                 buf2 = Convert.ToString(str2);
 
                 //Directory.CreateDirectory(str0);
-                Program.FORM.chart1.SaveImage(/*str0+"\\"+*/bstr + sl + buf, System.Drawing.Imaging.ImageFormat.Bmp);
 
-                Program.FORM.chart2.SaveImage(/*str0 + "\\" + */bstr + sl + buf2, System.Drawing.Imaging.ImageFormat.Bmp);
+                //не было комента  Program.FORM.chart1.SaveImage(/*str0+"\\"+*/bstr + sl + buf, System.Drawing.Imaging.ImageFormat.Bmp);
+
+                //не было комента  Program.FORM.chart2.SaveImage(/*str0 + "\\" + */bstr + sl + buf2, System.Drawing.Imaging.ImageFormat.Bmp);
                 string str3 = bstr + sl + "График 2 качества аппроксимации функции (" + d3 + ") (и её плотности) на области (" + d4 + ") методом " + d6 + " в зависимости от числа базисных функций (" + d2 + ").bmp";
-                ImageActions.MergerOfImages(Image.FromFile(bstr + sl + buf2), Image.FromFile(bstr + sl + buf)).Save(str3, System.Drawing.Imaging.ImageFormat.Bmp);
+                //ImageActions.MergerOfImages(Image.FromFile(bstr + sl + buf2), Image.FromFile(bstr + sl + buf)).Save(str3, System.Drawing.Imaging.ImageFormat.Bmp);
 
-                //CloseWindow("График 2 качества аппроксимации в зависимости от числа базисных функций.bmp");// закрываем окно (создаем bmp-файл)
+                //не было комента   ImageActions.SaveRastAndVec(bstr + sl + buf, bstr + sl + buf2, str3);
+
+                Program.FORM.chart1.SaveImage(adress + "График 2 граничной функции (" + d3 + ") и её приближения на кривой (" + d4 + ").emf", System.Drawing.Imaging.ImageFormat.Emf);
+                Program.FORM.chart2.SaveImage(adress + "График 2 (плотности) граничной функции (" + d3 + ") и её приближения на кривой (" + d4 + ").emf", System.Drawing.Imaging.ImageFormat.Emf);
             }
 
             /// <summary>
@@ -1138,7 +1353,7 @@ namespace Курсач
                 //    }
                 //}
 
-                Program.FORM.chart1.Series[0].Name = $"Аппроксимация функции {FuncName[GF-1]} на области {CircleName[CIRCLE-1]} методом {A} при числе точек {N}";
+                Program.FORM.chart1.Series[0].Name = $"Аппроксимация функции {FuncName[GF - 1]} на области {CircleName[CIRCLE - 1]} методом {A} при числе точек {N}";
                 Program.FORM.chart1.Series[0].Color = Color.Red; // задаем цвет линии (красный)
                 Program.FORM.chart1.Series[0].Points.AddXY(0, myCurve.Firstkind(N, N)); // устанавливаем курсор на точку
 
@@ -1148,7 +1363,7 @@ namespace Курсач
                 }
 
                 //SetColor(0, 250, 0); // задаем цвет линии (зеленый)
-                Program.FORM.chart1.Series[1].Name = $"Аппроксимация функции {FuncName[GF-1]} на области {CircleName[CIRCLE-1]} методом {B} при числе точек {N}";
+                Program.FORM.chart1.Series[1].Name = $"Аппроксимация функции {FuncName[GF - 1]} на области {CircleName[CIRCLE - 1]} методом {B} при числе точек {N}";
                 Program.FORM.chart1.Series[1].Color = Color.Green;
                 Program.FORM.chart1.Series[1].Points.AddXY(0, myCurve.Firstkind(N, N)); // устанавливаем курсор на точку
                 for (int i = 0; i < N; i++)
@@ -1202,7 +1417,7 @@ namespace Курсач
 
             }
 
-            public static void Create(ref double[] Errors,ref double[] ErrorsD,ref double[] ErrorsQ,ref double[] ErrorsDQ, bool parallel = false)
+            public static void Create(ref double[] Errors, ref double[] ErrorsD, ref double[] ErrorsQ, ref double[] ErrorsDQ, bool parallel = false)
             {
                 Program.FORM.textBox1.Text += "Для графика в зависимости от числа точек:";
                 Program.FORM.textBox1.Text += Environment.NewLine;
@@ -1210,8 +1425,8 @@ namespace Курсач
                 {
                     //Method_des(N, baseMethod, MySLAU);
                     //Method_des(N, baseMethod, MySLAUQ);
-                        Errors = MySLAU.ErrorsMas/*Error(i)*/; //заполнить массив погрешностей
-                        ErrorsQ = MySLAUQ.ErrorsMas/*ErrorQ(i)*/; //заполнить массив погрешностей
+                    Errors = MySLAU.ErrorsMas/*Error(i)*/; //заполнить массив погрешностей
+                    ErrorsQ = MySLAUQ.ErrorsMas/*ErrorQ(i)*/; //заполнить массив погрешностей
                     ErrorsD = MySLAU.ErrorMasP;
                     ErrorsDQ = MySLAUQ.ErrorMasP;
                     for (int i = 0; i < N; i++)
@@ -1222,7 +1437,7 @@ namespace Курсач
 
                         //    for (int ii = 1; ii <= i; ii++)
                         //    {
-                        //        sum += MySLAU.x[ii - 1] * masPoints[ii - 1].PotentialF((BasisPoint)x);
+                        //        sum += MySLAU.x[ii - 1] * masPoints[ii - 1].PotentialF((Point)x);
                         //    }
                         //    double s = sum - fig(x);
                         //    return s * s;
@@ -1234,7 +1449,7 @@ namespace Курсач
 
                         //       for (int ii = 1; ii <= i; ii++)
                         //       {
-                        //           sum += MySLAUQ.x[ii - 1] * masPoints[ii - 1].PotentialF((BasisPoint)x);
+                        //           sum += MySLAUQ.x[ii - 1] * masPoints[ii - 1].PotentialF((Point)x);
                         //       }
                         //       double s = sum - fig(x);
                         //       return s * s;
@@ -1253,14 +1468,14 @@ namespace Курсач
                     }
                     //(new Vectors(Errors)).Show();
                     //(new Vectors(ErrorsQ)).Show();
-                }            
+                }
                 //else
-                    ////но при поиске наилучшего алгоритма нельзя делать распараллеливание в этом месте
-                    //Parallel.For(0, N, (int i) =>
-                    //{
-                    //    Method_des(i, baseMethod, MySLAU); //решить частичную систему нужным методом
-                    //    Errors[i] = Error(i); //заполнить массив погрешностей
-                    //});
+                ////но при поиске наилучшего алгоритма нельзя делать распараллеливание в этом месте
+                //Parallel.For(0, N, (int i) =>
+                //{
+                //    Method_des(i, baseMethod, MySLAU); //решить частичную систему нужным методом
+                //    Errors[i] = Error(i); //заполнить массив погрешностей
+                //});
 
                 //Errors[N - 1] = RESULT;
             }
@@ -1312,12 +1527,12 @@ namespace Курсач
                 string d6 = Convert.ToString(meth);
                 str = "Сообщение об ошибке для графика 2 погрешностей (без log) качества аппроксимации функции (" + d3 + ") на области (" + d4 + ") методом " + d6 + " в зависимости от числа базисных функций (" + d2 + ").txt";
                 buf = Convert.ToString(str);
-                StreamWriter fout = new StreamWriter(String.Concat(Program.Form1.DirectName,buf));
+                StreamWriter fout = new StreamWriter(String.Concat(Program.Form1.DirectName, buf));
                 fout.WriteLine("Невозможно построить логарифмический график, поскольку на элементе " + num + "(=0) функция принимает значение -infinity");
                 fout.Close();
             }
 
-            public static void WriteMassiv(double[] x,double[] y) //вывод массива погрешностей
+            public static void WriteMassiv(double[] x, double[] y) //вывод массива погрешностей
             {
                 //запись в файл
                 string buf = new string(new char[250]);
@@ -1329,7 +1544,7 @@ namespace Курсач
                 string d6 = Convert.ToString(baseMethod);
                 str = "Файл 2 погрешностей (без log) качества аппроксимации функции (" + d3 + ") на области (" + d4 + ") методом " + d6 + " в зависимости от числа базисных функций (" + d2 + ").txt";
                 buf = Convert.ToString(str);
-                StreamWriter fout = new StreamWriter(String.Concat(Program.Form1.DirectName,buf));
+                StreamWriter fout = new StreamWriter(String.Concat(Program.Form1.DirectName, buf));
 
                 zero = true; //нулей нет
                 int j = -1; //номер с нулём
@@ -1390,7 +1605,7 @@ namespace Курсач
                         goto end1;
                     }
                 }
-                end1:
+            end1:
                 fout.WriteLine();
                 fout.WriteLine("Анализ массива:");
                 fout.WriteLine("1)Минимальное значение " + min + " на элементе " + mini);
@@ -1406,7 +1621,7 @@ namespace Курсач
                 Program.FORM.chart1.Titles[0].Text = "Наилучшая аппроксимация равна " + min + " на элементе " + (mini + 1);
                 if (y.Where(r => r == 0).Count() > 0)
                     zero = true;
-                Program.FORM.chart2.Titles[0].Text = "Наилучшая аппроксимация равна " + y.Min() + " на элементе " + (Array.IndexOf(y,y.Min())+1);
+                Program.FORM.chart2.Titles[0].Text = "Наилучшая аппроксимация равна " + y.Min() + " на элементе " + (Array.IndexOf(y, y.Min()) + 1);
 
                 if (!zero)
                 {
@@ -1435,33 +1650,33 @@ namespace Курсач
                 string d7 = Convert.ToString(baseMethod);
                 str1 = "Данные для кривой " + d6;
                 dir_Curve_name = str1;
-                Directory.CreateDirectory(Program.Form1.DirectName+dir_Curve_name); //создать папку для кривой
+                Directory.CreateDirectory(Program.Form1.DirectName + dir_Curve_name); //создать папку для кривой
 
-                if(minN!=maxN)
-                for (KursMethods.GF = 1; KursMethods.GF <= KGF; KursMethods.GF++)
-                {
-                    d5 = Convert.ToString(GF);
-                    d6 = Convert.ToString(CIRCLE);
-                    d7 = Convert.ToString(baseMethod);
-                    str2 = "При граничной функции " + d5;
-                    dir_func_name = str2;
-                    bstr=Program.Form1.DirectName+str1+sl+str2;
-                    chstr = bstr;
-                    Directory.CreateDirectory(chstr); //создать в ней папку для функции
-                    for (int m = minN; m <= maxN; m += cu)
+                if (minN != maxN)
+                    for (KursMethods.GF = 1; KursMethods.GF <= KGF; KursMethods.GF++)
                     {
-                        ind++;
-                        Desigion(m, KursMethods.GF, KursMethods.CIRCLE); //заполнение массива из файла (0) или при генерировании (>0), решение и вывод решения
-                        Fixity(); //график зависимости погрешности аппроксимации от числа базисных точек
-                        Program.FORM.textBox1.Text += "-------Осталось ";
-                        Program.FORM.textBox1.Text += t - ind;
-                        Program.FORM.textBox1.Text += Environment.NewLine;
-                        //Program.FORM.Invalidate();
-                        Program.FORM.textBox1.Refresh();
-                        Program.FORM.chart1.Refresh();
-                        Program.FORM.textBox1.SelectionStart = Program.FORM.textBox1.Text.Length; Program.FORM.textBox1.ScrollToCaret();
+                        d5 = Convert.ToString(GF);
+                        d6 = Convert.ToString(CIRCLE);
+                        d7 = Convert.ToString(baseMethod);
+                        str2 = "При граничной функции " + d5;
+                        dir_func_name = str2;
+                        bstr = Program.Form1.DirectName + str1 + sl + str2;
+                        chstr = bstr;
+                        Directory.CreateDirectory(chstr); //создать в ней папку для функции
+                        for (int m = minN; m <= maxN; m += cu)
+                        {
+                            ind++;
+                            Desigion(m, KursMethods.GF, KursMethods.CIRCLE); //заполнение массива из файла (0) или при генерировании (>0), решение и вывод решения
+                            Fixity(); //график зависимости погрешности аппроксимации от числа базисных точек
+                            Program.FORM.textBox1.Text += "-------Осталось ";
+                            Program.FORM.textBox1.Text += t - ind;
+                            Program.FORM.textBox1.Text += Environment.NewLine;
+                            //Program.FORM.Invalidate();
+                            Program.FORM.textBox1.Refresh();
+                            Program.FORM.chart1.Refresh();
+                            Program.FORM.textBox1.SelectionStart = Program.FORM.textBox1.Text.Length; Program.FORM.textBox1.ScrollToCaret();
+                        }
                     }
-                }
                 else
                 {
                     KursMethods.GF = 1;
@@ -1471,7 +1686,7 @@ namespace Курсач
                     d7 = Convert.ToString(baseMethod);
                     str2 = "При граничной функции " + d5;
                     dir_func_name = str2;
-                    bstr=Program.Form1.DirectName+str1+sl+str2;
+                    bstr = Program.Form1.DirectName + str1 + sl + str2;
                     chstr = bstr;
                     Directory.CreateDirectory(chstr); //создать в ней папку для функции
                     Desigion(m, KursMethods.GF, KursMethods.CIRCLE); //заполнение массива из файла (0) или при генерировании (>0), решение и вывод решения
@@ -1484,10 +1699,10 @@ namespace Курсач
                         d7 = Convert.ToString(baseMethod);
                         str2 = "При граничной функции " + d5;
                         dir_func_name = str2;
-                        bstr=Program.Form1.DirectName+str1+sl+str2;
+                        bstr = Program.Form1.DirectName + str1 + sl + str2;
                         chstr = bstr;
                         Directory.CreateDirectory(chstr); //создать в ней папку для функции
-                        Desigion(m, KursMethods.GF, KursMethods.CIRCLE,true,new SLAUpok( MySLAU),new SLAUpok( MySLAUQ)); //заполнение массива из файла (0) или при генерировании (>0), решение и вывод решения
+                        Desigion(m, KursMethods.GF, KursMethods.CIRCLE, true, new SLAUpok(MySLAU), new SLAUpok(MySLAUQ)); //заполнение массива из файла (0) или при генерировании (>0), решение и вывод решения
                         "Взята старая система с новым свободным вектором".Show();
                         Fixity(); //график зависимости погрешности аппроксимации от числа базисных точек
                         Program.FORM.chart1.Refresh();
@@ -1498,6 +1713,72 @@ namespace Курсач
 
         //-----------------------------------------------------------
 
+
+        public static bool ScriptEnded = true;
+        public static void LnGraf(int s, int g, int cu, bool QsystemISNeeded = false)
+        {
+            while (!ScriptEnded) { }
+
+            double[] ErrorsD = new double[s], Errors = new double[s], ErrorsQ = new double[s], ErrorsDQ = new double[s];
+            double tmp = LMIN_RADIUS;
+            double EPSs = (LMAX_RADIUS - LMIN_RADIUS) / (s - 1);
+            int i = 0;
+
+            StreamWriter arg = new StreamWriter("arg2.txt");
+            StreamWriter info = new StreamWriter("info2.txt");
+            string st = $"s = {s} g = {FuncName[g - 1]} cu = {CircleName[cu - 1]}";
+            info.WriteLine(st + ".pdf");
+            info.WriteLine(st + "(density).html");
+            info.WriteLine(st + "(potential).html");
+            info.Close();
+            for (int j = 0; j < s; j++)
+            {
+                arg.WriteLine($"{j + 1} {LMIN_RADIUS + j * EPSs}");
+            }
+            arg.Close();
+
+            StreamWriter val = new StreamWriter("val2.txt");
+            StreamWriter val2 = new StreamWriter("val2l.txt");
+            for (; LMIN_RADIUS <= LMAX_RADIUS; LMIN_RADIUS += EPSs)
+            {
+                Desigion(s, g, cu, QsystemISNeeded);
+                ForFixity.Create(ref Errors, ref ErrorsD, ref ErrorsQ, ref ErrorsDQ);
+                for (int k = 1; k <= s; k++)
+                {
+                    if (ErrorsD[k - 1] == 0.0)
+                        val.WriteLine("NA");
+                    else
+                        val.WriteLine(ErrorsD[k - 1]);
+
+                    if (Errors[k - 1] == 0.0)
+                        val2.WriteLine("NA");
+                    else
+                        val2.WriteLine(Errors[k - 1]);
+                }
+            }
+
+            val.Close();
+            val2.Close();
+            LMIN_RADIUS = tmp;
+
+            StartProcess("LastGrafic.R");
+            // Process.Start("LastGrafic.R");
+        }
+        public static void StartProcess(string fileName)
+        {
+            Process process = new Process();
+            process.StartInfo.FileName = fileName;
+            process.EnableRaisingEvents = true;
+
+            process.Exited += (sender, e) =>
+            {
+                Console.WriteLine($"Процесс завершен с кодом {process.ExitCode}");
+                ScriptEnded = true;
+            };
+            ScriptEnded = false;
+            process.Start();
+        }
+
         /// <summary>
         /// График зависимости качества аппроксимации от радиуса при s функциях и d кривых
         /// </summary>
@@ -1505,7 +1786,7 @@ namespace Курсач
         /// <param name="d"></param>
         /// <param name="g"></param>
         /// <param name="cu"></param>
-        public static void Quality(int s, int d, int g, int cu,bool QsystemISNeeded=false)
+        public static void Quality(int s, int d, int g, int cu, bool QsystemISNeeded = false)
         {
             //------------------------------обнуление данных
             Program.FORM.chart1.Series.Clear();
@@ -1537,7 +1818,7 @@ namespace Курсач
                 //SLAUpok.VALUE_FOR_ULTRA = KursMethods.myCurve.Firstkind(KursMethods.fis);
                 if ((g != 0) && (cu != 0))
                 {
-                    Desigion(s, g, cu,QsystemISNeeded);
+                    Desigion(s, g, cu, QsystemISNeeded);
                 }
                 else
                 {
@@ -1551,7 +1832,7 @@ namespace Курсач
                 if (Errors[i] == 0)
                 {
                     Program.FORM.textBox1.Text += "Аппроксимация в машинный ноль на элементе " + (i + 1) + " (радиус " + LMIN_RADIUS + " )" + Environment.NewLine;
-                    ForQuality.Draw_CIRCLE(LMIN_RADIUS,Color.Red,Program.FORM.chart1);
+                    ForQuality.Draw_CIRCLE(LMIN_RADIUS, Color.Red, Program.FORM.chart1);
                     isred = true;
                 }
                 else ForQuality.Draw_CIRCLE(LMIN_RADIUS, Color.Green, Program.FORM.chart1);
@@ -1590,7 +1871,7 @@ namespace Курсач
             Program.FORM.textBox1.SelectionStart = Program.FORM.textBox1.Text.Length; Program.FORM.textBox1.ScrollToCaret();
 
             //записать в файл массив и провести анализ
-            string buf = new string(new char[250]),buf1,buf2;
+            string buf = new string(new char[250]), buf1, buf2;
             string str;
             string newstr;
             string d1 = Convert.ToString(s);
@@ -1663,7 +1944,7 @@ namespace Курсач
                     goto end1;
                 }
             }
-            end1:
+        end1:
             fout.WriteLine();
             fout.WriteLine("Анализ массива:");
             fout.WriteLine("1)Минимальное значение " + min + " на элементе " + mini);
@@ -1691,9 +1972,12 @@ namespace Курсач
                 Program.FORM.chart1.Series.Add($"...при граничной функции {g}");
                 str = "График 3.2 кривых и базисных потенциалов методом " + d7 + " в зависимости от радиуса,(" + d1 + ") потенциальных функций.bmp";
                 newstr = bstr + sl + str; //полный адрес
-                buf =  Convert.ToString(newstr);
+                buf = Convert.ToString(newstr);
                 Program.FORM.chart1.SaveImage(buf, System.Drawing.Imaging.ImageFormat.Bmp);
                 buf1 = Convert.ToString(buf);
+
+                Program.FORM.chart1.SaveImage(adress + "График 3.2 кривых и базисных потенциалов методом " + d7 + " в зависимости от радиуса,(" + d1 + ") потенциальных функций.emf", System.Drawing.Imaging.ImageFormat.Emf);
+                //Program.FORM.chart2.SaveImage(adress + "График 2 (плотности) граничной функции (" + d3 + ") и её приближения на кривой (" + d4 + ").emf", System.Drawing.Imaging.ImageFormat.Emf);
             }
             else //нарисовать график, если нет нулей
             {
@@ -1717,13 +2001,13 @@ namespace Курсач
                 Program.FORM.chart1.Refresh();
                 str = "График 3.1 качества аппроксимации методом " + d7 + " в зависимости от радиуса,(" + d1 + ") потенциальных функций.bmp";
                 newstr = bstr + sl + str; //полный адрес
-                 buf = Convert.ToString(newstr);
+                buf = Convert.ToString(newstr);
                 Program.FORM.chart1.SaveImage(buf, System.Drawing.Imaging.ImageFormat.Bmp);
                 buf1 = Convert.ToString(buf);
             }
 
 
-            isred = ErrorsD.Where(x => x <= 0 || x==Double.NaN).Count() != 0;
+            isred = ErrorsD.Where(x => x <= 0 || x == Double.NaN).Count() != 0;
             ErrorsD = ErrorsD.Where(x => !(x != x) && (x > 0)).ToArray();
             if (isred)
             {
@@ -1731,7 +2015,7 @@ namespace Курсач
                 Program.FORM.chart2.Series.Add($"...при граничной функции {g}");
                 str = "График 3.2 аппроксимации плотности методом " + d7 + " в зависимости от радиуса,(" + d1 + ") потенциальных функций.bmp";
                 newstr = bstr + sl + str; //полный адрес
-                buf =  Convert.ToString(newstr);
+                buf = Convert.ToString(newstr);
                 Program.FORM.chart2.SaveImage(buf, System.Drawing.Imaging.ImageFormat.Bmp);
                 buf2 = Convert.ToString(buf);
             }
@@ -1764,17 +2048,21 @@ namespace Курсач
                 buf2 = Convert.ToString(buf);
             }
             string str3 = bstr + sl + "График 3 аппроксимации функции и её плотности методом " + d7 + " в зависимости от радиуса,(" + d1 + ") потенциальных функций.bmp";
-            ImageActions.MergerOfImages(Image.FromFile(buf2), Image.FromFile(buf1)).Save(str3, System.Drawing.Imaging.ImageFormat.Bmp);
+            //ImageActions.MergerOfImages(Image.FromFile(buf2), Image.FromFile(buf1)).Save(str3, System.Drawing.Imaging.ImageFormat.Bmp);
+            //ImageActions.SaveRastAndVec(buf1, buf2, str3);
+
+            Program.FORM.chart1.SaveImage(adress + "График 3 кривых и базисных потенциалов методом " + d7 + " в зависимости от радиуса,(" + d1 + ") потенциальных функций.emf", System.Drawing.Imaging.ImageFormat.Emf);
+            Program.FORM.chart2.SaveImage(adress + "График 3 (плотности) граничной функции (" + d3 + ") и её приближения на кривой (" + d4 + ").emf", System.Drawing.Imaging.ImageFormat.Emf);
         }
 
         public class ForQuality
         {
-            public static void Draw_CIRCLE(double radius, Color color,System.Windows.Forms.DataVisualization.Charting.Chart chart) //нарисовать окружность
+            public static void Draw_CIRCLE(double radius, Color color, System.Windows.Forms.DataVisualization.Charting.Chart chart) //нарисовать окружность
             {
                 //SetColor(R, G, B); // задаем цвет линии
                 double d = radius - MIN_RADIUS;
                 int count = 0;
-                
+
                 if (d > 0)
                 {
                     chart.Series.Add("");
@@ -1826,14 +2114,14 @@ namespace Курсач
                         }
                         break;
                 }
-                }
-            public static void Draw_CIRCLE(double radius,Color color)
+            }
+            public static void Draw_CIRCLE(double radius, Color color)
             {
                 Draw_CIRCLE(radius, color, Program.FORM.chart1);
                 Draw_CIRCLE(radius, color, Program.FORM.chart2);
             }
-          
-            public static void Draw_mas(BasisPoint[] r, Color color) //нарисовать массив точек
+
+            public static void Draw_mas(Point[] r, Color color) //нарисовать массив точек
             {
 
                 //SetColor(R, G, B); // задаем цвет линии
@@ -1894,7 +2182,7 @@ namespace Курсач
                 string d7 = Convert.ToString(baseMethod);
                 str1 = "Данные для кривой " + d6;
                 dir_Curve_name = str1;
-                Directory.CreateDirectory(Program.Form1.DirectName+dir_Curve_name); //создать папку для кривой
+                Directory.CreateDirectory(Program.Form1.DirectName + dir_Curve_name); //создать папку для кривой
 
                 for (GF = 1; GF <= KGF; GF++)
                 {
@@ -1903,7 +2191,7 @@ namespace Курсач
                     d7 = Convert.ToString(baseMethod);
                     str2 = "При граничной функции " + d5;
                     dir_func_name = str2;
-                    bstr=Program.Form1.DirectName+str1+sl+str2;
+                    bstr = Program.Form1.DirectName + str1 + sl + str2;
                     chstr = bstr;
                     Directory.CreateDirectory(chstr); //создать в ней папку для функции
 
@@ -1925,737 +2213,6 @@ namespace Курсач
                 }
             }
         }
-
-        /// <summary>
-        /// Пространство тестовых функций и данных
-        /// </summary>
-        public class TestFuncAndCurve
-        {
-            /// <summary>
-            /// Расширенные параметризации кривых
-            /// </summary>
-            public static DRealFunc[] U = new DRealFunc[CountCircle], V = new DRealFunc[CountCircle];
-            /// <summary>
-            /// Площади сегментов кривых
-            /// </summary>
-            public static TripleFunc[] T = new TripleFunc[CountCircle];
-            public static RealFunc[] Ends = new RealFunc[CountCircle];
-            static TestFuncAndCurve()
-            {
-                U[0] = (double t, double r) => r * Math.Cos(t);
-                V[0] = (double t, double r) => r * Math.Sin(t);
-                U[1] = (double t, double r) =>
-                  {
-                      dis = r - MIN_RADIUS;
-                      mdx = dis / 2; //но если внутри каждой вставить это,оставив те глобальные, всё получится
-                      if ((t >= 0) && (t <= 2 * r))
-                      {
-                          return t / 2 - mdx;
-                      }
-                      if ((t >= 2 * r) && (t <= 3 * r))
-                      {
-                          return 3 * r - 1 * t - mdx;
-                      }
-                      throw new Exception("Выход за границы отрезка параметризации");
-                  };
-                V[1] = (double t, double r) =>
-                {
-                    dis = r - MIN_RADIUS;
-                    mdx = dis / 2;
-                    mdy = mdx / Math.Sqrt(3);
-                    if ((t >= 0) && (t <= r))
-                    {
-                        return t / 2 * Math.Sqrt(3) - mdy;
-                    }
-                    if ((t >= r) && (t <= 2 * r))
-                    {
-                        return -t / 2 * Math.Sqrt(3) + r * Math.Sqrt(3) - mdy;
-                    }
-                    if ((t >= 2 * r) && (t <= 3 * r))
-                    {
-                        return 0 - mdy;
-                    }
-                    throw new Exception("Выход за границы отрезка параметризации");
-                };
-                U[2] = (double t, double r) =>
-                {
-                    dis = r - MIN_RADIUS;
-                    mdx = dis / 2;
-                    if ((t >= 0) && (t <= r))
-                    {
-                        return t - mdx;
-                    }
-                    if ((t >= r) && (t <= 2 * r))
-                    {
-                        return r - mdx;
-                    }
-                    if ((t >= 2 * r) && (t <= 3 * r))
-                    {
-                        return 3 * r - t - mdx;
-                    }
-                    if ((t >= 3 * r) && (t <= 4 * r))
-                    {
-                        return 0 - mdx;
-                    }
-                    throw new Exception("Выход за границы отрезка параметризации");
-                };
-                V[2] = (double t, double r) =>
-                {
-                    dis = r - MIN_RADIUS;
-                    mdx = dis / 2;
-                    if ((t >= 0) && (t <= r))
-                    {
-                        return 0 - mdx;
-                    }
-                    if ((t >= r) && (t <= 2 * r))
-                    {
-                        return t - r - mdx;
-                    }
-                    if ((t >= 2 * r) && (t <= 3 * r))
-                    {
-                        return r - mdx;
-                    }
-                    if ((t >= 3 * r) && (t <= 4 * r))
-                    {
-                        return 4 * r - t - mdx;
-                    }
-                    throw new Exception("Выход за границы отрезка параметризации");
-                };
-                U[3] = (double t, double r) =>
-                {
-                    dis = r - MIN_RADIUS;
-                    mdx = dis / 2;
-                    mdy = mdx / Math.Sqrt(3);
-                    if ((t >= 0) && (t <= r))
-                    {
-                        return t - mdx;
-                    }
-                    if ((t >= r) && (t <= 1.5 * r))
-                    {
-                        return 3 * r - 2 * t - mdx;
-                    }
-                    throw new Exception("Выход за границы отрезка параметризации");
-                };
-                V[3] = (double t, double r) =>
-                {
-                    dis = r - MIN_RADIUS;
-                    mdx = dis / 2;
-                    mdy = mdx * Math.Sqrt(3) / 2;
-                    if ((t >= 0) && (t <= 0.5 * r))
-                    {
-                        return Math.Sqrt(r * r - (t - r) * (t - r)) - mdy;
-                    }
-                    if ((t >= 0.5 * r) && (t <= r))
-                    {
-                        return Math.Sqrt(r * r - t * t) - mdy;
-                    }
-                    if ((t >= r) && (t <= 1.5 * r))
-                    {
-                        return 0 - mdy;
-                    }
-                    throw new Exception("Выход за границы отрезка параметризации");
-                };
-
-                T[0]=(double tx,double ty,double r)=> tx * ty * r;Ends[0] = (double r) => 2 * Math.PI;
-                T[1] = (double tx, double ty, double r) => tx * ty /2/Math.Sqrt(3); Ends[1] = (double r) => 3 * r;
-                T[2] = (double tx, double ty, double r) => tx * ty/2; Ends[2] = (double r) => 4 * r;
-                T[3] = (double tx, double ty, double r) => 2*tx * ty * (Math.PI/3-Math.Sqrt(3)/4)/1.5/*(2 * Math.PI / 3+1)*/; Ends[3] = (double r) => /*(1+2*Math.PI/3)*/1.5 * r;
-
-                //for (int i = 0; i < DFunctions.Length; i++)
-                //    GFunctions[i] = (Point x) =>
-                //{
-                //    Functional f = (Point p) => DFunctions[i](p) * E(new Point(x.x - p.x, x.y - p.y));
-                //    return DFunctions[i](x);
-                //    return DoubleIntegral(f, myCurve, myCurve.S, Method.GaussKronrod15, 0.001, FuncMethods.DefInteg.countY);
-                //};
-                FuncName[0] = "x+y";
-                FuncName[1] = "sin(y)*(exp(x)+exp(-x))";
-                FuncName[2] = "3x+6y+Round(x+y)";
-                FuncName[3] = "constant";
-                FuncName[4] = "-ln(|point-z0|)";
-                FuncName[5] = "x*x-y*y";
-                FuncName[6] = "(x+y)*sin(x)*(exp(x)+exp(-x))";
-                FuncName[7] = "0 либо 0.5 либо -0.5";
-                FuncName[8] = "cos(2x)/cos(xy) либо 1";
-                FuncName[9] = "cos(x)sin(xy)*min(x,y)";
-                FuncName[10] = "ln(1+|x|+|y|)+exp(x)/pi";
-            }
-
-            //возможные параметризации для области
-            //окружность радиуса MIN_RADIUS
-            public static double u1(double t)
-            {
-                return MIN_RADIUS * Math.Cos(t);
-            }
-            public static double v1(double t)
-            {
-                return MIN_RADIUS * Math.Sin(t);
-            }
-
-            //соответствующая окружность радиуса MAX_RADIUS (около которой берутся базисные точки)
-            public static double u1h(double t)
-            {
-                return MAX_RADIUS * Math.Cos(t);
-            }
-            public static double v1h(double t)
-            {
-                return MAX_RADIUS * Math.Sin(t);
-            }
-
-            //равносторонний треугольник со стороной MIN_RADIUS
-            public static double u2(double t)
-            {
-                if ((t >= 0) && (t <= 2 * MIN_RADIUS))
-                {
-                    return t / 2;
-                }
-                if ((t >= 2 * MIN_RADIUS) && (t <= 3 * MIN_RADIUS))
-                {
-                    return 3 * MIN_RADIUS - 1 * t;
-                }
-                throw new Exception("Выход за границы отрезка параметризации");
-            }
-            public static double v2(double t)
-            {
-                if ((t >= 0) && (t <= MIN_RADIUS))
-                {
-                    return t / 2 * Math.Sqrt(3);
-                }
-                if ((t >= MIN_RADIUS) && (t <= 2 * MIN_RADIUS))
-                {
-                    return -t / 2 * Math.Sqrt(3) + MIN_RADIUS * Math.Sqrt(3);
-                }
-                if ((t >= 2 * MIN_RADIUS) && (t <= 3 * MIN_RADIUS))
-                {
-                    return 0;
-                }
-                throw new Exception("Выход за границы отрезка параметризации");
-            }
-            public static double dis = MAX_RADIUS - MIN_RADIUS; //кажется, из-за глобальности этих переменных всегда происходит стягивание одной вершины в одну и ту же точку
-            public static double mdx = dis / 2;
-            public static double mdy = mdx / Math.Sqrt(3);
-            //соответствующий равносторонний треугольник со стороной MAX_RADIUS
-            public static double u2h(double t)
-            {
-                dis = MAX_RADIUS - MIN_RADIUS;
-                mdx = dis / 2; //но если внутри каждой вставить это,оставив те глобальные, всё получится
-                if ((t >= 0) && (t <= 2 * MAX_RADIUS))
-                {
-                    return t / 2 - mdx;
-                }
-                if ((t >= 2 * MAX_RADIUS) && (t <= 3 * MAX_RADIUS))
-                {
-                    return 3 * MAX_RADIUS - 1 * t - mdx;
-                }
-                throw new Exception("Выход за границы отрезка параметризации");
-            }
-            public static double v2h(double t)
-            {
-                dis = MAX_RADIUS - MIN_RADIUS;
-                mdx = dis / 2;
-                mdy = mdx / Math.Sqrt(3);
-                if ((t >= 0) && (t <= MAX_RADIUS))
-                {
-                    return t / 2 * Math.Sqrt(3) - mdy;
-                }
-                if ((t >= MAX_RADIUS) && (t <= 2 * MAX_RADIUS))
-                {
-                    return -t / 2 * Math.Sqrt(3) + MAX_RADIUS * Math.Sqrt(3) - mdy;
-                }
-                if ((t >= 2 * MAX_RADIUS) && (t <= 3 * MAX_RADIUS))
-                {
-                    return 0 - mdy;
-                }
-                throw new Exception("Выход за границы отрезка параметризации");
-            }
-
-            //квадрат со стороной MIN_RADIUS
-            public static double u3(double t)
-            {
-                if ((t >= 0) && (t <= MIN_RADIUS))
-                {
-                    return t;
-                }
-                if ((t >= MIN_RADIUS) && (t <= 2 * MIN_RADIUS))
-                {
-                    return MIN_RADIUS;
-                }
-                if ((t >= 2 * MIN_RADIUS) && (t <= 3 * MIN_RADIUS))
-                {
-                    return 3 * MIN_RADIUS - t;
-                }
-                if ((t >= 3 * MIN_RADIUS) && (t <= 4 * MIN_RADIUS))
-                {
-                    return 0;
-                }
-                throw new Exception("Выход за границы отрезка параметризации");
-            }
-            public static double v3(double t)
-            {
-                if ((t >= 0) && (t <= MIN_RADIUS))
-                {
-                    return 0;
-                }
-                if ((t >= MIN_RADIUS) && (t <= 2 * MIN_RADIUS))
-                {
-                    return t - MIN_RADIUS;
-                }
-                if ((t >= 2 * MIN_RADIUS) && (t <= 3 * MIN_RADIUS))
-                {
-                    return MIN_RADIUS;
-                }
-                if ((t >= 3 * MIN_RADIUS) && (t <= 4 * MIN_RADIUS))
-                {
-                    return 4 * MIN_RADIUS - t;
-                }
-                throw new Exception("Выход за границы отрезка параметризации");
-            }
-            //соответствующий квадрат со стороной MAX_RADIUS
-            public static double u3h(double t)
-            {
-                dis = MAX_RADIUS - MIN_RADIUS;
-                mdx = dis / 2;
-                if ((t >= 0) && (t <= MAX_RADIUS))
-                {
-                    return t - mdx;
-                }
-                if ((t >= MAX_RADIUS) && (t <= 2 * MAX_RADIUS))
-                {
-                    return MAX_RADIUS - mdx;
-                }
-                if ((t >= 2 * MAX_RADIUS) && (t <= 3 * MAX_RADIUS))
-                {
-                    return 3 * MAX_RADIUS - t - mdx;
-                }
-                if ((t >= 3 * MAX_RADIUS) && (t <= 4 * MAX_RADIUS))
-                {
-                    return 0 - mdx;
-                }
-                throw new Exception("Выход за границы отрезка параметризации");
-            }
-            public static double v3h(double t)
-            {
-                dis = MAX_RADIUS - MIN_RADIUS;
-                mdx = dis / 2;
-                if ((t >= 0) && (t <= MAX_RADIUS))
-                {
-                    return 0 - mdx;
-                }
-                if ((t >= MAX_RADIUS) && (t <= 2 * MAX_RADIUS))
-                {
-                    return t - MAX_RADIUS - mdx;
-                }
-                if ((t >= 2 * MAX_RADIUS) && (t <= 3 * MAX_RADIUS))
-                {
-                    return MAX_RADIUS - mdx;
-                }
-                if ((t >= 3 * MAX_RADIUS) && (t <= 4 * MAX_RADIUS))
-                {
-                    return 4 * MAX_RADIUS - t - mdx;
-                }
-                throw new Exception("Выход за границы отрезка параметризации");
-            }
-            //острие
-            public static double u4(double t)
-            {
-                if ((t >= 0) && (t <= MIN_RADIUS))
-                {
-                    return t;
-                }
-                if ((t >= MIN_RADIUS) && (t <= 1.5 * MIN_RADIUS))
-                {
-                    return 3 * MIN_RADIUS - 2 * t;
-                }
-                throw new Exception("Выход за границы отрезка параметризации");
-            }
-            public static double v4(double t)
-            {
-                if ((t >= 0) && (t <= 0.5 * MIN_RADIUS))
-                {
-                    return Math.Sqrt(MIN_RADIUS * MIN_RADIUS - (t - MIN_RADIUS) * (t - MIN_RADIUS));
-                }
-                if ((t >= 0.5 * MIN_RADIUS) && (t <= MIN_RADIUS))
-                {
-                    return Math.Sqrt(MIN_RADIUS * MIN_RADIUS - t * t);
-                }
-                if ((t >= MIN_RADIUS) && (t <= 1.5 * MIN_RADIUS))
-                {
-                    return 0;
-                }
-                throw new Exception("Выход за границы отрезка параметризации");
-            }
-
-            public static double u4h(double t)
-            {
-                dis = MAX_RADIUS - MIN_RADIUS;
-                mdx = dis / 2;
-                mdy = mdx / Math.Sqrt(3);
-                if ((t >= 0) && (t <= MAX_RADIUS))
-                {
-                    return t - mdx;
-                }
-                if ((t >= MAX_RADIUS) && (t <= 1.5 * MAX_RADIUS))
-                {
-                    return 3 * MAX_RADIUS - 2 * t - mdx;
-                }
-                throw new Exception("Выход за границы отрезка параметризации");
-            }
-            public static double v4h(double t)
-            {
-                dis = MAX_RADIUS - MIN_RADIUS;
-                mdx = dis / 2;
-                mdy = mdx * Math.Sqrt(3) / 2;
-                if ((t >= 0) && (t <= 0.5 * MAX_RADIUS))
-                {
-                    return Math.Sqrt(MAX_RADIUS * MAX_RADIUS - (t - MAX_RADIUS) * (t - MAX_RADIUS)) - mdy;
-                }
-                if ((t >= 0.5 * MAX_RADIUS) && (t <= MAX_RADIUS))
-                {
-                    return Math.Sqrt(MAX_RADIUS * MAX_RADIUS - t * t) - mdy;
-                }
-                if ((t >= MAX_RADIUS) && (t <= 1.5 * MAX_RADIUS))
-                {
-                    return 0 - mdy;
-                }
-                throw new Exception("Выход за границы отрезка параметризации");
-            }
-
-            //граничные функции и массив граничных функций
-            public static double g1(Point point)=>point.x+point.y;        
-            public static double g2(Point point)=>Math.Sin(point.y)*(Math.Exp(point.x)+Math.Exp(-point.x));
-            public static double g3(Point point)=>3*point.x+6*point.y+Math.Round(point.x+point.y);
-            public static double g4(Point point)=>CONSTANT;
-            public static double g5(Point point)=>masPoints[0].PotentialF((BasisPoint)point);
-            public static double g6(Point point)=>point.x*point.x-point.y*point.y;
-            public static double g7(Point point)=>g1(point) * g2(point);
-            public static double g8(Point point)
-            {
-                double dx = MIN_RADIUS / 2;
-                double dy = MIN_RADIUS / 2 * Math.Sqrt(3);
-                double argument;
-                //C++ TO C# CONVERTER TODO TASK: The following line was determined to contain a copy constructor call - this should be verified and a copy constructor should be created:
-                //ORIGINAL LINE: BasisPoint d = point;
-                BasisPoint d = new BasisPoint(point); //d.x=-0.25;d.y=-0.25;
-                d.x -= dx;
-                d.y -= dy; //сдвиг к началу координат
-
-                if (d.x == 0)
-                {
-                    argument = pi / 2 * Math.Sign((sbyte)d.y);
-                }
-                else
-                {
-                    if (d.y == 0)
-                    {
-                        argument = pi * Math.Sign((sbyte)-1 + Math.Sign((sbyte)d.x));
-                    }
-                    else
-                    {
-                        argument = Math.Atan(d.y / d.x) + Math.Sign((sbyte)Math.Abs(d.x) - d.x) * Math.Sign((sbyte)d.y) * pi;
-                    }
-                }
-                //return argument;
-                //cout+d.x+" "+d.y+" аргумент в доли: "+argument/pi+endl;
-
-                if ((-pi <= argument) && (argument < -2 * pi / 3))
-                {
-                    return -1.0 / 2;
-                }
-                if ((-2 * pi / 3 <= argument) && (argument <= -pi / 3))
-                {
-                    return 0; //return 1; //единицы будут
-                }
-                if ((-pi / 3 < argument) && (argument <= pi / 2))
-                {
-                    return 1.0 / 2; //return 1; //уже не будут
-                }
-                /*if ((pi / 2 < argument) && (argument <= pi))*/
-                return -1.0 / 2;
-            }
-            public static double g9(Point point)
-            {
-                if (Math.Cos(point.x * point.y) != 0)
-                {
-                    return Math.Cos(2 * point.x) / Math.Cos(point.x * point.y);
-                }
-                return 1;
-            }
-            public static double g10(Point p) => Math.Cos(p.x) * Math.Sin(p.x * p.y)*Math.Min(p.x,p.y);
-            public static double g11(Point p) => Math.Log(1 + Math.Abs(p.x) + Math.Abs(p.y)) + Math.Exp(p.x)/pi;
-            public static Functional[] DFunctions = { g1, g2, g3, g4, g5, g6, g7, g8,g9,g10,g11 };
-            public static Functional[] GFunctions = new Functional[DFunctions.Length];
-        }
-
-        internal static class RandomNumbers
-        {
-            private static System.Random r;
-
-            internal static int NextNumber()
-            {
-                if (r == null)
-                    Seed();
-
-                return r.Next();
-            }
-
-            internal static int NextNumber(int ceiling)
-            {
-                if (r == null)
-                    Seed();
-
-                return r.Next(ceiling);
-            }
-
-            internal static void Seed()
-            {
-                r = new System.Random();
-            }
-
-            internal static void Seed(int seed)
-            {
-                r = new System.Random(seed);
-            }
-        }
-
-    }
-
-    /// <summary>
-    /// Класс кривых для курсача - пришлось так сделать, чтобы добавить новый метод
-    /// </summary>
-    public class CurveK : Curve
-    {
-        public CurveK(double a0, double b0, RealFunc uu, RealFunc vv) : base(a0, b0, uu, vv) { }
-        public CurveK(double a0, double b0, RealFunc uu, RealFunc vv,double radius) : base(a0, b0, uu, vv,radius) { }
-        public CurveK(double a0, double b0, RealFunc uu, RealFunc vv, double radius,DRealFunc uuu,DRealFunc vvv,TripleFunc T,RealFunc end) : base(a0, b0, uu, vv, radius,uuu,vvv,T,end) { }
-        public CurveK() : base() { }
-
-        /// <summary>
-        /// Вычисление криволинейного интеграла первого рода по этой кривой от функции BasisFuncPow(int i,int j,BasisPoint z)
-        /// </summary>
-        /// <param name="i"></param>
-        /// <param name="j"></param>
-        /// <returns></returns>
-        public double Firstkind(int i, int j)
-        {
-            //Get_h(ITER_INTEG);
-            //double value = 0;
-            //for (int k = 1; k <= M; k++)
-            //{
-            //    value += (KursMethods.BasisFuncPow(i, j, Transfer(a + (k) * _h)) + KursMethods.BasisFuncPow(i, j, Transfer(a + (k - 1) * _h))) * BasisPoint.Eudistance(Transfer(a + (k - 1) * _h), Transfer(a + (k) * _h)) / 2; //метод трапеций
-            //}
-            //return value;
-            //if(j!=KursMethods.N)
-            //{
-
-            //}
-
-            //"Запрос на исчисление интеграла".Show();
-            return this.Firstkind((Point x)=>KursMethods.BasisFuncPow(i,j,(BasisPoint)x));
-        }
-    }
-
-    /// <summary>
-    /// Класс СЛАУ с методами их решения (продолжение)
-    /// </summary>
-    public class SLAUpok : SLAU
-    {
-        public SLAUpok() : base() { }
-        public SLAUpok(StreamReader fs) : base(fs) { }
-        public SLAUpok(SLAUpok M, int t) : base(M, t) { }
-        public SLAUpok(SLAUpok M)
-        {
-            Make(M.Size);
-            ultraval = -1;
-            UltraCount = 0;
-            this.curve = M.curve;
-            for (int i = 0; i < this.Size; i++)
-                for (int j = 0; j < this.Size; j++)
-                    this.A[i, j] = M.A[i, j];
-        }
-        public CurveK curve;
-        public double[] ErrorsMas,ErrorMasP;
-        //public Functional f;
-
-        public double Error(int k) //частичная погрешность
-        {
-            double p = curve.Firstkind(KursMethods.N, KursMethods.N);
-            double sum = 0;
-
-            double[] Ax = new double[KursMethods.N];
-            Func_in_matrix.Matrix_power(ref Ax, A, x, k);
-            for (int i = 0; i < k; i++)
-            {
-                sum += x[i] * Ax[i];
-            }
-            double EPS = Math.Abs(p - sum);
-            return Math.Sqrt(EPS);
-        }
-
-        private double ultraval=-1;
-        public double VALUE_FOR_ULTRA { get { if (ultraval == -1) ultraval = curve.Firstkind(KursMethods.N, KursMethods.N); return ultraval; } set {ultraval=value; } }
-        public override void Make(int k)
-        {
-            base.Make(k);
-            UltraCount = 0;
-            ultraval = -1;
-            ErrorsMas = new double[k];
-            ErrorMasP = new double[k];
-        }
-        public void Make(int k,double[,] AMAS)
-        {
-            Make(k);
-            for (int i = 0; i < this.Size; i++)
-                for (int j = 0; j < this.Size; j++)
-                    this.A[i, j] = AMAS[i, j];
-        }
-
-        /// <summary>
-        /// Число, которое показывает, какая часть системы уже была решена ультра-гибридом
-        /// </summary>
-        public int UltraCount=0;
-        public void UltraHybrid(int t)
-        {
-            //UltraCount.Show();
-            if(UltraCount==0)//если вообще не решалось
-            {
-                //"Вошло".Show();
-                x[0] = b[0] / A[0, 0];  //x[0].Show();
-                VALUE_FOR_ULTRA = Error(1);
-                ErrorsMas[0] = VALUE_FOR_ULTRA;
-                Functional f = (Point x) =>
-                {
-                    double sum = this.x[0] * KursMethods.masPoints[0].PotentialF((BasisPoint)x);
-                    double s = sum - KursMethods.fig(x);
-                    return s * s;
-                };
-                ErrorMasP[0] = Math.Sqrt(DoubleIntegral(f, curve, curve.S,  FuncMethods.DefInteg.Method.GaussKronrod15, 0.001, FuncMethods.DefInteg.countY));
-
-                UltraCount++;
-                for (int i = UltraCount + 1; i <= t; i++)
-                    UltraHybridLast(i);
-                UltraCount = t;
-            }
-            else if(UltraCount==t-1)//если надо решить только по последней координате
-            {
-                    UltraHybridLast(t);
-                    UltraCount++;
-            }
-            else
-            {
-                for (int i = UltraCount+1; i <= t; i++)
-                    UltraHybridLast(i);
-                UltraCount = t;
-            }
-        }
-        /// <summary>
-        /// Ультра-гибридный метод суперского решения по последней координате
-        /// </summary>
-        /// <param name="t"></param>
-        public void UltraHybridLast(int t) //гибридный с координатной минимизацией по последней координате
-        {
-            double[] c = new double[t];
-            for (int i = 0; i < t - 1; i++)
-                c[i] = x[i];
-            Vectors mk1 = new Vectors(c), mk2 = new Vectors(c);
-
-            double sum = 0;
-            GaussSpeedy(t);
-
-            double tmp = Error(t);
-            if (VALUE_FOR_ULTRA < tmp) //если погрешность выросла - исправить это, потому что новое решение не годится
-            {
-                $"{VALUE_FOR_ULTRA} < {tmp} при t = {t} (до покоординатной минимизации результата СПИДГАУССА)".Show();
-                //покоординатная минимизация результата СПИДГАУССА
-                for (int k = 0; k <= t - 1; k++)
-                {
-                    for (int j = 0; j < k; j++)
-                        sum += x[j] * A[k, j];
-                    for (int j = k + 1; j < t - 1; j++)
-                        sum += x[j] * A[k, j];
-                    x[k] = (b[k] - sum) / A[k, k];
-                    sum = 0;
-                }
-
-                tmp = Error(t);
-                if (VALUE_FOR_ULTRA < tmp)
-                {
-                    $"{VALUE_FOR_ULTRA} < {tmp} при t = {t} (до полно покоординатной минимизации вектора с1 с2 ... 0)".Show();
-                    for (int i = 0; i < t; i++)//исправили, теперь пробуем новый метод                 
-                        x[i] = c[i];
-
-                    //покоординатная минимизация
-                    for (int k = 0; k <= t - 1; k++)
-                    {
-                        for (int j = 0; j < k; j++)
-                            sum += x[j] * A[k, j];
-                        for (int j = k + 1; j < t - 1; j++)
-                            sum += x[j] * A[k, j];
-                        x[k] = (b[k] - sum) / A[k, k];
-                        sum = 0;
-                    }
-
-
-                    double tmp1 = Error(t);
-                    if (VALUE_FOR_ULTRA < tmp1) //погрешность опять выросла - тогда просто оставляем 0 на конце
-                    {
-                        $"{VALUE_FOR_ULTRA} < {tmp1} при t = {t} (до полно покоординатной минимизации на конце)".Show();
-                        for (int i = 0; i < t; i++)//исправили, теперь пробуем новый метод                 
-                            x[i] = c[i];
-                        for (int j = 0; j < t - 1; j++)
-                        {
-                            sum += x[j] * A[t - 1, j];
-                        }
-                        x[t - 1] = (b[t - 1] - sum) / A[t - 1, t - 1];
-                        sum = 0;
-                        tmp = Error(t);
-                        if (VALUE_FOR_ULTRA < tmp)
-                        {
-                            for (int i = 0; i < t - 1; i++)
-                        {
-                            x[i] = c[i];
-                        }
-                        x[t - 1] = 0;
-                        }
-                        else
-                        {
-                            $"Погрешность уменьшена МИНИМАКОЙ НА КОНЦЕ на {(VALUE_FOR_ULTRA - tmp) / VALUE_FOR_ULTRA * 100} %".Show();
-                            VALUE_FOR_ULTRA = tmp;
-                        }
-
-                    }
-                    else
-                    {
-                        $"Погрешность уменьшена ПОЛНОЙ МИНИМАКОЙ на {(VALUE_FOR_ULTRA - tmp1) / VALUE_FOR_ULTRA * 100} %".Show();
-                        VALUE_FOR_ULTRA = tmp1;
-                    }
-                }
-                else
-                {
-                    $"Погрешность уменьшена МИНИМАКОЙ СПИДГАУССА на {(VALUE_FOR_ULTRA - tmp) / VALUE_FOR_ULTRA * 100} %".Show();
-                    VALUE_FOR_ULTRA = tmp;
-                }
-            }
-            else
-            {
-                $"Погрешность уменьшена СПИДГАУССОМ на {(VALUE_FOR_ULTRA - tmp) / VALUE_FOR_ULTRA * 100} %".Show();
-                VALUE_FOR_ULTRA = tmp;
-            }
-
-            ErrorsMas[t - 1] = VALUE_FOR_ULTRA;
-            Functional f = (Point x) =>
-            {
-                sum = 0;
-
-                for (int ii = 1; ii <= t; ii++)
-                {
-                    sum += this.x[ii - 1] * KursMethods.masPoints[ii - 1].PotentialF((BasisPoint)x);
-                }
-                double s = sum - KursMethods.fig(x);
-                return s * s;
-            };
-            ErrorMasP[t-1] = Math.Sqrt(DoubleIntegral(f, curve, curve.S, FuncMethods.DefInteg.Method.GaussKronrod15, 0.001, FuncMethods.DefInteg.countY));
-            //UltraCount = t;
-            NEVA = Nev(A, x, b, t);
-        }
+       
     }
 }

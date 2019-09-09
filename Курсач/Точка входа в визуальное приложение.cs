@@ -4,12 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using МатКлассы2018;
+using МатКлассы;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
-using Point = МатКлассы2018.Point;
+using Point = МатКлассы.Point;
 
 
 
@@ -47,7 +47,7 @@ namespace Курсач
         /// <summary>
         /// Массив базисных точек плоскости
         /// </summary>
-        public static BasisPoint[] masPoints;
+        public static Point[] masPoints;
         /// <summary>
         /// Граничная функция от точки
         /// </summary>
@@ -65,7 +65,7 @@ namespace Курсач
 
             for (int i = 1; i <= N; i++)
             {
-                sum += MySLAU.x[i - 1] * masPoints[i - 1].PotentialF((BasisPoint)a);
+                sum += MySLAU.x[i - 1] * masPoints[i - 1].PotentialF((Point)a);
             }
             return sum;
         };
@@ -132,7 +132,7 @@ namespace Курсач
         /// <param name="j"></param>
         /// <param name="z"></param>
         /// <returns></returns>
-        public static double BasisFuncPow(int i, int j, BasisPoint z)
+        public static double BasisFuncPow(int i, int j, Point z)
         {
             if ((i == N) && (j == N))
             {
@@ -300,7 +300,7 @@ namespace Курсач
                     k++; //пока координаты точек считываются, прибавлять к счётчику
                 }
                 N = k / 2; //вычисление мощности множества базисных точек
-                masPoints = new BasisPoint[N];
+                masPoints = new Point[N];
 
                 fin.Close();
                 fin = new StreamReader("input.txt"); //объявление объекта для чтения из файла
@@ -382,7 +382,7 @@ namespace Курсач
             public static void FillMassiv(CurveK c, int z)
             {
                 N = z;
-                masPoints = new BasisPoint[N];
+                masPoints = new Point[N];
                 for (int i = 0; i < z; i++)
                 {
                     masPoints[i] = c.Transfer(c.a + (c.b - c.a) * i / z);
@@ -411,7 +411,7 @@ namespace Курсач
                 {
                     int a = RandomNumbers.NextNumber() % N;
                     int b = RandomNumbers.NextNumber() % N;
-                    Expendator.Swap<BasisPoint>(ref masPoints[a], ref masPoints[b]);
+                    Expendator.Swap<Point>(ref masPoints[a], ref masPoints[b]);
                 }
             }
 
@@ -420,7 +420,7 @@ namespace Курсач
             /// </summary>
             /// <param name="i"></param>
             /// <param name="a"></param>
-            public static void DeleteElement(int i, BasisPoint[] a)
+            public static void DeleteElement(int i, Point[] a)
             {
                 a[N - 1] = a[i];
                 for (int j = i; j < N - 1; j++) a[j] = a[j + 1];
@@ -431,7 +431,7 @@ namespace Курсач
             /// Отсеивание из массива повторяющихся элементов
             /// </summary>
             /// <param name="masPoints"></param>
-            public static void ExceptionMas(BasisPoint[] masPoints) //
+            public static void ExceptionMas(Point[] masPoints) //
             {
                 for (int i = 1; i < N; i++)
                 {
@@ -1341,7 +1341,7 @@ namespace Курсач
                 }
 
             }
-            public static void Draw_mas(BasisPoint[] r, Color color) //нарисовать массив точек
+            public static void Draw_mas(Point[] r, Color color) //нарисовать массив точек
             {
 
                 //SetColor(R, G, B); // задаем цвет линии
@@ -1685,7 +1685,7 @@ namespace Курсач
 
             public static double g5(Point point)
             {
-                return masPoints[0].PotentialF((BasisPoint)point);
+                return masPoints[0].PotentialF((Point)point);
             }
 
             public static double g6(Point point)
@@ -1707,8 +1707,8 @@ namespace Курсач
                 double dy = MIN_RADIUS / 2 * Math.Sqrt(3);
                 double argument;
                 //C++ TO C# CONVERTER TODO TASK: The following line was determined to contain a copy constructor call - this should be verified and a copy constructor should be created:
-                //ORIGINAL LINE: BasisPoint d = point;
-                BasisPoint d = new BasisPoint(point); //d.x=-0.25;d.y=-0.25;
+                //ORIGINAL LINE: Point d = point;
+                Point d = new Point(point); //d.x=-0.25;d.y=-0.25;
                 d.x -= dx;
                 d.y -= dy; //сдвиг к началу координат
 
@@ -1790,7 +1790,7 @@ namespace Курсач
         public CurveK() : base() { }
 
         /// <summary>
-        /// Вычисление криволинейного интеграла первого рода по этой кривой от функции BasisFuncPow(int i,int j,BasisPoint z)
+        /// Вычисление криволинейного интеграла первого рода по этой кривой от функции BasisFuncPow(int i,int j,Point z)
         /// </summary>
         /// <param name="i"></param>
         /// <param name="j"></param>
@@ -1801,7 +1801,7 @@ namespace Курсач
             double value = 0;
             for (int k = 1; k <= M; k++)
             {
-                value += (KursMethods.BasisFuncPow(i, j, Transfer(a + (k) * _h)) + KursMethods.BasisFuncPow(i, j, Transfer(a + (k - 1) * _h))) * BasisPoint.Eudistance(Transfer(a + (k - 1) * _h), Transfer(a + (k) * _h)) / 2; //метод трапеций
+                value += (KursMethods.BasisFuncPow(i, j, Transfer(a + (k) * _h)) + KursMethods.BasisFuncPow(i, j, Transfer(a + (k - 1) * _h))) * Point.Eudistance(Transfer(a + (k - 1) * _h), Transfer(a + (k) * _h)) / 2; //метод трапеций
             }
             return value;
         }

@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using МатКлассы2018;
-using static МатКлассы2018.FuncMethods.DefInteg;
+using МатКлассы;
+using static МатКлассы.FuncMethods.DefInteg;
 
 namespace Интегралы.Дм.ПА
 {
@@ -118,7 +118,7 @@ namespace Интегралы.Дм.ПА
             {
                 MonteKarloEnum KK = MonteKarloEnum.Usual;
                 if (radioButton23.Checked) KK = MonteKarloEnum.Geo;
-                МатКлассы2018.Point p = new МатКлассы2018.Point(a, b);
+                МатКлассы.Point p = new МатКлассы.Point(a, b);
                 MultiFunc F = (double[] t)=> f(t[0]);
                 h_Count = count;
                 n = count;
@@ -234,7 +234,7 @@ namespace Интегралы.Дм.ПА
 
             for (MonteKarloEnum KK =0;(int)KK<2;KK++)
             {
-                МатКлассы2018.Point p = new МатКлассы2018.Point(a, b);
+                МатКлассы.Point p = new МатКлассы.Point(a, b);
                 MultiFunc F = (double[] t) => f(t[0]);
                 h_Count = count;
                 n = count;

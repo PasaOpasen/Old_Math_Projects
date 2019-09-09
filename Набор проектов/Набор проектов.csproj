@@ -43,6 +43,10 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Классы, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Code\Классы\bin\Release\Классы.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Form1.cs">
@@ -79,9 +83,29 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Code\Библиотека графики\Библиотека графики.csproj">
+      <Project>{ce3c0ed7-208c-4043-89a9-19e93f1e2e46}</Project>
+      <Name>Библиотека графики</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Code\ДОПОЛНЕНИЯ\Demo_For_FlexibleMessageBox-noexe\Demo_For_FlexibleMessageBox\Demo_For_FlexibleMessageBox.csproj">
+      <Project>{f1fd937b-c84e-4f6c-b533-4982bd43914f}</Project>
+      <Name>Demo_For_FlexibleMessageBox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Code\Классы\Классы %28библиотека%29.csproj">
+      <Project>{cd3eefde-74ed-48da-8e82-1e6abab1a140}</Project>
+      <Name>Классы %28библиотека%29</Name>
+    </ProjectReference>
     <ProjectReference Include="..\drawgraphProgram\SystAnalys_lr1\Свойства графов. Дм. Па.csproj">
       <Project>{f4f05f7e-e389-4178-9e81-716683abff47}</Project>
       <Name>Свойства графов. Дм. Па</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PeriodSol\PeriodSol.csproj">
+      <Project>{203270b6-da52-44f8-a494-5895c5a1bee2}</Project>
+      <Name>PeriodSol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Диплом\Диплом.csproj">
+      <Project>{54f8dc68-f14e-4d5b-87e0-84000a5f9362}</Project>
+      <Name>Диплом</Name>
     </ProjectReference>
     <ProjectReference Include="..\Задача Штурма-Лиувилля\Задача Штурма-Лиувилля. Дм. ПА.csproj">
       <Project>{f2533f2d-f80f-4d3a-a93c-5c0d545e104c}</Project>
@@ -94,10 +118,6 @@
     <ProjectReference Include="..\Истинное значение величины. Дм. ПА\Истинное значение величины. Дм. ПА.csproj">
       <Project>{a5220af0-bbbe-4522-962a-733a2f2c6f25}</Project>
       <Name>Истинное значение величины. Дм. ПА</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Классы\Классы %28библиотека%29.csproj">
-      <Project>{cd3eefde-74ed-48da-8e82-1e6abab1a140}</Project>
-      <Name>Классы %28библиотека%29</Name>
     </ProjectReference>
     <ProjectReference Include="..\КодировкаДекодировка\КодировкаДекодировка.csproj">
       <Project>{f2b70ab8-161f-424e-8130-eae4020c5632}</Project>
@@ -131,9 +151,9 @@
       <Project>{3b294b5d-a552-4646-b60f-76e3b3b5538b}</Project>
       <Name>Моделирование волн в двуслое</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Работа2019\Работа2019.csproj">
-      <Project>{e5295df8-8e87-467f-b0e5-b914161c3016}</Project>
-      <Name>Работа2019</Name>
+    <ProjectReference Include="..\Распознавание цифр\Распознавание цифр.csproj">
+      <Project>{7adcd55a-be17-4f3f-bea7-5c8d23d0dae3}</Project>
+      <Name>Распознавание цифр</Name>
     </ProjectReference>
     <ProjectReference Include="..\Решение ОДУ. Дм. ПА\Решение ОДУ. Дм. ПА.csproj">
       <Project>{ba058f2b-2189-4036-84b6-f9b25aee020f}</Project>

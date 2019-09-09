@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using МатКлассы2018;
-using static МатКлассы2018.Graphs;
-using static МатКлассы2018.Point;
+using МатКлассы;
+using static МатКлассы.Graphs;
+using static МатКлассы.Point;
 
 namespace SystAnalys_lr1
 {

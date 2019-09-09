@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using МатКлассы2018;
-using static МатКлассы2018.Number;
-using static МатКлассы2018.Vectors;
-using static МатКлассы2018.FuncMethods.DefInteg.GaussKronrod;
+using МатКлассы;
+using static МатКлассы.Number;
+using static МатКлассы.Vectors;
+using static МатКлассы.FuncMethods.DefInteg.GaussKronrod;
 using System.Windows.Forms;
 using Библиотека_графики;
 

@@ -8,8 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using МатКлассы2018;
-using static МатКлассы2018.Graphs;
+using МатКлассы;
+using static МатКлассы.Graphs;
 
 namespace SystAnalys_lr1
 {

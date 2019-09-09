@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Интегралы;
 using Истинное_значение_величины;
-using МатКлассы2018;
+using МатКлассы;
 using Критерии_принятия_решений_в_условиях_неопределённости;
 using Метод_наименьших_квадратов;
 using Полином_Эрмита;

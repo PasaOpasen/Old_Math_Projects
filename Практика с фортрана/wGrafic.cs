@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using МатКлассы2018;
-using static МатКлассы2018.Number;
-using static МатКлассы2018.FuncMethods.Optimization;
+using МатКлассы;
+using static МатКлассы.Number;
+using static МатКлассы.FuncMethods.Optimization;
 using System.Media;
 using Библиотека_графики;
 

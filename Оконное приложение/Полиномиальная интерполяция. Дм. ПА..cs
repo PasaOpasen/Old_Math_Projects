@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using МатКлассы2018;
+using МатКлассы;
 using System.IO;
-using Point = МатКлассы2018.Point;
+using Point = МатКлассы.Point;
 
 namespace Оконное_приложение
 {
@@ -149,40 +149,40 @@ namespace Оконное_приложение
                 }
             }
 
-            МатКлассы2018.Point[] mas = null;
+            МатКлассы.Point[] mas = null;
             double min = Convert.ToDouble(textBox6.Text),max= Convert.ToDouble(textBox7.Text);
 
             if (radioButton1.Checked)
             {
                 StreamReader fs = new StreamReader("input.txt");
-                mas = МатКлассы2018.Point.Points(fs);
+                mas = МатКлассы.Point.Points(fs);
             }
             if (radioButton2.Checked)
             {
                 double a = Convert.ToDouble(textBox2.Text);
                 double b = Convert.ToDouble(textBox3.Text);
                 int m = Convert.ToInt32(textBox1.Text);
-                mas = МатКлассы2018.Point.Points(f, m-1, a, b);
+                mas = МатКлассы.Point.Points(f, m-1, a, b);
                 if (!checkBox5.Checked) { min = mas[0].x;max = mas[mas.Length - 1].x; }
-                chart1.Series[0].Points.DataBindXY(МатКлассы2018.Point.PointsX(f, 100, min, max), МатКлассы2018.Point.PointsY(f, 100, min, max));
+                chart1.Series[0].Points.DataBindXY(МатКлассы.Point.PointsX(f, 100, min, max), МатКлассы.Point.PointsY(f, 100, min, max));
             }
             if(radioButton6.Checked)
             {
                 int m = Convert.ToInt32(textBox1.Text);
-                mas = new МатКлассы2018.Point[m];
+                mas = new МатКлассы.Point[m];
                 string s;
                 string[] st;
                 for (int k = 0; k < m; k++)
                 {
                     s = textBox5.Lines[k];
                     st = s.Split(' ');//в аргументах указывается массив символов, которым разделяются числа
-                    mas[k] = new МатКлассы2018.Point(Convert.ToDouble(st[0]), Convert.ToDouble(st[1]));
+                    mas[k] = new МатКлассы.Point(Convert.ToDouble(st[0]), Convert.ToDouble(st[1]));
                 }
             }
             if(radioButton8.Checked)
             {
                 int m = Convert.ToInt32(textBox1.Text);
-                mas = new МатКлассы2018.Point[m];
+                mas = new МатКлассы.Point[m];
                 string s;
                 string[] st;
                 for (int k = 0; k < m; k++)
@@ -190,10 +190,10 @@ namespace Оконное_приложение
                     s = textBox5.Lines[k];
                     st = s.Split(' ');//в аргументах указывается массив символов, которым разделяются числа
                     double v = Convert.ToDouble(st[0]);
-                    mas[k] = new МатКлассы2018.Point(v, f(v));
+                    mas[k] = new МатКлассы.Point(v, f(v));
                 }
                 if (!checkBox5.Checked) { min = mas[0].x; max = mas[mas.Length - 1].x; }
-                chart1.Series[0].Points.DataBindXY(МатКлассы2018.Point.PointsX(f, 100, min, max), МатКлассы2018.Point.PointsY(f, 100, min, max));
+                chart1.Series[0].Points.DataBindXY(МатКлассы.Point.PointsX(f, 100, min, max), МатКлассы.Point.PointsY(f, 100, min, max));
             }
 
             Draw_mas(mas, Color.Orchid);
@@ -211,7 +211,7 @@ namespace Оконное_приложение
             {
                 Polynom p = new Polynom(mas);
 
-                chart1.Series[1].Points.DataBindXY(МатКлассы2018.Point.PointsX(p.Value, 100, min, max), МатКлассы2018.Point.PointsY(p.Value, 100, min, max));
+                chart1.Series[1].Points.DataBindXY(МатКлассы.Point.PointsX(p.Value, 100, min, max), МатКлассы.Point.PointsY(p.Value, 100, min, max));
                 Program.data.textBox1.Items.Add(String.Format("Интерполяционный полином Лагранжа в степенном базисе: {0}",p.ToString()));
                 L = p.Value;
             }
@@ -219,7 +219,7 @@ namespace Оконное_приложение
             {
                 Polynom p = Polynom.Neu(mas);
 
-                chart1.Series[2].Points.DataBindXY(МатКлассы2018.Point.PointsX(p.Value, 100, min, max), МатКлассы2018.Point.PointsY(p.Value, 100, min, max));
+                chart1.Series[2].Points.DataBindXY(МатКлассы.Point.PointsX(p.Value, 100, min, max), МатКлассы.Point.PointsY(p.Value, 100, min, max));
                 Program.data.textBox1.Items.Add("");
                 Program.data.textBox1.Items.Add(String.Format("Интерполяционный полином Ньютона в степенном базисе: {0}", p.ToString()));
                 N = p.Value;
@@ -231,7 +231,7 @@ namespace Оконное_приложение
 
                 S = Polynom.CubeSpline(mas,a,b);
 
-                chart1.Series[4].Points.DataBindXY(МатКлассы2018.Point.PointsX(S, 100, min, max), МатКлассы2018.Point.PointsY(S, 100, min, max));
+                chart1.Series[4].Points.DataBindXY(МатКлассы.Point.PointsX(S, 100, min, max), МатКлассы.Point.PointsY(S, 100, min, max));
 
                 if(checkBox6.Checked)
                 {
@@ -242,14 +242,14 @@ namespace Оконное_приложение
                     this.chart1.Series[count].Color = Color.Aqua;
                     this.chart1.Series[count].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
                     this.chart1.Series[count].BorderWidth = 3;
-                    chart1.Series[count].Points.DataBindXY(МатКлассы2018.Point.PointsX(S1, 100, min, max), МатКлассы2018.Point.PointsY(S1, 100, min, max));
+                    chart1.Series[count].Points.DataBindXY(МатКлассы.Point.PointsX(S1, 100, min, max), МатКлассы.Point.PointsY(S1, 100, min, max));
 
                     this.chart1.Series.Add("Вторая производная сплайна");
                     count = this.chart1.Series.Count - 1;
                     this.chart1.Series[count].Color = Color.Black;
                     this.chart1.Series[count].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
                     this.chart1.Series[count].BorderWidth = 3;
-                    chart1.Series[count].Points.DataBindXY(МатКлассы2018.Point.PointsX(S2, 100, min, max), МатКлассы2018.Point.PointsY(S2, 100, min, max));
+                    chart1.Series[count].Points.DataBindXY(МатКлассы.Point.PointsX(S2, 100, min, max), МатКлассы.Point.PointsY(S2, 100, min, max));
                 }
 
                 Program.data.textBox1.Items.Add("");
@@ -269,7 +269,7 @@ namespace Оконное_приложение
                 int q = mas.Length - 1 - p;
                 R = Polynom.R(mas, p, q,bq);
 
-                chart1.Series[3].Points.DataBindXY(МатКлассы2018.Point.PointsX(R, 100, min, max), МатКлассы2018.Point.PointsY(R, 100, min, max));
+                chart1.Series[3].Points.DataBindXY(МатКлассы.Point.PointsX(R, 100, min, max), МатКлассы.Point.PointsY(R, 100, min, max));
 
                 Program.data.textBox1.Items.Add("");
                 if (Program.data.checkBox1.Checked)
@@ -299,12 +299,12 @@ namespace Оконное_приложение
 
             ////RealFunc f = Math.Cos, p = Polynom.Derivative(f, 14, -10, 10, 4).Value, g = Polynom.Lag(f, 12, -10, 10).Value;
 
-            //МатКлассы2018.Point[] mas = new МатКлассы2018.Point[5];
-            //mas[0] = new МатКлассы2018.Point(0, 1);
-            //mas[1] = new МатКлассы2018.Point(1, -5);
-            //mas[2] = new МатКлассы2018.Point(2, 0);
-            //mas[3] = new МатКлассы2018.Point(3, 1);
-            //mas[4] = new МатКлассы2018.Point(4, 1);
+            //МатКлассы.Point[] mas = new МатКлассы.Point[5];
+            //mas[0] = new МатКлассы.Point(0, 1);
+            //mas[1] = new МатКлассы.Point(1, -5);
+            //mas[2] = new МатКлассы.Point(2, 0);
+            //mas[3] = new МатКлассы.Point(3, 1);
+            //mas[4] = new МатКлассы.Point(4, 1);
             //RealFunc g = Polynom.CubeSpline(mas);
 
             //RealFunc f = (double x) => { return x * Math.Sin(x) + 1; };
@@ -314,8 +314,8 @@ namespace Оконное_приложение
             //FuncMethods.Approx(f, p, SequenceFundKind.Orthogonal, 6, -1, 1);
 
             //chart1.Series[0].Color = Color.Gold;
-            //chart1.Series[0].Points.DataBindXY(МатКлассы2018.Point.PointsX(g, 100, -1, 2), МатКлассы2018.Point.PointsY(g, 100, -1, 2));
-            //chart1.Series[1].Points.DataBindXY(МатКлассы2018.Point.PointsX(f, 100, -1, 1), МатКлассы2018.Point.PointsY(f, 100, -1, 1));
+            //chart1.Series[0].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, -1, 2), МатКлассы.Point.PointsY(g, 100, -1, 2));
+            //chart1.Series[1].Points.DataBindXY(МатКлассы.Point.PointsX(f, 100, -1, 1), МатКлассы.Point.PointsY(f, 100, -1, 1));
 
             //chart1.SaveImage(@"Image.png", System.Drawing.Imaging.ImageFormat.Png);
         }

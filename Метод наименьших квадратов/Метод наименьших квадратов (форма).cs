@@ -8,8 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using МатКлассы2018;
-using Point = МатКлассы2018.Point;
+using МатКлассы;
+using Point = МатКлассы.Point;
 
 namespace Метод_наименьших_квадратов
 {
@@ -225,24 +225,24 @@ namespace Метод_наименьших_квадратов
 
                     //чтение набора узлов
                     int m = Convert.ToInt32(textBox4.Text);
-                    mas2 = new МатКлассы2018.Point[m];
+                    mas2 = new МатКлассы.Point[m];
                     string s;
                     string[] st;
                     for (int k = 0; k < m; k++)
                     {
                         s = textBox5.Lines[k];
                         st = s.Split(' ');//в аргументах указывается массив символов, которым разделяются числа
-                        mas2[k] = new МатКлассы2018.Point(Convert.ToDouble(st[0]), Convert.ToDouble(st[1]));
+                        mas2[k] = new МатКлассы.Point(Convert.ToDouble(st[0]), Convert.ToDouble(st[1]));
                     }
                     //чтение массива абцисс
                     s = textBox3.Lines[0];
                     st = s.Split(' ');//в аргументах указывается массив символов, которым разделяются числа;
                     m = st.Length;
-                    mas1 = new МатКлассы2018.Point[m];
+                    mas1 = new МатКлассы.Point[m];
                     for (int k = 0; k < m; k++)
                     {
                         double v = Convert.ToDouble(st[k]);
-                        mas1[k] = new МатКлассы2018.Point(v, f(v));
+                        mas1[k] = new МатКлассы.Point(v, f(v));
                     }
 
                     if (radioButton2.Checked) net = new FuncMethods.NetFunc(mas1);
@@ -325,7 +325,7 @@ namespace Метод_наименьших_квадратов
                             SequenceFunc t = FuncMethods.Monoms;
                             //SequencePol t = FuncMethods.Monom;
                             RealFunc g = FuncMethods.Approx(net, t, SequenceFuncKind.Other, n);
-                            chart1.Series[1].Points.DataBindXY(МатКлассы2018.Point.PointsX(g, 100, a, b), МатКлассы2018.Point.PointsY(g, 100, a, b)); chart1.Series[1].IsVisibleInLegend = true;
+                            chart1.Series[1].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[1].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для системы мономов---------");
                             if (radioButton2.Checked) FuncMethods.ShowApprox(f, net.Arguments, t, SequenceFuncKind.Other, n);
                             else FuncMethods.ShowApprox(net, t, SequenceFuncKind.Other, n);
@@ -370,7 +370,7 @@ namespace Метод_наименьших_квадратов
                             Program.FORM.chart1.Series[count].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
                             //Program.FORM.chart1.Series[count].IsVisibleInLegend = false;
                             Program.FORM.chart1.Series[count].BorderWidth = 2;
-                            chart1.Series[count].Points.DataBindXY(МатКлассы2018.Point.PointsX(pol, 100, a, b), МатКлассы2018.Point.PointsY(pol, 100, a, b));
+                            chart1.Series[count].Points.DataBindXY(МатКлассы.Point.PointsX(pol, 100, a, b), МатКлассы.Point.PointsY(pol, 100, a, b));
                             Console.WriteLine("--------Для наименьших перпендикуляров---------");
                             Console.WriteLine("Аппроксимация сеточной функции полученной функцией");
                             Console.WriteLine("\t(в дискретной среднеквадратичной норме) равна {0}", FuncMethods.NetFunc.Distance(net, pol));
@@ -382,7 +382,7 @@ namespace Метод_наименьших_квадратов
                             SequenceFunc t = FuncMethods.Lezhandrs(a, b);
                             //SequencePol t = FuncMethods.Lezhandr(a, b);
                             RealFunc g = FuncMethods.Approx(net, t, SequenceFuncKind.Orthogonal, n);
-                            chart1.Series[2].Points.DataBindXY(МатКлассы2018.Point.PointsX(g, 100, a, b), МатКлассы2018.Point.PointsY(g, 100, a, b)); chart1.Series[2].IsVisibleInLegend = true;
+                            chart1.Series[2].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[2].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для системы полиномов Лежандра---------");
                             if (radioButton2.Checked) FuncMethods.ShowApprox(f, net.Arguments, t, SequenceFuncKind.Orthogonal, n);
                             else FuncMethods.ShowApprox(net, t, SequenceFuncKind.Orthogonal, n);
@@ -392,7 +392,7 @@ namespace Метод_наименьших_квадратов
                         {
                             SequenceFunc t = FuncMethods.TrigSystem(a, b);
                             RealFunc g = FuncMethods.Approx(net, t, SequenceFuncKind.Orthonormal, n);
-                            chart1.Series[6].Points.DataBindXY(МатКлассы2018.Point.PointsX(g, 100, a, b), МатКлассы2018.Point.PointsY(g, 100, a, b)); chart1.Series[6].IsVisibleInLegend = true;
+                            chart1.Series[6].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[6].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для ортонормированной системы тригонометрических полиномов---------");
                             if (radioButton2.Checked) FuncMethods.ShowApprox(f, net.Arguments, t, SequenceFuncKind.Orthonormal, n);
                             else FuncMethods.ShowApprox(net, t, SequenceFuncKind.Orthonormal, n);
@@ -401,7 +401,7 @@ namespace Метод_наименьших_квадратов
                         {
                             SequenceFunc t = FuncMethods.HaarSystem(a, b);
                             RealFunc g = FuncMethods.Approx(net, t, SequenceFuncKind.Orthogonal, n);
-                            chart1.Series[7].Points.DataBindXY(МатКлассы2018.Point.PointsX(g, 100, a, b), МатКлассы2018.Point.PointsY(g, 100, a, b)); chart1.Series[7].IsVisibleInLegend = true;
+                            chart1.Series[7].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[7].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для системы Хаара---------");
                             if (radioButton2.Checked) FuncMethods.ShowApprox(f, net.Arguments, t, SequenceFuncKind.Orthogonal, n);
                             else FuncMethods.ShowApprox(net, t, SequenceFuncKind.Orthogonal, n);
@@ -410,7 +410,7 @@ namespace Метод_наименьших_квадратов
                         {
                             SequenceFunc t = (double x, int k) => Math.Exp(k * x);
                             RealFunc g = FuncMethods.Approx(net, t, SequenceFuncKind.Other, n);
-                            chart1.Series[8].Points.DataBindXY(МатКлассы2018.Point.PointsX(g, 100, a, b), МатКлассы2018.Point.PointsY(g, 100, a, b)); chart1.Series[8].IsVisibleInLegend = true;
+                            chart1.Series[8].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[8].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для системы экспонент---------");
                             if (radioButton2.Checked) FuncMethods.ShowApprox(f, net.Arguments, t, SequenceFuncKind.Other, n);
                             else FuncMethods.ShowApprox(net, t, SequenceFuncKind.Other, n);
@@ -502,13 +502,13 @@ namespace Метод_наименьших_квадратов
                     }
                     else
                     {
-                        chart1.Series[0].Points.DataBindXY(МатКлассы2018.Point.PointsX(f, 100, a, b), МатКлассы2018.Point.PointsY(f, 100, a, b));
+                        chart1.Series[0].Points.DataBindXY(МатКлассы.Point.PointsX(f, 100, a, b), МатКлассы.Point.PointsY(f, 100, a, b));
                         if (checkBox1.Checked)
                         {
                             //SequenceFunc t = FuncMethods.Monoms;
                             SequencePol t = FuncMethods.Monom;
                             RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
-                            chart1.Series[1].Points.DataBindXY(МатКлассы2018.Point.PointsX(g, 100, a, b), МатКлассы2018.Point.PointsY(g, 100, a, b)); chart1.Series[1].IsVisibleInLegend = true;
+                            chart1.Series[1].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[1].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для системы мономов---------");
                             FuncMethods.ShowApprox(f, t, SequenceFuncKind.Other, n, a, b);
                         }
@@ -521,7 +521,7 @@ namespace Метод_наименьших_квадратов
                             for (int i = 0; i < n; i++)
                                 MyMas[i] = /*Polynom.Lezh(i).Value;*/Polynom.Lezh(i).Value(s).Value;
                             RealFunc g = FuncMethods.ApproxForLezhandr(f, MyMas, a, b);
-                            chart1.Series[2].Points.DataBindXY(МатКлассы2018.Point.PointsX(g, 100, a, b), МатКлассы2018.Point.PointsY(g, 100, a, b)); chart1.Series[2].IsVisibleInLegend = true;
+                            chart1.Series[2].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[2].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для системы полиномов Лежандра---------");
                             FuncMethods.ShowApprox(f, t, SequenceFuncKind.Orthogonal, n, a, b);
                         }
@@ -530,25 +530,25 @@ namespace Метод_наименьших_квадратов
                             //SequencePol t = FuncMethods.Cheb(a,b);
                             SequenceFunc t = FuncMethods.Chebs(a, b);
                             RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
-                            chart1.Series[3].Points.DataBindXY(МатКлассы2018.Point.PointsX(g, 100, a, b), МатКлассы2018.Point.PointsY(g, 100, a, b)); chart1.Series[3].IsVisibleInLegend = true;
+                            chart1.Series[3].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[3].IsVisibleInLegend = true;
                         }
                         if (checkBox4.Checked)
                         {
                             SequenceFunc t = FuncMethods.Lagerrs(a, b);
                             RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
-                            chart1.Series[4].Points.DataBindXY(МатКлассы2018.Point.PointsX(g, 100, a, b), МатКлассы2018.Point.PointsY(g, 100, a, b)); chart1.Series[4].IsVisibleInLegend = true;
+                            chart1.Series[4].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[4].IsVisibleInLegend = true;
                         }
                         if (checkBox5.Checked)
                         {
                             SequenceFunc t = FuncMethods.Hermits(a, b);
                             RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
-                            chart1.Series[5].Points.DataBindXY(МатКлассы2018.Point.PointsX(g, 100, a, b), МатКлассы2018.Point.PointsY(g, 100, a, b)); chart1.Series[5].IsVisibleInLegend = true;
+                            chart1.Series[5].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[5].IsVisibleInLegend = true;
                         }
                         if (checkBox6.Checked)
                         {
                             SequenceFunc t = FuncMethods.TrigSystem(a, b);
                             RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Orthonormal, n, a, b);
-                            chart1.Series[6].Points.DataBindXY(МатКлассы2018.Point.PointsX(g, 100, a, b), МатКлассы2018.Point.PointsY(g, 100, a, b)); chart1.Series[6].IsVisibleInLegend = true;
+                            chart1.Series[6].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[6].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для ортонормированной системы тригонометрических полиномов---------");
                             FuncMethods.ShowApprox(f, t, SequenceFuncKind.Orthonormal, n, a, b);
                         }
@@ -556,7 +556,7 @@ namespace Метод_наименьших_квадратов
                         {
                             SequenceFunc t = FuncMethods.HaarSystem(a, b);
                             RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Orthogonal, n, a, b);
-                            chart1.Series[7].Points.DataBindXY(МатКлассы2018.Point.PointsX(g, 100, a, b), МатКлассы2018.Point.PointsY(g, 100, a, b)); chart1.Series[7].IsVisibleInLegend = true;
+                            chart1.Series[7].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[7].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для системы Хаара---------");
                             FuncMethods.ShowApprox(f, t, SequenceFuncKind.Orthogonal, n, a, b);
                         }
@@ -564,7 +564,7 @@ namespace Метод_наименьших_квадратов
                         {
                             SequenceFunc t = (double x, int k) => Math.Exp(k * x);
                             RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
-                            chart1.Series[8].Points.DataBindXY(МатКлассы2018.Point.PointsX(g, 100, a, b), МатКлассы2018.Point.PointsY(g, 100, a, b)); chart1.Series[8].IsVisibleInLegend = true;
+                            chart1.Series[8].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[8].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для системы экспонент---------");
                             FuncMethods.ShowApprox(f, t, SequenceFuncKind.Other, n, a, b);
                         }

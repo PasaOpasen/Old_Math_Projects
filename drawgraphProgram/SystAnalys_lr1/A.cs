@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.OpenFileDialog;
-using МатКлассы2018;
+using МатКлассы;
 
 namespace SystAnalys_lr1
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using МатКлассы2018;
+using МатКлассы;
 using System.IO;
 using System.Drawing;
 
@@ -17,7 +17,7 @@ namespace Сжатие_изображения_DCT
 
             new Compress().ShowDialog();
             //GlobalMembers.BitMap = new Bitmap("test.bmp");
-            //МатКлассы2018.Point size = new МатКлассы2018.Point(GlobalMembers.BitMap.Width,GlobalMembers.BitMap.Height);
+            //МатКлассы.Point size = new МатКлассы.Point(GlobalMembers.BitMap.Width,GlobalMembers.BitMap.Height);
 
             //--------------------------------------------------------------------------
 
@@ -67,7 +67,7 @@ namespace Сжатие_изображения_DCT
 
             //    GlobalMembers.frec = new Frecuency($"frec {k}.txt");
             //    string[] st = GlobalMembers.frec.reader.ReadLine().Split(' ');
-            //     size = new МатКлассы2018.Point(Convert.ToDouble(st[0]), Convert.ToDouble(st[1]));
+            //     size = new МатКлассы.Point(Convert.ToDouble(st[0]), Convert.ToDouble(st[1]));
             //    Bitmap B2 = new Bitmap((int)size.x, (int)size.y);
             //    for (int i = 0; i < size.x - 8; i += 8)
             //    {
@@ -104,7 +104,7 @@ namespace Сжатие_изображения_DCT
         public static void Compression(Bitmap Image, int begk = 3, int endk = 10)
         {
             GlobalMembers.BitMap = new Bitmap(Cut(Image));
-            МатКлассы2018.Point size = new МатКлассы2018.Point(GlobalMembers.BitMap.Width, GlobalMembers.BitMap.Height);
+            МатКлассы.Point size = new МатКлассы.Point(GlobalMembers.BitMap.Width, GlobalMembers.BitMap.Height);
 
             DCT.Transform dct = new DCT.Transform();
             for (int k = begk; k <= endk; k++)
@@ -134,7 +134,7 @@ namespace Сжатие_изображения_DCT
         public static Bitmap Compression(Bitmap Image, int k = 5)
         {
             GlobalMembers.BitMap = new Bitmap(Cut(Image));
-            МатКлассы2018.Point size = new МатКлассы2018.Point(GlobalMembers.BitMap.Width, GlobalMembers.BitMap.Height);
+            МатКлассы.Point size = new МатКлассы.Point(GlobalMembers.BitMap.Width, GlobalMembers.BitMap.Height);
 
             DCT.Transform dct = new DCT.Transform();
             GlobalMembers.frec = new Frecuency(10.0, -1000.0, 1000.0, $"frec {k}.txt");
@@ -164,7 +164,7 @@ namespace Сжатие_изображения_DCT
         public static void BitmapToFile(Bitmap bitmap, string filename, int k = 5,bool lines=false)
         {
             GlobalMembers.BitMap = new Bitmap(Cut(bitmap));
-            МатКлассы2018.Point size = new МатКлассы2018.Point(GlobalMembers.BitMap.Width, GlobalMembers.BitMap.Height);
+            МатКлассы.Point size = new МатКлассы.Point(GlobalMembers.BitMap.Width, GlobalMembers.BitMap.Height);
             DCT.Transform dct = new DCT.Transform();
             GlobalMembers.frec = new Frecuency(10.0, -1000.0, 1000.0, filename);
             Bitmap B = new Bitmap(GlobalMembers.BitMap);
@@ -200,7 +200,7 @@ namespace Сжатие_изображения_DCT
             DCT.Transform dct = new DCT.Transform();
             GlobalMembers.frec = new Frecuency(filename);
             string[] st = GlobalMembers.frec.reader.ReadLine().Split(' ');
-            МатКлассы2018.Point size = new МатКлассы2018.Point(Convert.ToDouble(st[0]), Convert.ToDouble(st[1]));
+            МатКлассы.Point size = new МатКлассы.Point(Convert.ToDouble(st[0]), Convert.ToDouble(st[1]));
             Bitmap B2 = new Bitmap((int)size.x, (int)size.y);
             if(!lines)
             for (int i = 0; i < size.x - 8; i += 8)
@@ -245,7 +245,7 @@ namespace Сжатие_изображения_DCT
         public static void SVDBitmapToFile(Bitmap bitmap, string filename, bool lines=false)
         {
             GlobalMembers.BitMap = new Bitmap(Cut(bitmap));
-            МатКлассы2018.Point size = new МатКлассы2018.Point(GlobalMembers.BitMap.Width, GlobalMembers.BitMap.Height);
+            МатКлассы.Point size = new МатКлассы.Point(GlobalMembers.BitMap.Width, GlobalMembers.BitMap.Height);
             DCT.Transform dct = new DCT.Transform();
             Bitmap B = new Bitmap(GlobalMembers.BitMap);
 
@@ -289,7 +289,7 @@ namespace Сжатие_изображения_DCT
             DCT.Transform dct = new DCT.Transform();
             StreamReader wf = new StreamReader(filename), uf = new StreamReader("U.txt"), vtf = new StreamReader("VT.txt");
             string[] st = wf.ReadLine().Split(' ');
-            МатКлассы2018.Point size = new МатКлассы2018.Point(Convert.ToDouble(st[0]), Convert.ToDouble(st[1]));
+            МатКлассы.Point size = new МатКлассы.Point(Convert.ToDouble(st[0]), Convert.ToDouble(st[1]));
             Bitmap B2 = new Bitmap((int)size.x, (int)size.y);
             if (!lines)
                 for (int i = 0; i < size.x - 8; i += 8)

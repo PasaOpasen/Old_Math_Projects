@@ -8,8 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Media;
-using МатКлассы2018;
-using static МатКлассы2018.Number;
+using МатКлассы;
+using static МатКлассы.Number;
 using Библиотека_графики;
 
 namespace Практика_с_фортрана
@@ -179,14 +179,14 @@ chart1.Series[i].Points.Clear();
             //    for(int i=0;i<k;i++)
             //    {
             //        xval[i] = beg + i * h;
-            //        uRval[i] = РабКонсоль.u(new МатКлассы2018.Point(fix, xval[i]));
+            //        uRval[i] = РабКонсоль.u(new МатКлассы.Point(fix, xval[i]));
             //        umodval[i] = Math.Abs(uRval[i]);
             //    }
             //else if(radioButton1.Checked)
             //    for (int i = 0; i < k; i++)
             //    {
             //        xval[i] = beg + i * h;
-            //        uRval[i] = РабКонсоль.u(new МатКлассы2018.Point(xval[i],fix));//uRval[i].Show();
+            //        uRval[i] = РабКонсоль.u(new МатКлассы.Point(xval[i],fix));//uRval[i].Show();
             //        umodval[i] = Math.Abs(uRval[i]);
             //    }
 

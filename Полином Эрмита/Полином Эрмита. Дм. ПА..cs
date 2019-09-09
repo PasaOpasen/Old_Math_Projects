@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using МатКлассы2018;
-using Point = МатКлассы2018.Point;
+using МатКлассы;
+using Point = МатКлассы.Point;
 
 namespace Полином_Эрмита
 {
@@ -113,7 +113,7 @@ namespace Полином_Эрмита
                 if(P.Count!=0) Draw_mas(Point.Points(P), Color.Black);
             }
 
-            chart1.Series[0].Points.DataBindXY(МатКлассы2018.Point.PointsX(q.Value, 100, mas[0].x, mas[mas.Length - 1].x), МатКлассы2018.Point.PointsY(q.Value, 100, mas[0].x, mas[mas.Length - 1].x));
+            chart1.Series[0].Points.DataBindXY(МатКлассы.Point.PointsX(q.Value, 100, mas[0].x, mas[mas.Length - 1].x), МатКлассы.Point.PointsY(q.Value, 100, mas[0].x, mas[mas.Length - 1].x));
         }
     }
 }
