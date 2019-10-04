@@ -15,7 +15,7 @@ namespace Практика_с_фортрана
 {
     public partial class Energy : Form
     {
-        RealFunc Ez, Ex,Ez0;
+        Func<double,double> Ez, Ex,Ez0;
         public Energy()
         {
             InitializeComponent();
@@ -53,7 +53,7 @@ namespace Практика_с_фортрана
                   ComplexFunc u = (Number.Complex z) => РабКонсоль.uResdx(x,z.Re) * РабКонсоль.uRes(x, z.Re).Conjugate;
                   return FuncMethods.DefInteg.GaussKronrod.MySimpleGaussKronrod(u, -РабКонсоль.h, 0).Im;
 
-                  //RealFunc ureal = (double z) => u(z).Re;
+                  //Func<double,double> ureal = (double z) => u(z).Re;
                   //return FuncMethods.DefInteg.GaussKronrod.Integral(ureal, -РабКонсоль.h, 0);
               };
         }

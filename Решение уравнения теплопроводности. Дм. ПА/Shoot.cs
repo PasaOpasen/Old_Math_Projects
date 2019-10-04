@@ -122,7 +122,7 @@ namespace Решение_уравнения_теплопроводности.Д�
             if (radioButton1.Checked) stepcount = (int)((end - beg) / (step));
 
             list = new List<VectorFunc>(); vlist = new List<Vectors>();netlist = new List<VectorNetFunc>();
-            RealFunc[] masf = new RealFunc[maxdim], masu = new RealFunc[maxdim], masF = new RealFunc[maxdim];
+            Func<double,double>[] masf = new Func<double,double>[maxdim], masu = new Func<double,double>[maxdim], masF = new Func<double,double>[maxdim];
             alpha = new Vectors(maxdim);
 
 

@@ -16,7 +16,7 @@ namespace Оконное_приложение
     public partial class Form1 : Form
     {
         static int ind = 0,ind2=0,ind3=0;
-        public RealFunc N, L, R, S,f=null;
+        public Func<double,double> N, L, R, S,f=null;
 
         public Form1()
         {
@@ -235,7 +235,7 @@ namespace Оконное_приложение
 
                 if(checkBox6.Checked)
                 {
-                    RealFunc S1 = Polynom.DSpline,S2=Polynom.D2Spline;
+                    Func<double,double> S1 = Polynom.DSpline,S2=Polynom.D2Spline;
 
                     this.chart1.Series.Add("Первая производная сплайна");
                     int count = this.chart1.Series.Count - 1;
@@ -297,7 +297,7 @@ namespace Оконное_приложение
             //}
             ////chart1.Series[0].Points.D
 
-            ////RealFunc f = Math.Cos, p = Polynom.Derivative(f, 14, -10, 10, 4).Value, g = Polynom.Lag(f, 12, -10, 10).Value;
+            ////Func<double,double> f = Math.Cos, p = Polynom.Derivative(f, 14, -10, 10, 4).Value, g = Polynom.Lag(f, 12, -10, 10).Value;
 
             //МатКлассы.Point[] mas = new МатКлассы.Point[5];
             //mas[0] = new МатКлассы.Point(0, 1);
@@ -305,9 +305,9 @@ namespace Оконное_приложение
             //mas[2] = new МатКлассы.Point(2, 0);
             //mas[3] = new МатКлассы.Point(3, 1);
             //mas[4] = new МатКлассы.Point(4, 1);
-            //RealFunc g = Polynom.CubeSpline(mas);
+            //Func<double,double> g = Polynom.CubeSpline(mas);
 
-            //RealFunc f = (double x) => { return x * Math.Sin(x) + 1; };
+            //Func<double,double> f = (double x) => { return x * Math.Sin(x) + 1; };
             //SequenceFunc p = (double x, int n) => { return Polynom.Lezh(n).Value(x); };
 
 

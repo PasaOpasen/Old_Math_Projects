@@ -37,11 +37,11 @@ namespace Практика_с_фортрана
 
             РабКонсоль.SetPoles(РабКонсоль.polesBeg,РабКонсоль.polesEnd,РабКонсоль.steproot,РабКонсоль.epsroot,РабКонсоль.countroot);
 
-            DRealFunc f= (double a, double b) => РабКонсоль.uRes(a, b).Abs;
+            Func<double,double,double>f= (double a, double b) => РабКонсоль.uRes(a, b).Abs;
             if(radioButton2.Checked) f = (double a, double b) => РабКонсоль.uRes(a, b).Re;
             if (radioButton3.Checked) f = (double a, double b) => РабКонсоль.uRes(a, b).Im;
 
-            ИнтеграцияСДругимиПрограммами.CreatTableInExcel(f, x0, X, x, z0, Z, z);
+            ИнтеграцияСДругимиПрограммами.CreatTableInExcel(new DRealFunc( f), x0, X, x, z0, Z, z);
         }
 
         private void button1_Click(object sender, EventArgs e)

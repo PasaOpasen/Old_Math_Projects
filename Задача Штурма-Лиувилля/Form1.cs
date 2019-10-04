@@ -35,7 +35,7 @@ namespace Задача_Штурма_Лиувилля
             A = textBox6.Text.ToDouble();B = textBox7.Text.ToDouble();D = textBox8.Text.ToDouble();
             A1 = textBox11.Text.ToDouble();B1 = textBox10.Text.ToDouble();D1 = textBox9.Text.ToDouble();
 
-            RealFunc u, g, h, s, f;
+            Func<double,double> u, g, h, s, f;
             u = Parser.GetDelegate(textBox1.Text); 
             g = Parser.GetDelegate(textBox2.Text); 
             h = Parser.GetDelegate(textBox3.Text); 

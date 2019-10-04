@@ -33,7 +33,7 @@ namespace Интегралы.Дм.ПА
 
         private const string message = "Все доступные поля должны быть заполнены действительными числами. Число шагов и число отрезков - натуральными числами. При записи действительных чисел используются запятые, а не точки.";
         private const string caption = "Неверные входные данные!";
-        private RealFunc f;
+        private Func<double,double> f;
         private Method C;
         private double a, b, eps;
         private int count, seq,nn;

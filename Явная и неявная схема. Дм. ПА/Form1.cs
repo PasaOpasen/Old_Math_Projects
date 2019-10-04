@@ -30,8 +30,8 @@ chart1.Series[i].ToolTip = "X = #VALX, Y = #VAL Y";
             
         }
 
-        public DRealFunc u, f;
-        public RealFunc u0, f1, f2;
+        public Func<double,double,double>u, f;
+        public Func<double,double> u0, f1, f2;
         public double a, A1, B1, A2, B2, x0, X, t0, T,tau,h;
 
         private void radioButton5_CheckedChanged(object sender, EventArgs e)
@@ -163,7 +163,7 @@ chart1.Series[i].ToolTip = "X = #VALX, Y = #VAL Y";
 
             if(checkBox1.Checked)
             {
-            r1 = FuncMethods.ODU.TU(f, f1, f2, u0, u, a, A1, B1, A2, B2, x0, X, t0, T, xcount, tcount, out eps1, true,radioButton5.Checked);
+            r1 = FuncMethods.ODU.TU(new DRealFunc( f), f1, f2, u0,new DRealFunc( u), a, A1, B1, A2, B2, x0, X, t0, T, xcount, tcount, out eps1, true,radioButton5.Checked);
 
             label7.Text = $"aτ/h^2 = {a*tau/h/h}";
                 label5.Show();
@@ -172,7 +172,7 @@ chart1.Series[i].ToolTip = "X = #VALX, Y = #VAL Y";
             }
             if(checkBox2.Checked)
             {
-                r2= FuncMethods.ODU.TU(f, f1, f2, u0, u, a, A1, B1, A2, B2, x0, X, t0, T, xcount, tcount, out eps2, false,radioButton5.Checked);
+                r2= FuncMethods.ODU.TU(new DRealFunc( f), f1, f2, u0, new DRealFunc( u), a, A1, B1, A2, B2, x0, X, t0, T, xcount, tcount, out eps2, false,radioButton5.Checked);
                 label6.Show();
                 label6.Text = $"Точность неявной схемы = {eps2}";
             }

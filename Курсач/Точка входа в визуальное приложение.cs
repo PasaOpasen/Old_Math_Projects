@@ -552,8 +552,8 @@ namespace Курсач
         public static void Illustrating()
         {
 
-            //RealFunc s = (double i) => fi(myCurve.Transfer(i));
-            //RealFunc r = (double i) => Approx(myCurve.Transfer(i));
+            //Func<double,double> s = (double i) => fi(myCurve.Transfer(i));
+            //Func<double,double> r = (double i) => Approx(myCurve.Transfer(i));
             double ep = 0.001;
 
             //double[] a1 = Point.PointsX(s, ep, myCurve.a, myCurve.b);
@@ -1786,7 +1786,7 @@ namespace Курсач
     /// </summary>
     public class CurveK : Curve
     {
-        public CurveK(double a0, double b0, RealFunc uu, RealFunc vv) : base(a0, b0, uu, vv) { }
+        public CurveK(double a0, double b0, Func<double,double> uu, Func<double,double> vv) : base(a0, b0, uu, vv) { }
         public CurveK() : base() { }
 
         /// <summary>

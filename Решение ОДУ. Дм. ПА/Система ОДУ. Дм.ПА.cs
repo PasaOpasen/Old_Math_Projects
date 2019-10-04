@@ -65,7 +65,7 @@ namespace Решение_ОДУ.Дм.ПА
         }
         public VRealFunc f = null;
         public VectorFunc Searchfunc;
-        //public RealFunc[] mas;
+        //public Func<double,double>[] mas;
 
         int z = 0;
         void t_Tick(object sender, EventArgs e)
@@ -116,7 +116,7 @@ namespace Решение_ОДУ.Дм.ПА
             { 
                 try
                 {
-                    RealFunc[] q = new RealFunc[(int)numericUpDown2.Value];
+                    Func<double,double>[] q = new Func<double,double>[(int)numericUpDown2.Value];
                     for(int i=0;i<(int)numericUpDown2.Value;i++)
                     {
                         string s = dataGridView2.Rows[i].Cells[0].Value.ToString();
@@ -182,7 +182,7 @@ namespace Решение_ОДУ.Дм.ПА
             {
                 try
                 {
-                    RealFunc[] q = new RealFunc[(int)numericUpDown2.Value];
+                    Func<double,double>[] q = new Func<double,double>[(int)numericUpDown2.Value];
                     for (int i = 0; i < (int)numericUpDown2.Value; i++)
                     {
                         string s = dataGridView1.Rows[i].Cells[0].Value.ToString();
@@ -208,7 +208,7 @@ namespace Решение_ОДУ.Дм.ПА
                         return v;
                     };
                 }
-                RealFunc tmp = (double x) => Searchfunc(x)[0];
+                Func<double,double> tmp = (double x) => Searchfunc(x)[0];
                 double[] values = МатКлассы.Point.PointsY(tmp, 200, beg, end);
                 chart1.Series[8].Points.DataBindXY(МатКлассы.Point.PointsX(tmp, 200, beg, end), values); //list.AddRange(values);
                 chart1.Series[8].IsVisibleInLegend = true;
@@ -450,7 +450,7 @@ namespace Решение_ОДУ.Дм.ПА
 
 
             int k = (int)numericUpDown3.Value-1;
-            RealFunc tmp = (double x) => Searchfunc(x)[k];
+            Func<double,double> tmp = (double x) => Searchfunc(x)[k];
             double[] values = МатКлассы.Point.PointsY(tmp, 200, beg, end);
             chart1.Series[8].Points.DataBindXY(МатКлассы.Point.PointsX(tmp, 200, beg, end), values); //list.AddRange(values);
             chart1.Series[8].IsVisibleInLegend = true;

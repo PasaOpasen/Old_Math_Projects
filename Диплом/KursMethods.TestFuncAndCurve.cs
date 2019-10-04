@@ -65,12 +65,12 @@ namespace Курсач
             /// <summary>
             /// Расширенные параметризации кривых
             /// </summary>
-            public static DRealFunc[] U = new DRealFunc[CountCircle], V = new DRealFunc[CountCircle];
+            public static Func<double,double,double>[] U = new Func<double,double,double>[CountCircle], V = new Func<double,double,double>[CountCircle];
             /// <summary>
             /// Площади сегментов кривых
             /// </summary>
             public static TripleFunc[] T = new TripleFunc[CountCircle];
-            public static RealFunc[] Ends = new RealFunc[CountCircle];
+            public static Func<double,double>[] Ends = new Func<double,double>[CountCircle];
             static TestFuncAndCurve()
             {
                 U[0] = (double t, double r) => r * Math.Cos(t);

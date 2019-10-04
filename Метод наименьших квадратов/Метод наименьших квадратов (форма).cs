@@ -167,9 +167,9 @@ namespace Метод_наименьших_квадратов
                 chart1.Series[i].IsVisibleInLegend = false;
             for (int i = 9; i < Program.FORM.chart1.Series.Count; i++) { Program.FORM.chart1.Series.RemoveAt(i); i--; }
 
-            RealFunc f = Math.Sin;
+            Func<double,double> f = Math.Sin;
             FuncMethods.NetFunc net = new FuncMethods.NetFunc();
-            RealFunc g1, g2, g3, g4, g5, g6, g7;
+            Func<double,double> g1, g2, g3, g4, g5, g6, g7;
             //SequenceFunc Monom, Leg, Cheb, Lager, Her, Trig, Har;
             g1 = g2 = g3 = g4 = g5 = g6 = g7 = null;
 
@@ -261,7 +261,7 @@ namespace Метод_наименьших_квадратов
                             if (checkBox1.Checked)
                             {
                                 SequenceFunc t = FuncMethods.Monoms;
-                                RealFunc g = FuncMethods.Approx(net, t, SequenceFuncKind.Other, n);
+                                Func<double,double> g = FuncMethods.Approx(net, t, SequenceFuncKind.Other, n);
                                 if (radioButton2.Checked)
                                     MAS[1, n] = FuncMethods.RealFuncMethods.NormDistance(f, g, a, b);
                                 else
@@ -272,7 +272,7 @@ namespace Метод_наименьших_квадратов
                             if (checkBox2.Checked)
                             {
                                 SequenceFunc t = FuncMethods.Lezhandrs(a, b);
-                                RealFunc g = FuncMethods.Approx(net, t, SequenceFuncKind.Orthogonal, n);
+                                Func<double,double> g = FuncMethods.Approx(net, t, SequenceFuncKind.Orthogonal, n);
                                 if (radioButton2.Checked)
                                     MAS[2, n] = FuncMethods.RealFuncMethods.NormDistance(f, g, a, b);
                                 else
@@ -283,7 +283,7 @@ namespace Метод_наименьших_квадратов
                             if (checkBox6.Checked)
                             {
                                 SequenceFunc t = FuncMethods.TrigSystem(a, b);
-                                RealFunc g = FuncMethods.Approx(net, t, SequenceFuncKind.Orthonormal, n);
+                                Func<double,double> g = FuncMethods.Approx(net, t, SequenceFuncKind.Orthonormal, n);
                                 if (radioButton2.Checked)
                                     MAS[6, n] = FuncMethods.RealFuncMethods.NormDistance(f, g, a, b);
                                 else
@@ -293,7 +293,7 @@ namespace Метод_наименьших_квадратов
                             if (checkBox7.Checked)
                             {
                                 SequenceFunc t = FuncMethods.HaarSystem(a, b);
-                                RealFunc g = FuncMethods.Approx(net, t, SequenceFuncKind.Orthogonal, n);
+                                Func<double,double> g = FuncMethods.Approx(net, t, SequenceFuncKind.Orthogonal, n);
                                 if (radioButton2.Checked)
                                     MAS[7, n] = FuncMethods.RealFuncMethods.NormDistance(f, g, a, b);
                                 else
@@ -303,7 +303,7 @@ namespace Метод_наименьших_квадратов
                             if (checkBox8.Checked)
                             {
                                 SequenceFunc t = (double x, int k) => Math.Exp(k * x);
-                                RealFunc g = FuncMethods.Approx(net, t, SequenceFuncKind.Other, n);
+                                Func<double,double> g = FuncMethods.Approx(net, t, SequenceFuncKind.Other, n);
                                 if (radioButton2.Checked)
                                     MAS[8, n] = FuncMethods.RealFuncMethods.NormDistance(f, g, a, b);
                                 else
@@ -324,7 +324,7 @@ namespace Метод_наименьших_квадратов
                         {
                             SequenceFunc t = FuncMethods.Monoms;
                             //SequencePol t = FuncMethods.Monom;
-                            RealFunc g = FuncMethods.Approx(net, t, SequenceFuncKind.Other, n);
+                            Func<double,double> g = FuncMethods.Approx(net, t, SequenceFuncKind.Other, n);
                             chart1.Series[1].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[1].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для системы мономов---------");
                             if (radioButton2.Checked) FuncMethods.ShowApprox(f, net.Arguments, t, SequenceFuncKind.Other, n);
@@ -348,7 +348,7 @@ namespace Метод_наименьших_квадратов
                             //S.Show();
                             S.GaussSelection();
                             a1 = S.x[0]; a0 = S.x[1];
-                            RealFunc pol = new Polynom(new double[] { -a0, -a1 }).Value;
+                            Func<double,double> pol = new Polynom(new double[] { -a0, -a1 }).Value;
                             SLAU T = new SLAU(FuncMethods.Monoms, net, n);
                             T.Gauss();//T.Show();
 
@@ -381,7 +381,7 @@ namespace Метод_наименьших_квадратов
                         {
                             SequenceFunc t = FuncMethods.Lezhandrs(a, b);
                             //SequencePol t = FuncMethods.Lezhandr(a, b);
-                            RealFunc g = FuncMethods.Approx(net, t, SequenceFuncKind.Orthogonal, n);
+                            Func<double,double> g = FuncMethods.Approx(net, t, SequenceFuncKind.Orthogonal, n);
                             chart1.Series[2].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[2].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для системы полиномов Лежандра---------");
                             if (radioButton2.Checked) FuncMethods.ShowApprox(f, net.Arguments, t, SequenceFuncKind.Orthogonal, n);
@@ -391,7 +391,7 @@ namespace Метод_наименьших_квадратов
                         if (checkBox6.Checked)
                         {
                             SequenceFunc t = FuncMethods.TrigSystem(a, b);
-                            RealFunc g = FuncMethods.Approx(net, t, SequenceFuncKind.Orthonormal, n);
+                            Func<double,double> g = FuncMethods.Approx(net, t, SequenceFuncKind.Orthonormal, n);
                             chart1.Series[6].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[6].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для ортонормированной системы тригонометрических полиномов---------");
                             if (radioButton2.Checked) FuncMethods.ShowApprox(f, net.Arguments, t, SequenceFuncKind.Orthonormal, n);
@@ -400,7 +400,7 @@ namespace Метод_наименьших_квадратов
                         if (checkBox7.Checked)
                         {
                             SequenceFunc t = FuncMethods.HaarSystem(a, b);
-                            RealFunc g = FuncMethods.Approx(net, t, SequenceFuncKind.Orthogonal, n);
+                            Func<double,double> g = FuncMethods.Approx(net, t, SequenceFuncKind.Orthogonal, n);
                             chart1.Series[7].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[7].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для системы Хаара---------");
                             if (radioButton2.Checked) FuncMethods.ShowApprox(f, net.Arguments, t, SequenceFuncKind.Orthogonal, n);
@@ -409,7 +409,7 @@ namespace Метод_наименьших_квадратов
                         if (checkBox8.Checked)
                         {
                             SequenceFunc t = (double x, int k) => Math.Exp(k * x);
-                            RealFunc g = FuncMethods.Approx(net, t, SequenceFuncKind.Other, n);
+                            Func<double,double> g = FuncMethods.Approx(net, t, SequenceFuncKind.Other, n);
                             chart1.Series[8].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[8].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для системы экспонент---------");
                             if (radioButton2.Checked) FuncMethods.ShowApprox(f, net.Arguments, t, SequenceFuncKind.Other, n);
@@ -434,7 +434,7 @@ namespace Метод_наименьших_квадратов
                             {
                                 //SequenceFunc t = FuncMethods.Monoms;
                                 SequencePol t = FuncMethods.Monom;
-                                RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
+                                Func<double,double> g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
                                 MAS[1, n] = FuncMethods.RealFuncMethods.NormDistance(f, g, a, b);
                                 chart1.Series[1].Points.AddXY(n, Math.Log10(MAS[1, n])); chart1.Series[1].IsVisibleInLegend = true;
                                 chart1.Series[1].Name = "Мономы с применением ультра-гибрида";
@@ -450,18 +450,18 @@ namespace Метод_наименьших_квадратов
                                 SequencePol t = FuncMethods.Lezhandr(a, b);
 
                                 Polynom s = new Polynom(new double[] { -2 * a / (b - a) - 1, 2.0 / (b - a) });
-                                RealFunc[] MyMas = new RealFunc[n];
+                                Func<double,double>[] MyMas = new Func<double,double>[n];
                                 for (int i = 0; i < n; i++)
                                     MyMas[i] = /*Polynom.Lezh(i).Value;*/Polynom.Lezh(i).Value(s).Value;
-                                //RealFunc g = FuncMethods.ApproxForLezhandr(f, MyMas, a, b);
-                                RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Orthogonal, n, a, b);
+                                //Func<double,double> g = FuncMethods.ApproxForLezhandr(f, MyMas, a, b);
+                                Func<double,double> g = FuncMethods.Approx(f, t, SequenceFuncKind.Orthogonal, n, a, b);
                                 MAS[2, n] = FuncMethods.RealFuncMethods.NormDistance(f, g, a, b);
                                 chart1.Series[2].Points.AddXY(n, Math.Log10(MAS[2, n])); chart1.Series[2].IsVisibleInLegend = true;
                             }
                             if (checkBox6.Checked)
                             {
                                 SequenceFunc t = FuncMethods.TrigSystem(a, b);
-                                RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Orthonormal, n, a, b);
+                                Func<double,double> g = FuncMethods.Approx(f, t, SequenceFuncKind.Orthonormal, n, a, b);
                                 MAS[6, n] = FuncMethods.RealFuncMethods.NormDistance(f, g, a, b);
                                 chart1.Series[6].Points.AddXY(n, Math.Log10(MAS[6, n])); chart1.Series[6].IsVisibleInLegend = true;
                                 chart1.Series[6].Name = "Тригонометрическая система с применением ультра-гибрида";
@@ -474,7 +474,7 @@ namespace Метод_наименьших_квадратов
                             if (checkBox7.Checked)
                             {
                                 SequenceFunc t = FuncMethods.HaarSystem(a, b);
-                                RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Orthogonal, n, a, b);
+                                Func<double,double> g = FuncMethods.Approx(f, t, SequenceFuncKind.Orthogonal, n, a, b);
                                 MAS[7, n] = FuncMethods.RealFuncMethods.NormDistance(f, g, a, b);
                                 chart1.Series[7].Points.AddXY(n, Math.Log10(MAS[7, n])); chart1.Series[7].IsVisibleInLegend = true;
                                 chart1.Series[7].Name = "Система Хаара как ортогональная система";
@@ -487,7 +487,7 @@ namespace Метод_наименьших_квадратов
                             if (checkBox8.Checked)
                             {
                                 SequenceFunc t = (double x, int k) => Math.Exp(k * x);
-                                RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
+                                Func<double,double> g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
                                 MAS[8, n] = FuncMethods.RealFuncMethods.NormDistance(f, g, a, b);
                                 chart1.Series[8].Points.AddXY(n, Math.Log10(MAS[8, n])); chart1.Series[8].IsVisibleInLegend = true;
                                 chart1.Series[8].Name = "Экспоненты с применением ультра-гибрида";
@@ -507,7 +507,7 @@ namespace Метод_наименьших_квадратов
                         {
                             //SequenceFunc t = FuncMethods.Monoms;
                             SequencePol t = FuncMethods.Monom;
-                            RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
+                            Func<double,double> g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
                             chart1.Series[1].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[1].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для системы мономов---------");
                             FuncMethods.ShowApprox(f, t, SequenceFuncKind.Other, n, a, b);
@@ -517,10 +517,10 @@ namespace Метод_наименьших_квадратов
                             //SequenceFunc t = FuncMethods.Lezhandrs(a,b);
                             SequencePol t = FuncMethods.Lezhandr(a, b);
                             Polynom s = new Polynom(new double[] { -2 * a / (b - a) - 1, 2.0 / (b - a) });
-                            RealFunc[] MyMas = new RealFunc[n];
+                            Func<double,double>[] MyMas = new Func<double,double>[n];
                             for (int i = 0; i < n; i++)
                                 MyMas[i] = /*Polynom.Lezh(i).Value;*/Polynom.Lezh(i).Value(s).Value;
-                            RealFunc g = FuncMethods.ApproxForLezhandr(f, MyMas, a, b);
+                            Func<double,double> g = FuncMethods.ApproxForLezhandr(f, MyMas, a, b);
                             chart1.Series[2].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[2].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для системы полиномов Лежандра---------");
                             FuncMethods.ShowApprox(f, t, SequenceFuncKind.Orthogonal, n, a, b);
@@ -529,25 +529,25 @@ namespace Метод_наименьших_квадратов
                         {
                             //SequencePol t = FuncMethods.Cheb(a,b);
                             SequenceFunc t = FuncMethods.Chebs(a, b);
-                            RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
+                            Func<double,double> g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
                             chart1.Series[3].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[3].IsVisibleInLegend = true;
                         }
                         if (checkBox4.Checked)
                         {
                             SequenceFunc t = FuncMethods.Lagerrs(a, b);
-                            RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
+                            Func<double,double> g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
                             chart1.Series[4].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[4].IsVisibleInLegend = true;
                         }
                         if (checkBox5.Checked)
                         {
                             SequenceFunc t = FuncMethods.Hermits(a, b);
-                            RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
+                            Func<double,double> g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
                             chart1.Series[5].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[5].IsVisibleInLegend = true;
                         }
                         if (checkBox6.Checked)
                         {
                             SequenceFunc t = FuncMethods.TrigSystem(a, b);
-                            RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Orthonormal, n, a, b);
+                            Func<double,double> g = FuncMethods.Approx(f, t, SequenceFuncKind.Orthonormal, n, a, b);
                             chart1.Series[6].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[6].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для ортонормированной системы тригонометрических полиномов---------");
                             FuncMethods.ShowApprox(f, t, SequenceFuncKind.Orthonormal, n, a, b);
@@ -555,7 +555,7 @@ namespace Метод_наименьших_квадратов
                         if (checkBox7.Checked)
                         {
                             SequenceFunc t = FuncMethods.HaarSystem(a, b);
-                            RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Orthogonal, n, a, b);
+                            Func<double,double> g = FuncMethods.Approx(f, t, SequenceFuncKind.Orthogonal, n, a, b);
                             chart1.Series[7].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[7].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для системы Хаара---------");
                             FuncMethods.ShowApprox(f, t, SequenceFuncKind.Orthogonal, n, a, b);
@@ -563,7 +563,7 @@ namespace Метод_наименьших_квадратов
                         if (checkBox8.Checked)
                         {
                             SequenceFunc t = (double x, int k) => Math.Exp(k * x);
-                            RealFunc g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
+                            Func<double,double> g = FuncMethods.Approx(f, t, SequenceFuncKind.Other, n, a, b);
                             chart1.Series[8].Points.DataBindXY(МатКлассы.Point.PointsX(g, 100, a, b), МатКлассы.Point.PointsY(g, 100, a, b)); chart1.Series[8].IsVisibleInLegend = true;
                             Console.WriteLine("--------Для системы экспонент---------");
                             FuncMethods.ShowApprox(f, t, SequenceFuncKind.Other, n, a, b);

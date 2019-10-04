@@ -23,12 +23,12 @@ namespace Практика_с_фортрана
 
         public static DComplexFunc u,u_, uk1, uk2, uk1_, uk2_,uRes,uResdx,uResdz;
         public static ComplexFunc delta;
-        public static RealFunc q;
+        public static Func<double,double> q;
 
         public static double c = 1.1, w = 2, c1 = 1, c2 = 2, m1 = 1, m2 = 1;
-        public static RealFunc k = (double omega) => omega / c;
-        public static RealFunc k1 = (double omega) => omega / c1;
-        public static RealFunc k2 = (double omega) => omega / c2;
+        public static Func<double,double> k = (double omega) => omega / c;
+        public static Func<double,double> k1 = (double omega) => omega / c1;
+        public static Func<double,double> k2 = (double omega) => omega / c2;
 
         public static ComplexFunc sigma = (Complex alp) => Complex.Sqrt((alp - k(w)) * (alp + k(w)));
         

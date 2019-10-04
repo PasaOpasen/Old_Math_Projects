@@ -15,9 +15,9 @@ namespace Решение_ОДУ.Дм.ПА
 {
     public partial class SearchSol : Form
     {
-        public DRealFunc f = null;
-        public RealFunc Searchfunc;
-        public RealFunc[] mas;
+        public Func<double,double,double>f = null;
+        public Func<double,double> Searchfunc;
+        public Func<double,double>[] mas;
         public SearchSol()
         {
             InitializeComponent();
@@ -26,7 +26,7 @@ namespace Решение_ОДУ.Дм.ПА
             for(int i=0;i<8;i++)
                 chart1.Series[i].ToolTip = "X = #VALX, Y = #VALY";
 
-            mas = new RealFunc[6];
+            mas = new Func<double,double>[6];
             label7.Hide();
             textBox6.Hide();
             button6.Hide();
@@ -88,7 +88,7 @@ namespace Решение_ОДУ.Дм.ПА
                 string s = textBox1.Text;
                 try
                 {
-                    RealFunc q = Parser.GetDelegate(s);
+                    Func<double,double> q = Parser.GetDelegate(s);
                     f = (double x, double u) => q(x);
                     textBox1.Text = Parser.FORMULA;
                 }
@@ -140,7 +140,7 @@ namespace Решение_ОДУ.Дм.ПА
             info.Add($"-----Погрешности разных методов на отрезке интегрирования [{beg},{end}] c начальным шагом {step}:");
             if (checkBox1.Checked)
             {
-                NetFunc func = ODU.ODUsearch(f, beg, end, step, ODU.Method.E1, begval,eps,checkBox10.Checked);list.AddRange(func.Values);
+                NetFunc func = ODU.ODUsearch(new DRealFunc( f), beg, end, step, ODU.Method.E1, begval,eps,checkBox10.Checked);list.AddRange(func.Values);
                 for (int i = 0; i < func.CountKnots; i++)
                     chart1.Series[0].Points.AddXY(func.Arg(i), func[i]);
                 chart1.Series[0].Name = "Метод Эйлера";
@@ -151,7 +151,7 @@ namespace Решение_ОДУ.Дм.ПА
             }
             if (checkBox2.Checked)
             {
-                NetFunc func = ODU.ODUsearch(f, beg, end, step, ODU.Method.E2, begval, eps, checkBox10.Checked); list.AddRange(func.Values);
+                NetFunc func = ODU.ODUsearch(new DRealFunc(f), beg, end, step, ODU.Method.E2, begval, eps, checkBox10.Checked); list.AddRange(func.Values);
                 for (int i = 0; i < func.CountKnots; i++)
                     chart1.Series[1].Points.AddXY(func.Arg(i), func[i]);
                 chart1.Series[1].Name = "Метод Эйлера с пересчётом";
@@ -162,7 +162,7 @@ namespace Решение_ОДУ.Дм.ПА
             }
             if (checkBox3.Checked)
             {
-                NetFunc func = ODU.ODUsearch(f, beg, end, step, ODU.Method.H, begval, eps, checkBox10.Checked); list.AddRange(func.Values);
+                NetFunc func = ODU.ODUsearch(new DRealFunc(f), beg, end, step, ODU.Method.H, begval, eps, checkBox10.Checked); list.AddRange(func.Values);
                 for (int i = 0; i < func.CountKnots; i++)
                     chart1.Series[2].Points.AddXY(func.Arg(i), func[i]);
                 chart1.Series[2].Name = "Метод Хойна";
@@ -173,7 +173,7 @@ namespace Решение_ОДУ.Дм.ПА
             }
             if (checkBox4.Checked)
             {
-                NetFunc func = ODU.ODUsearch(f, beg, end, step, ODU.Method.RK3, begval, eps, checkBox10.Checked); list.AddRange(func.Values);
+                NetFunc func = ODU.ODUsearch(new DRealFunc(f), beg, end, step, ODU.Method.RK3, begval, eps, checkBox10.Checked); list.AddRange(func.Values);
                 for (int i = 0; i < func.CountKnots; i++)
                     chart1.Series[3].Points.AddXY(func.Arg(i), func[i]);
                 chart1.Series[3].Name = "Метод Рунге-Кутты 3 порядка";
@@ -184,7 +184,7 @@ namespace Решение_ОДУ.Дм.ПА
             }
             if (checkBox5.Checked)
             {
-                NetFunc func = ODU.ODUsearch(f, beg, end, step, ODU.Method.RK4, begval, eps, checkBox10.Checked); list.AddRange(func.Values);
+                NetFunc func = ODU.ODUsearch(new DRealFunc(f), beg, end, step, ODU.Method.RK4, begval, eps, checkBox10.Checked); list.AddRange(func.Values);
                 for (int i = 0; i < func.CountKnots; i++)
                     chart1.Series[4].Points.AddXY(func.Arg(i), func[i]);
                 chart1.Series[4].Name = "Метод Рунге-Кутты 4 порядка";
@@ -195,7 +195,7 @@ namespace Решение_ОДУ.Дм.ПА
             }
             if (checkBox6.Checked)
             {
-                NetFunc func = ODU.ODUsearch(f, beg, end, step, ODU.Method.P38, begval, eps, checkBox10.Checked); list.AddRange(func.Values);
+                NetFunc func = ODU.ODUsearch(new DRealFunc(f), beg, end, step, ODU.Method.P38, begval, eps, checkBox10.Checked); list.AddRange(func.Values);
                 for (int i = 0; i < func.CountKnots; i++)
                     chart1.Series[5].Points.AddXY(func.Arg(i), func[i]);
                 chart1.Series[5].Name = "Правило трёх восьмых";
@@ -206,7 +206,7 @@ namespace Решение_ОДУ.Дм.ПА
             }
             if (checkBox7.Checked)
             {
-                NetFunc func = ODU.ODUsearch(f, beg, end, step, ODU.Method.F, begval, eps, checkBox10.Checked); list.AddRange(func.Values);
+                NetFunc func = ODU.ODUsearch(new DRealFunc(f), beg, end, step, ODU.Method.F, begval, eps, checkBox10.Checked); list.AddRange(func.Values);
                 for (int i = 0; i < func.CountKnots; i++)
                     chart1.Series[6].Points.AddXY(func.Arg(i), func[i]);
                 chart1.Series[6].Name = "Метод Фельдберга";
@@ -217,7 +217,7 @@ namespace Решение_ОДУ.Дм.ПА
             }
             if (checkBox8.Checked)
             {
-                NetFunc func = ODU.ODUsearch(f, beg, end, step, ODU.Method.C, begval, eps, checkBox10.Checked); list.AddRange(func.Values);
+                NetFunc func = ODU.ODUsearch(new DRealFunc(f), beg, end, step, ODU.Method.C, begval, eps, checkBox10.Checked); list.AddRange(func.Values);
                 for (int i = 0; i < func.CountKnots; i++)
                     chart1.Series[7].Points.AddXY(func.Arg(i), func[i]);
                 chart1.Series[7].Name = "Метод Ческино";
