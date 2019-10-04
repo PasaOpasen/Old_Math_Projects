@@ -1,0 +1,603 @@
+PWD c:\Users\крендель\Desktop\диплом
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\miktex\data\le\pdftex\pdflatex.fmt
+INPUT c:\Users\крендель\Desktop\диплом\diplom_1.tex
+OUTPUT c:\Users\крендель\Desktop\диплом\diplom_1.log
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\size10.clo
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\size10.clo
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\extsizes\extsizes.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\extsizes\extsizes.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\extsizes\size14.clo
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\extsizes\size14.clo
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr12.tfm
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\inputenc.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\inputenc.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\fontenc.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\fontenc.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\t1enc.def
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\t1enc.def
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\cyrillic\t2aenc.def
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\cyrillic\t2aenc.def
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\t2aenc.dfu
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\t2aenc.dfu
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\cyrillic\t2acmr.fd
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\cyrillic\t2acmr.fd
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\larm1440.tfm
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics\keyval.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics\keyval.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.cfg
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.cfg
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphicx.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphicx.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphics.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphics.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics\trig.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics\trig.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics-cfg\graphics.cfg
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics-cfg\graphics.cfg
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics-def\pdftex.def
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics-def\pdftex.def
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amstext.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amstext.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsgen.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsgen.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsbsy.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsbsy.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsopn.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsopn.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\amssymb.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\amssymb.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\amsfonts.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\amsfonts.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\tools\indentfirst.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\tools\indentfirst.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\babel\babel.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\babel\babel.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\babel\switch.def
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\arabi\bblopts.cfg
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\arabi\bblopts.cfg
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\babel-english\english.ldf
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\babel-english\english.ldf
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\babel\babel.def
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\babel\txtbabel.def
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\babel-russian\russianb.ldf
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\babel-russian\russianb.ldf
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\placeins\placeins.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\placeins\placeins.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\pdfpages\pdfpages.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\pdfpages\pdfpages.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\ifthen.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\ifthen.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\tools\calc.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\tools\calc.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\eso-pic\eso-pic.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\eso-pic\eso-pic.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\atbegshi.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\atbegshi.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics-cfg\color.cfg
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics-cfg\color.cfg
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\pdfpages\pppdftex.def
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\pdfpages\pppdftex.def
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\svg\svg.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\svg\svg.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\koma-script\scrbase.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\koma-script\scrbase.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\koma-script\scrlfile.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\koma-script\scrlfile.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifluatex.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifluatex.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\pdftexcmds.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\pdftexcmds.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\tools\shellesc.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\tools\shellesc.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\trimspaces\trimspaces.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\trimspaces\trimspaces.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\transparent.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\transparent.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\auxhook.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\auxhook.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\hobsub-generic.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\hobsub-generic.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\pd1enc.def
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\pd1enc.def
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\puenc.def
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\puenc.def
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\hyperref.cfg
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\hyperref.cfg
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\url\url.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\url\url.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hpdftex.def
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hpdftex.def
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\rerunfilecheck.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\rerunfilecheck.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\multirow\multirow.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\multirow\multirow.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\flafter.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\flafter.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\ulem\ulem.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\ulem\ulem.sty
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\latex-fonts\lasy6.tfm
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\setspace\setspace.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\setspace\setspace.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\caption\caption.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\caption\caption.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\caption\caption3.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\caption\caption3.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\caption\subcaption.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\caption\subcaption.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\titlesec\titlesec.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\titlesec\titlesec.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\titlesec\block.tss
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\titlesec\block.tss
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\enumitem\enumitem.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\enumitem\enumitem.sty
+INPUT c:\Users\крендель\Desktop\диплом\diplom_1.aux
+INPUT c:\Users\крендель\Desktop\диплом\diplom_1.aux
+OUTPUT c:\Users\крендель\Desktop\диплом\diplom_1.aux
+INPUT C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii
+INPUT C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\grfext.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\grfext.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\pdflscape.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\pdflscape.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics\lscape.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics\lscape.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty
+INPUT C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty
+INPUT c:\Users\крендель\Desktop\диплом\diplom_1.out
+INPUT c:\Users\крендель\Desktop\диплом\diplom_1.out
+INPUT c:\Users\крендель\Desktop\диплом\diplom_1.out
+INPUT c:\Users\крендель\Desktop\диплом\diplom_1.out
+OUTPUT c:\Users\крендель\Desktop\диплом\diplom_1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\diplom_1.out
+INPUT c:\Users\крендель\Desktop\диплом\diplom_1.out
+OUTPUT c:\Users\крендель\Desktop\диплом\diplom_1.out
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\larm1000.tfm
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\larm1200.tfm
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\labx1440.tfm
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\labx1200.tfm
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\pdftex\config\pdftex.map
+INPUT c:\Users\крендель\Desktop\диплом\diplom_1.toc
+INPUT c:\Users\крендель\Desktop\диплом\diplom_1.toc
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\jknappen\ec\ecrm1440.tfm
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi12.tfm
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmsy10.tfm
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmex10.tfm
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msam7.tfm
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
+OUTPUT c:\Users\крендель\Desktop\диплом\diplom_1.toc
+INPUT c:\Users\крендель\Desktop\диплом\tit.pdf
+INPUT c:\Users\крендель\Desktop\диплом\tit.pdf
+INPUT c:\Users\крендель\Desktop\диплом\tit.pdf
+INPUT c:\Users\крендель\Desktop\диплом\tit.pdf
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx12.tfm
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx10.tfm
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx7.tfm
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\lati1440.tfm
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx5.tfm
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msam5.tfm
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msbm5.tfm
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\larm0700.tfm
+INPUT c:\Users\крендель\Desktop\диплом\01.pdf
+INPUT c:\Users\крендель\Desktop\диплом\01.pdf
+INPUT c:\Users\крендель\Desktop\диплом\01.pdf
+INPUT c:\Users\крендель\Desktop\диплом\01.pdf
+INPUT c:\Users\крендель\Desktop\диплом\02.pdf
+INPUT c:\Users\крендель\Desktop\диплом\02.pdf
+INPUT c:\Users\крендель\Desktop\диплом\02.pdf
+INPUT c:\Users\крендель\Desktop\диплом\02.pdf
+INPUT c:\Users\крендель\Desktop\диплом\rect.pdf
+INPUT c:\Users\крендель\Desktop\диплом\rect.pdf
+INPUT c:\Users\крендель\Desktop\диплом\rect.pdf
+INPUT c:\Users\крендель\Desktop\диплом\rect.pdf
+INPUT c:\Users\крендель\Desktop\диплом\r1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\r1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\r1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\r1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\r2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\r2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\r2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\r2.pdf
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\cyrillic\t2acmtt.fd
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\cyrillic\t2acmtt.fd
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\latt1000.tfm
+INPUT c:\Users\крендель\Desktop\диплом\f1.png
+INPUT c:\Users\крендель\Desktop\диплом\f1.png
+INPUT c:\Users\крендель\Desktop\диплом\f1.png
+INPUT c:\Users\крендель\Desktop\диплом\f1.png
+INPUT c:\Users\крендель\Desktop\диплом\f1.png
+INPUT c:\Users\крендель\Desktop\диплом\f2.png
+INPUT c:\Users\крендель\Desktop\диплом\f2.png
+INPUT c:\Users\крендель\Desktop\диплом\f2.png
+INPUT c:\Users\крендель\Desktop\диплом\f2.png
+INPUT c:\Users\крендель\Desktop\диплом\f2.png
+INPUT c:\Users\крендель\Desktop\диплом\Runge1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\Runge1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\Runge1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\Runge1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\Runge2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\Runge2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\Runge2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\Runge2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\il1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\il1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\il1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\il1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\monex.pdf
+INPUT c:\Users\крендель\Desktop\диплом\monex.pdf
+INPUT c:\Users\крендель\Desktop\диплом\monex.pdf
+INPUT c:\Users\крендель\Desktop\диплом\monex.pdf
+INPUT c:\Users\крендель\Desktop\диплом\expex.pdf
+INPUT c:\Users\крендель\Desktop\диплом\expex.pdf
+INPUT c:\Users\крендель\Desktop\диплом\expex.pdf
+INPUT c:\Users\крендель\Desktop\диплом\expex.pdf
+INPUT c:\Users\крендель\Desktop\диплом\mon.pdf
+INPUT c:\Users\крендель\Desktop\диплом\mon.pdf
+INPUT c:\Users\крендель\Desktop\диплом\mon.pdf
+INPUT c:\Users\крендель\Desktop\диплом\mon.pdf
+INPUT c:\Users\крендель\Desktop\диплом\rat.pdf
+INPUT c:\Users\крендель\Desktop\диплом\rat.pdf
+INPUT c:\Users\крендель\Desktop\диплом\rat.pdf
+INPUT c:\Users\крендель\Desktop\диплом\rat.pdf
+INPUT c:\Users\крендель\Desktop\диплом\log.pdf
+INPUT c:\Users\крендель\Desktop\диплом\log.pdf
+INPUT c:\Users\крендель\Desktop\диплом\log.pdf
+INPUT c:\Users\крендель\Desktop\диплом\log.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d5.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d5.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d5.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d5.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v5.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v5.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v5.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v5.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d6.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d6.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d6.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d6.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v6.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v6.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v6.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v6.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d7.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d7.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d7.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d7.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v7.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v7.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v7.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v7.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d8.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d8.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d8.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d8.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v8.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v8.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v8.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v8.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d10.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d10.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d10.pdf
+INPUT c:\Users\крендель\Desktop\диплом\d10.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v10.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v10.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v10.pdf
+INPUT c:\Users\крендель\Desktop\диплом\v10.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f11.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f11.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f11.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f11.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f13.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f13.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f13.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f13.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f22.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f22.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f22.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f22.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f24.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f24.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f24.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f24.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f31.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f31.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f31.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f31.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f51.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f51.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f51.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f51.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f53.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f53.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f53.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f53.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f54.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f54.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f54.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f54.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f61.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f61.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f61.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f61.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f62.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f62.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f62.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f62.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f71.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f71.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f71.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f71.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f72.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f72.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f72.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f72.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f81.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f81.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f81.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f81.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f91.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f91.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f91.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f91.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f111.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f111.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f111.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f111.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f112.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f112.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f112.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f112.pdf
+INPUT c:\Users\крендель\Desktop\диплом\valargs.pdf
+INPUT c:\Users\крендель\Desktop\диплом\valargs.pdf
+INPUT c:\Users\крендель\Desktop\диплом\valargs.pdf
+INPUT c:\Users\крендель\Desktop\диплом\valargs.pdf
+INPUT c:\Users\крендель\Desktop\диплом\Points2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\Points2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\Points2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\Points2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\fix1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\fix1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\fix1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\fix1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\fix_1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\fix_1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\fix_1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\fix_1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\fix2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\fix2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\fix2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\fix2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\fix_2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\fix_2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\fix_2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\fix_2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\nolnol.pdf
+INPUT c:\Users\крендель\Desktop\диплом\nolnol.pdf
+INPUT c:\Users\крендель\Desktop\диплом\nolnol.pdf
+INPUT c:\Users\крендель\Desktop\диплом\nolnol.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f11d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f11d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f11d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f11d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f13d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f13d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f13d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f13d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f41d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f41d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f41d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f41d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f53d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f53d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f53d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f53d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f63d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f63d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f63d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f63d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f71d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f71d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f71d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f71d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f104d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f104d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f104d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\f104d.pdf
+INPUT c:\Users\крендель\Desktop\диплом\parab.pdf
+INPUT c:\Users\крендель\Desktop\диплом\parab.pdf
+INPUT c:\Users\крендель\Desktop\диплом\parab.pdf
+INPUT c:\Users\крендель\Desktop\диплом\parab.pdf
+INPUT c:\Users\крендель\Desktop\диплом\S1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\S1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\S1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\S1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\S2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\S2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\S2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\S2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\S3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\S3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\S3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\S3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig3.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big5.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big5.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big5.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big5.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig5.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig5.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig5.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig5.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big6.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big6.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big6.pdf
+INPUT c:\Users\крендель\Desktop\диплом\big6.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig6.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig6.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig6.pdf
+INPUT c:\Users\крендель\Desktop\диплом\pig6.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf1.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf1b.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf1b.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf1b.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf1b.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf1b2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf1b2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf1b2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf1b2.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf4.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf4best.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf4best.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf4best.pdf
+INPUT c:\Users\крендель\Desktop\диплом\bf4best.pdf
+INPUT c:\Users\крендель\Desktop\диплом\diplom_1.aux
+INPUT c:\Users\крендель\Desktop\диплом\diplom_1.out
+INPUT c:\Users\крендель\Desktop\диплом\diplom_1.out
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\latt1000.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\latt1000.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\larm0700.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\larm0700.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\lati1440.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\lati1440.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\labx1200.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\labx1200.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\larm1440.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\larm1440.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\labx1440.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\labx1440.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\larm1200.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\larm1200.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\larm1000.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\larm1000.pk
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmbx12.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmbx12.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmex10.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmex10.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi10.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi10.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi12.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi12.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi7.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi7.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr10.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr10.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr12.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr12.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr7.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr7.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy10.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy10.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy7.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy7.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\symbols\msam10.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\symbols\msam10.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\symbols\msbm10.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\symbols\msbm10.pfb

@@ -1,0 +1,363 @@
+\NeedsTeXFormat{LaTeX2e}
+
+\ProvidesPackage{ReportIMMI}[2012/10/08 Package for reports of IMMI KSU]
+%\documentclass[amsmath,amssymb,12pt]{article}
+
+%\usepackage[cp866]{inputenc}  % для DOS кодировки
+\RequirePackage[cp1251]{inputenc}  % для Windows кодировки
+
+\RequirePackage{graphicx}  % standard LaTeX graphics tool
+                       % for including eps-figure files
+\RequirePackage{amsmath} \RequirePackage{amsfonts} \RequirePackage{amssymb}
+\RequirePackage{calc}
+\RequirePackage[usenames]{color}
+\RequirePackage[a4paper, top=20mm,bottom=20mm,left=30mm,right=15mm,footskip=0.7cm, marginparwidth=0cm, includefoot]{geometry}
+\parindent=1.25cm
+\setlength{\baselineskip}{1ex}  %{1ex}  1.5 интеравал для 12 шрифта
+\renewcommand{\baselinestretch}{1}
+
+
+\RequirePackage{longtable}
+
+%\RequirePackage{tabularx}
+
+%\usepackage{geometry}
+
+\DeclareOption{ru}{
+\PassOptionsToPackage{english,russian}{babel}
+\def\TableName{Таблица}
+\def\FigName{Рисунок}
+\def\REFNAME{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}
+\def\Refname{Список использованных источников}
+
+}
+
+%% изменение стандартного размера шрифта
+%\makeatletter
+%\renewcommand\normalsize{\@setfontsize\normalsize{14pt}{18pt}}
+%\makeatother
+%% изменение  размера шрифта в подписях к фигурам и таблицам
+%\usepackage[font=large]{caption}
+
+\DeclareOption*{\PackageError{ReportIMMI}{Unknown option `\CurrentOption'}}
+\ProcessOptions\relax
+
+\RequirePackage{babel}
+
+ \AtBeginDocument{%
+\mathcode`\==32768 \mathcode`\+=32768 \mathcode`\-=32768
+\renewcommand\contentsname{СОДЕРЖАНИЕ} \FontSize
+\abovedisplayskip =\baselineskip
+\belowdisplayskip =  \baselineskip
+\abovedisplayshortskip = \abovedisplayskip
+\belowdisplayshortskip= \belowdisplayskip
+\pretolerance=7000
+}
+\AtEndDocument{\GlobalStatistic}
+% СОКРАЩЕНИЯ И НОВЫЕ КОМАНДЫ ДЛЯ ТЕКСТА
+
+% СОКРАЩЕНИЯ
+
+\newcommand{\btau}{{\mbox{\boldmath $\tau$}}}
+\newcommand{\bbeta}{{\mbox{\boldmath $\beta$}}}
+\newcommand{\bpsi}{{\mbox{\boldmath $\psi$}}}
+\newcommand{\bal}{{\mbox{\boldmath $\alpha$}}}
+\newcommand{\bxi}{{\mbox{\boldmath $\xi$}}}
+\newcommand{\bcalK}{{\mbox{\boldmath ${\cal K}$}}}
+
+\newcommand{\bFi}{{\mbox{\boldmath $\Phi$}}}
+\newcommand{\bv}{{\mbox{\boldmath $v$}}}
+\newcommand{\bV}{{\mbox{\boldmath $V$}}}
+\newcommand{\bff}{{\mbox{\boldmath $f$}}}
+\newcommand{\Int}{\int\limits}
+\newcommand{\Sum}{\sum\limits}
+\newcommand{\bsg}{{\mbox{\boldmath $\sigma$}}}
+\newcommand{\bPhi}{{\mbox{\boldmath $\Phi$}}}
+\newcommand{\bfi}{{\mbox{\boldmath $\varphi$}}}
+\newcommand{\bnabla}{{\mbox{\boldmath $\nabla$}}}
+
+\newcommand{\N}{\symbol{242}} %% Знак номера "No"
+\newcommand{\iif}{\frac{1}{2\pi}\int\limits_{\Gamma}}
+\newcommand{\suml}{\sum\limits}
+\def\eps{\varepsilon}
+\def\f{\varphi}
+\def\sg{\sigma}
+\def\om{\omega}
+\def\gm{\gamma}
+\def\l{\lambda}
+\def\al{\alpha}
+\def\bt{\beta}
+\def\d{\delta}
+\def\om{\omega}
+\def\inf{\infty}
+\def\p{\partial}
+\def\ba{\begin{array}}
+\def\ea{\end{array}}
+\def\beq{\begin{equation}}
+\newcommand{\beql}[1]{\beq\label{#1}}
+\def\eeq{\end{equation}}
+\def\bd{\begin{displaymath}}
+\def\ed{\end{displaymath}}
+\def\ic{{\rm i}}
+\def\ec{{\rm e}}
+\def\citep{\cite}
+\newcommand{\bT}{{\mbox{\boldmath ${\rm T}$}}}
+\newcommand{\bp}{{\mbox{\boldmath $p$}}}
+\newcommand{\ii}{\int\limits_{-\infty}^{\infty}}
+\newcommand{\bP}{{\mbox{\boldmath $P$}}}
+
+\def\bx{{\bf x}}
+\def\baa{{\bf a}}
+\def\bu{{\bf u}}
+\def\bm{{\bf m}}
+\def\bn{{\bf n}}
+%\def\btau{{\bf \tau}}
+\def\bq{{\bf q}}
+\def\bQ{{\bf Q}}
+\def\bU{{\bf U}}
+\def\bxi{{\bf \xi}}
+\def\bk{{\bf k}}
+\def\bi{{\bf i}}
+\def\bff{{\bf f}}
+\def\bc{{\bf c}}
+\def\bK{{\bf K}}
+
+\def\operatorname#1{\mathop{#1}\,}
+
+\def\Nl{N_{{\rm L}}}
+\def\NC{N_{{\rm C}}}
+\def\Nc{N_{{\rm c}}}
+\def\Nu{N_{{\rm U}}}
+\def\Nd{N_{{\rm D}}}
+\def\Np{N_{{\rm p}}}
+\def\Ns{N_{{\rm s}}}
+\def\Npj{N_{{\rm p}j}}
+\def\ICC{I_{{\rm c}}}
+\def\Hu{H_{{\rm u}}}
+\def\Ru{R_{{\rm u}}}
+\def\ha{h_{{\rm a}}}
+\def\wa{w_{{\rm a}}}
+\def\Va{V_{{\rm a}}}
+\def\Sc{S_{{\rm c}}}
+\def\Sd{S_{{\rm d}}}
+
+
+\newcommand{\iG}{\int\limits_{\Gamma}}
+\newcommand{\iGp}{\int\limits_{\Gamma_{+}}}
+\newcommand{\iGt}{\int\limits_{\Gamma_2}}
+\newcommand{\iGo}{\int\limits_{\Gamma_1}}
+\newcommand{\bvsg}{{\mbox{\boldmath $\varsigma$}}}
+\newcommand{\bphi}{{\mbox{\boldmath $\phi$}}}
+\newcommand{\Fourier}{{\mbox{${\cal F}_x$}}}
+
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+\newcommand{\bF}{{\mbox{\boldmath $\Phi$}}}
+
+
+\newcommand{\sizacc}[3]{\accentset{\text{\scalebox{#1}{${#2}$}}}{#3}}
+
+
+%%% КОНЕЦ СОКРАЩЕНИЙ
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Специфические настройки
+%порядок использования символов в перечислениях (itemize)
+\renewcommand{\labelitemi}{$-$}
+\renewcommand{\labelitemii}{$\bullet$}
+
+%\usepackage{color}
+%\textcolor{red}{function $f(kx)$}
+
+% Секция и нумерация уравнений
+
+%%% { EDITED by S.FOMENKO
+%\RequirePackage[unicode]{hyperref}
+\RequirePackage{caption2}
+\RequirePackage{cite}
+%\usepackage{redactor}
+
+%\makeatletter \@addtoreset{footnote}{section} %
+%\@addtoreset{equation}{section} \@addtoreset{figure}{section} \@addtoreset{table}{section}
+%%\renewcommand{\thesection}{\arabic{section}}
+%\renewcommand{\theequation}{\thesection.\arabic{equation}}
+%\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+%\renewcommand{\thetable}{\thesection.\arabic{table}}
+
+\renewcommand\contentsname{СОДЕРЖАНИЕ}
+
+%\def\FontSize{\large} % размер шрифта по умолчанию
+\def\FontSize{\large}
+ \def\accentfontsect{\bf}
+%\def\accentfontsect{}
+% Стиль основных заголовков и оглавления
+
+\def\addsecskip{\vspace{\baselineskip}} %дополнительный пробел между заголовкамии разделов и основным текстом
+\def\delsecskip{\vspace{-\baselineskip}} % локальное удаление пробелов между заголовками разделов: использовать для случая подряд идущих заголовков: \section{...}\delsecskip\subsection{...}
+\def\deleqskip{\vspace{-\belowdisplayskip}\vspace{-\abovedisplayskip}} %локальное удаление лишних пробелов между подряд идущими формулами.
+
+\def\sectionskip{}
+\makeatletter
+\renewcommand{\section}{\clearpage\secdef\CmdSectionA\CmdSectionB}
+\newcommand{\CmdSectionA}[2][?]{%
+\refstepcounter{section}{{\par \pretolerance=10000 \FontSize\accentfontsect{\thesection\quad#2}\sectionskip\par}}%
+ \addcontentsline{toc}{section}{\protect\numberline{\thesection}{#1}}}
+\newcommand{\CmdSectionB}[1]{{\pretolerance=10000 \centering\FontSize\accentfontsect\uppercase{#1}\addsecskip\par}}
+\newcommand{\simplesection}[1]{\section*{#1}
+\addcontentsline{toc}{section}{#1}}
+
+\renewcommand{\l@section}{\@dottedtocline{1}{0em}{2.3em}}
+
+\renewcommand{\subsection}{\pagebreak[3]\secdef\CmdSubSectionA\CmdSubSectionB}
+\newcommand{\CmdSubSectionA}[2][?]{%
+\refstepcounter{subsection}{\addsecskip\par
+\pretolerance=10000
+\FontSize\accentfontsect\thesubsection\quad#2\protect\nopagebreak\addsecskip\par}%\bfseries
+\addcontentsline{toc}{subsection}{\protect\numberline{\thesubsection} #1}}
+\newcommand{\CmdSubSectionB}[1]{\addsecskip\par{\pretolerance=10000 \centering\FontSize\accentfontsect#1\protect\nopagebreak\bigskip\par\addsecskip}}
+
+\renewcommand{\subsubsection}{\pagebreak[1]\secdef\CmdSubSubSectionA\CmdSubSubSectionB}
+\newcommand{\CmdSubSubSectionA}[2][?]{%
+{ \pretolerance=10000 \refstepcounter{subsubsection}{\protect\pagebreak[3] \addsecskip\par\accentfontsect\FontSize\thesubsubsection\quad#2\protect\nopagebreak\par\addsecskip\nopagebreak}}%
+\addcontentsline{toc}{subsubsection}{\protect\numberline{\thesubsubsection} #1} }
+\newcommand{\CmdSubSubSectionB}[1]{\addsecskip\par{\pretolerance=10000 \accentfontsect\FontSize#1\protect\pagebreak[3]\addsecskip\par}\nopagebreak}
+
+\renewcommand{\l@section}{\@dottedtocline{1}{0em}{1em}}
+\renewcommand{\l@subsection}{\@dottedtocline{2}{1em}{1.5em}}
+\renewcommand{\l@subsubsection}{\@dottedtocline{3}{3em}{2.5em}}
+
+% Глобальные счетчики и статистика: общее число страниц, рисунков, таблиц и ссылок.
+\newcounter{NumPage} \def\theNumPage{\arabic{NumPage}}
+\newcounter{NumFig}	 \def\theNumFig{\arabic{NumFig}}
+\newcounter{NumTable} \def\theNumTable{\arabic{NumTable}}
+\newcounter{NumCit}	 \def\theNumCit{\arabic{NumCit}}
+\def\LabelToCounter#1#2{\addtocounter{#2}{-1}\refstepcounter{#2}\label{#1}}
+
+\def\GlobalStatistic{\protect \LabelToCounter{AllFigures}{NumFig} \LabelToCounter{AllTables}{NumTable}
+\LabelToCounter{AllCites}{NumCit}
+\setcounter{NumPage}{\value{page}}\LabelToCounter{AllPages}{NumPage} }
+
+\def\NumFigures{\ref*{AllFigures}~}
+\def\NumTables{\ref*{AllTables}~}
+\def\NumReferences{\ref*{AllCites}~}
+\def\NumPages{\ref*{AllPages}~}
+
+
+% Стиль заголовков плавающих объектов
+%\renewcommand{\captionlabeldelim}{\,--\!}
+\def\FontSizeF{\normalsize} %\large
+\def\FontSizeFigCaption{\large} %\large
+%\def\TableName{Таблица}
+%\def\FigName{Рисунок}
+\newcommand{\fcaption}[1]{
+\addtocounter{NumFig}{1}\refstepcounter{figure}{\pretolerance=10000\FontSizeFigCaption \par \baselineskip=0.66\baselineskip\vspace{3mm}
+\centering \FigName~\thefigure\ --\ #1 \par} }
+
+\let\defaultfigure\figure
+\let\defaultendfigure\endfigure
+\renewcommand{\figure}[1][!htb]{\defaultfigure[#1]  \let\caption\fcaption\FontSizeF  \baselineskip=0.66\baselineskip }
+\def\endfigure{\defaultendfigure}
+
+
+
+\let\defaulttable\table
+\let\defaultendtable\endtable
+\def\FontSizeT{\large}
+\def\FontSizeTabCaption{\large}
+\newcommand{\tcaption}[1]{\addtocounter{NumTable}{1}\refstepcounter{table}{\pretolerance=10000\FontSizeTabCaption\vspace{4mm}\par \baselineskip=0.66\baselineskip \noindent\TableName~\thetable\ --\ #1 \par}\vspace{0.5\baselineskip}   } %\raggedleft
+
+\renewcommand{\table}[1][!htb]{\defaulttable[#1]\let\caption\tcaption\FontSizeT}
+\def\endtable{\defaultendtable}
+
+
+
+
+% Стиль списка литературы
+\makeatletter
+%\def\REFNAME{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}
+%\def\Refname{Список использованных источников}
+
+\renewcommand{\thebibliography}[1]{\clearpage
+\renewcommand{\refname}{\Refname}
+\section*{\REFNAME}\addcontentsline{toc}{section}{\Refname}
+ \list{\arabic{enumi}\ \ }{\usecounter{enumi} \settowidth\labelwidth{0pt}
+\leftmargin=0pt \itemindent=1.5\parindent
+ \itemsep=0pt
+  \sloppy\clubpenalty4000\widowpenalty4000
+  \sfcode`\.=1000\relax
+}
+}
+\renewcommand{\endthebibliography}{\setcounter{NumCit}{\value{enumi}} \endlist}
+
+\renewenvironment{itemize}{\par\begingroup \def\item{\par --\ } }{\endgroup\par}
+\renewenvironment{enumerate}{\par\begingroup \setcounter{enumi}{0} \def\item{\refstepcounter{enumi}\par \arabic{enumi})\  } }{\endgroup\par}
+\newenvironment{aenumerate}{\par\begingroup \setcounter{enumi}{0} \def\item{\refstepcounter{enumi}\par \asbuk{enumi})\  } }{\endgroup\par}
+%\renewcommand{\thebibliography}[1]{\clearpage
+%\renewcommand{\refname}{\Refname}
+%\SimpleSection{\Refname}
+%\addcontentsline{toc}{section}{{\TocRefname}}
+% \list%
+% {\arabic{enumi}.}{\settowidth\labelwidth{[#1]}\leftmargin\labelwidth
+% \advance\leftmargin\labelsep
+% \usecounter{enumi}}
+% \def\newblock{\hskip .11em plus .33em minus .07em}
+% \sloppy\clubpenalty4000\widowpenalty4000
+% \sfcode`\.=1000\relax}
+%\renewcommand{\endthebibliography}{\setcounter{NumCit}{\value{enumi}} \endlist}
+
+
+%%% размеры страницы to pdf (old)
+%%\voffset=-0.94in \topmargin=2cm \headsep=0pt \headheight=0pt \textheight=25.5cm \footskip=35pt
+%%\hoffset=-1in	 \oddsidemargin=2.5cm \evensidemargin=2.5cm \textwidth=17cm
+%%\parindent=2.5em
+
+%% размеры страницы
+%\voffset=-1in \topmargin=2cm \headsep=0pt \headheight=0pt \textheight=25.2cm \footskip=0.7cm
+%\hoffset=-1in  \oddsidemargin=2.2cm \evensidemargin=2.2cm \textwidth=17.5cm
+%\parindent=1.5cm
+
+% размеры страницы
+%\voffset=-1.0in \topmargin=2cm \headsep=0pt \headheight=0pt \textheight=25.5cm \footskip=35pt
+%\hoffset=-1in  \oddsidemargin=3cm \evensidemargin=3cm \textwidth=16.5cm
+%\parindent=2.5em
+
+% отбивка между текстом и плавающим объектом (fig,table)
+\textfloatsep=2\baselineskip
+\setlength{\abovedisplayskip}{2\baselineskip}
+\setlength{\belowdisplayskip}{2\baselineskip}
+
+% для корректного переноса включенных формул
+\begingroup
+\catcode`\+\active\gdef+{\mathchar8235\nobreak\discretionary{}%
+ {\usefont{OT1}{cmr}{m}{n}\char43}{}}
+\catcode`\-\active\gdef-{\mathchar8704\nobreak\discretionary{}%
+ {\usefont{OMS}{cmsy}{m}{n}\char0}{}}
+\catcode`\=\active\gdef={\mathchar12349\nobreak\discretionary{}%
+ {\usefont{OT1}{cmr}{m}{n}\char61}{}}
+\endgroup
+\def\cdot{\mathchar8705\nobreak\discretionary{}%
+ {\usefont{OMS}{cmsy}{m}{n}\char1}{}}
+\def\times{\mathchar8706\nobreak\discretionary{}%
+ {\usefont{OMS}{cmsy}{m}{n}\char2}{}}
+
+
+
+
+
+
+% добавлено  Февраль 3, 2012 SFOM
+% таблица по всей ширине страницы
+% \wtabular{<число столбцов>}{<формат столбцов: c|r|l|...>}{<содержание таблицы>}
+% need \usepackage{calc}
+\def\wtabular#1#2#3{{ %\settowidth{\wtab}{\begin{tabular}{#2} #3 \end{tabular}}
+\tabcolsep=0pt
+\setlength{\tabcolsep}{(\textwidth-\widthof{\begin{tabular}{#2} #3 \end{tabular}})/(2*#1)}
+\ifnum\tabcolsep<0 \tabcolsep=0pt \fi
+\begin{tabular}{#2} #3 \end{tabular} }
+}
+
+
+
+% принудительный перенос
+\def\forcehyph{  \sloppy\clubpenalty4000\widowpenalty4000
+  \sfcode`\.=1000\relax
+}
