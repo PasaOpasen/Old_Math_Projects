@@ -1,3 +1,5 @@
+#номер варианта
+nv=7
 
 
 #чтение данных и чистка
@@ -5,6 +7,7 @@ library(readxl)
 
 datacrude =data.frame(read_excel("Таблица 1.xlsx")) 
 data=datacrude[5:nrow(datacrude),-c(1)]
+data=data[-nv,]
 colnames(data)=c("Country","Doctors","Deaths","GDP","Costs")
 
 data[,2:5]=apply(data[,2:5],2,function(x)scale( as.numeric(x)))#тут переменные из текста преобразуются в числа и стандартизируются
@@ -15,6 +18,8 @@ data[,1]=factor(data[,1])
 d = dist(data[,2:5], method = "euclidean")#матрица расстояний
 fit <- hclust(d, method = "ward.D")
 plot(fit, labels = data$Country,xlab = "Countries")
+
+plot(fit$height, xlab = "step",ylab="dist",type="b",col="blue",lwd=1,main="Расстояния при объединении кластеров")
 
 
 
@@ -27,11 +32,35 @@ plot(it,sums,type = "b",col="red")
 
 getimage=function(k){
   fit=kmeans(data[,2:5],k)
+print(fit$withinss)#внутригрупповые суммы
+print(fit$betweenss)  
+print(dist(fit$centers))#матрица расстояний
 
-newdata=data
-newdata$cluster=factor(fit$cluster)
+newdata=as_data_frame(data)%>%mutate(cluster=factor(fit$cluster))
+
+library(dplyr)
+means=newdata[,2:6]%>%group_by(cluster)%>%summarise(
+  meanCosts=mean(Costs),sdCosts=sd(Costs),
+  meanDoctors=mean(Doctors),sdDoctors=sd(Doctors),
+  meanGDP=mean(GDP),sdGDP=sd(GDP),
+  meanDeaths=mean(Deaths),sdDeaths=sd(Deaths)
+  )
+print(means)
+
+means=means[,c(1,2,4,6,8)]
+
+cs=c("red","green","blue","black","yellow")
+rg=range(means[-1])*1.05
+plot(as.numeric(means[1,2:5]),type="b",
+     col=cs[1],ylim = rg,ylab = "values of means")
+for(i in 2:k){
+  lines(as.numeric(means[i,2:5]),type="b",col=cs[i])
+}
+
+
 library(ggplot2)
 library(ggpubr)
+
 pl1=ggplot(newdata, aes(x=Doctors, y=Deaths, col = cluster))+
   geom_point(size = 3)+
   theme_bw() 
@@ -64,7 +93,27 @@ p2 <- ggarrange(costs, deaths, doctors, gdp,
 ggarrange(p1, p2, ncol = 1, nrow = 2,heights=c(1,3))
 }
 
-getimage(2)
+getimage(3)
+
+
+
+#Задание 3
+
+datacrude =data.frame(read_excel("Приложение 1.xlsx")) 
+data=datacrude[,-c(1)]
+data=data[,-c(1,2,16,17)]
+
+#data[,2:5]=apply(data[,2:5],2,function(x)scale( as.numeric(x)))#тут переменные из текста преобразуются в числа и стандартизируются
+
+
+
+
+
+
+
+
+
+
 
 
 
