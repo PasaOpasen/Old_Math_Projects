@@ -121,19 +121,44 @@ cor(vm$scores)
 
 
 ###################################Задание 4
+data =data.frame(read_excel("Приложение 2.xlsx")) 
+data$CLASS=factor(data$CLASS)
 
+library(MASS)
 
+ldadat <- lda(CLASS~.,data,method="t")
+ldadat$means#групповые средние
+(mat=ldadat$scaling)
+#matrix(nrow=1,as.numeric(data[65,1:7]))%*%as.matrix(mat)
 
+#функция для оценки ошибки 
+misclass <- function(pred, obs) {
+   tbl <- table(pred, obs)
+   sum <- colSums(tbl)
+   dia <- diag(tbl)
+   msc <- (sum - dia)/sum * 100
+   m.m <- mean(msc)
+   cat("Classification table:", "\n")
+   print(tbl)
+   cat("Misclassification errors:", "\n")
+   print(round(msc, 1))
+  }
 
+misclass(predict(ldadat, data[,1:7])$class, data[,8])
 
+#дерево классификации
+library(tree)
+datatree <- tree(data[,8] ~ ., data[,-8])
+plot(datatree)
+text(datatree) 
 
-
-
-
-
-
-
-
+#то же, что и раньше, только методом randomForest
+library(randomForest)
+rf <- randomForest(data[,8] ~ ., data=data[,1:7])
+rfp <- predict(rf, data[,1:7])
+table(rfp, data[,8])
+MDSplot(randomForest(data[,-8]), data[,8])
+misclass(rfp, data[,8])
 
 
 ###################################Задание 5
