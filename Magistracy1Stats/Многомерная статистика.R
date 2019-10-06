@@ -13,7 +13,7 @@ colnames(data)=c("Country","Doctors","Deaths","GDP","Costs")
 data[,2:5]=apply(data[,2:5],2,function(x)scale( as.numeric(x)))#тут переменные из текста преобразуются в числа и стандартизируются
 data[,1]=factor(data[,1])
 
-#задание 1
+#####################################Задание 1
 
 d = dist(data[,2:5], method = "euclidean")#матрица расстояний
 fit <- hclust(d, method = "ward.D")
@@ -23,7 +23,7 @@ plot(fit$height, xlab = "step",ylab="dist",type="b",col="blue",lwd=1,main="Ра�
 
 
 
-#Задание 2
+####################################Задание 2
 
 it=1:8
 sums=sapply(it, function(k) kmeans(data[,2:5], k)$tot.withinss)
@@ -97,15 +97,46 @@ getimage(3)
 
 
 
-#Задание 3
+###################################Задание 3
 
 datacrude =data.frame(read_excel("Приложение 1.xlsx")) 
 data=datacrude[,-c(1)]
 data=data[,-c(1,2,16,17)]
 
-#data[,2:5]=apply(data[,2:5],2,function(x)scale( as.numeric(x)))#тут переменные из текста преобразуются в числа и стандартизируются
+library(corrplot)
+corrplot(cor(data))
+
+library(psych)
+principal(data[,-1],nfactors = 8,rotate = "none")
+
+fa.parallel(data[,-1],fa="pc",show.legend = T,main="Диаграмма каменистой осыпи с параллельным анализом")
+
+#варимакс с нормализацией
+(vm=principal(apply(data[,-1],2,scale),nfactors = 6,rotate = "varimax"))
+#коэффициенты
+round(unclass(vm$weights),2)
+
+cor(vm$scores)
 
 
+
+###################################Задание 4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###################################Задание 5
 
 
 
