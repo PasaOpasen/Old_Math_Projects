@@ -23,7 +23,7 @@ setwd("C:\\Users\\крендель\\Desktop\\MagicCode\\Magistracy1Stats")
 Для выполнения работы использовался язык **R** версии `r getRversion()`. Необходимые пакеты скачиваются командой
 ```{r,eval=FALSE}
 install.packages(c("readxl","dplyr","ggplot2","ggpubr","corrplot",
-                   "psych","MASS","tree","randomForest"))
+                  "psych","MASS","tree","randomForest","TeachingDemos"))
 ```
 и подключаются
 ```{r}
@@ -36,6 +36,7 @@ library(psych)
 library(MASS)
 library(tree)
 library(randomForest)
+library(TeachingDemos)
 ```
 
 Также использовался номер варианта
@@ -43,7 +44,8 @@ library(randomForest)
 #номер варианта
 nv=7
 ```
-Дополнительная информация: [огромная статья по построению моделей в R](https://ranalytics.github.io/data-mining/01-Data-Mining-Models-in-R.html), [cтатья по кластерному, факторному и дискриминантному анализу в R](https://rpubs.com/iezepov/e502lec7), [курс по статистике в R](https://stepik.org/course/524/syllabus), [перечень основых функций языка](https://aakinshin.net/ru/posts/r-functions/), [математические операции в R](https://ru.wikibooks.org/wiki/Язык_программирования_R/Математика), [книги по R на моём GitHub](https://github.com/PasaOpasen/LittleHelps/tree/master/книги%20по%20языкам/R).
+Дополнительная информация: 
+[огромная статья по построению моделей в R](https://ranalytics.github.io/data-mining/01-Data-Mining-Models-in-R.html), [cтатья по кластерному, факторному и дискриминантному анализу в R](https://rpubs.com/iezepov/e502lec7), [курс по анализу данных в R](https://stepik.org/course/129/syllabus), [курс по основам R как языка программирования](https://stepik.org/course/497/syllabus),  [курс по статистике в R](https://stepik.org/course/524/syllabus), [перечень основых функций языка](https://aakinshin.net/ru/posts/r-functions/),  [математические операции в R](https://ru.wikibooks.org/wiki/Язык_программирования_R/Математика),  [книги по R на моём GitHub](https://github.com/PasaOpasen/LittleHelps/tree/master/книги%20по%20языкам/R).
 
 ***
 ## Многомерный анализ
@@ -180,6 +182,38 @@ getimage(2)
 getimage(3)
 ```
 
+Ещё один способ оценивать качество разбиения на группы --- **лица Чернова**. Идея состоит в том, чтобы для каждой группы найти какую-то характеристику каждой переменной (например, среднее), а затем на основе вектора таких характеристик постоить лица каждой группы: чем лица более похожи, тем группы более близки. Сделаем так для двух кластеров:
+```{r}
+#функция делает анализ dataset по методу k-means с k кластерами, затем добавляет результаты к датасету
+getbykmeans=function(dataset,k){
+  fit=kmeans(dataset,k)#строится модель
+  #Добавляем кластер к фрейму данных
+  library(dplyr)
+  newdata=as_data_frame(dataset)%>%mutate(cluster=factor(fit$cluster))
+}
+#функция считает средние и рисует лица
+getfaces=function(k){
+  #создаем матрицу средних
+means=getbykmeans(data[,2:5],k)%>%group_by(cluster)%>%
+  summarise_all(funs(mean))
+
+library(TeachingDemos)
+faces(means[,2:5])#рисуем лица
+}
+getfaces(2)
+```
+
+Видно, что лица сильно различаются. Для трёх кластеров
+```{r}
+getfaces(3)
+```
+
+два лица уже достаточно похожи. Для четырёх кластеров имеется две пары очень похожих лиц:
+```{r}
+getfaces(4)
+```
+
+
 Отсюда вывод: достаточно было использовать только два кластера.
 
 
@@ -243,6 +277,14 @@ head(data,9)
 ```{r,fig.height=10,fig.width=10}
 pairs(data[,1:7],col=data$CLASS,pch=16)
 ```
+
+Лица Чернова показывают, что в двух случаях между парами групп сильной разницы нет:
+```{r}
+newdata=as_data_frame(data)%>%group_by(CLASS)%>%
+    summarise_all(funs(mean))
+  faces(newdata[,2:8])#рисуем лица
+```
+
 
 Проведём обучение через линейный дискриминантный анализ:
 ```{r, include=FALSE}
@@ -349,6 +391,14 @@ ggarrange(
   ncol = 2, nrow = 4)
 ```
 
+Также лица Чернова:
+```{r}
+newdata=as_data_frame(data2)%>%group_by(cluster)%>%
+    summarise_all(funs(mean))
+  faces(newdata[,2:8])#рисуем лица
+```
+
+В целом качество такое же, как в обучающей выборке.
 
 
 

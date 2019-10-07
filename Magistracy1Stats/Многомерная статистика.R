@@ -110,6 +110,35 @@ ggarrange(ppp,p1, p2, ncol = 1, nrow = 3,heights=c(1.3,2,3))
 getimage(3)
 
 
+getfaces=function(dataset){
+  means=data_frame(dataset)%>%group_by_if(is.factor)
+ 
+  means=sapply(select_if(means,is.numeric), mean)
+  print(means)
+  library(TeachingDemos)
+  faces(means)
+}
+pp=mtcars
+pp$cyl=factor(pp$cyl)
+getfaces(pp[2:8,2:6])
+
+#функция делает анализ dataset по методу k-means с k кластерами, затем добавляет результаты к датасету
+getbykmeans=function(dataset,k){
+  fit=kmeans(dataset,k)#строится модель
+  #Добавляем кластер к фрейму данных
+  library(dplyr)
+  newdata=as_data_frame(dataset)%>%mutate(cluster=factor(fit$cluster))
+}
+#функция считает средние и рисует лица
+getfaces=function(k){
+  #создаем матрицу средних
+means=getbykmeans(data[,2:5],k)%>%group_by(cluster)%>%
+  summarise_all(funs(mean))
+
+library(TeachingDemos)
+faces(means[,2:5])#рисуем лица
+}
+getfaces(2)
 
 ###################################Задание 3
 
@@ -138,6 +167,11 @@ cor(vm$scores)
 data =data.frame(read_excel("Приложение 2.xlsx")) 
 data$CLASS=factor(data$CLASS)
 pairs(data[,1:7],col=data$CLASS,pch=16)
+
+newdata=as_data_frame(data)%>%group_by(CLASS)%>%
+    summarise_all(funs(mean))
+  faces(newdata[,2:8])#рисуем лица
+
 
 library(MASS)
 
@@ -224,6 +258,10 @@ ggarrange(
   ggplot(data2,aes(x=cluster,y=X7))+
     geom_boxplot(),
   ncol = 2, nrow = 4)
+
+newdata=as_data_frame(data2)%>%group_by(cluster)%>%
+  summarise_all(funs(mean))
+faces(newdata[,2:8])#рисуем лица
 
 if(FALSE){
   ggplot(data2,aes(x=X6,fill=cluster))+
