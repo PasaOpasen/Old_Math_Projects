@@ -5,13 +5,14 @@ nv=7
 #чтение данных и чистка
 library(readxl)
 
-datacrude =data.frame(read_excel("Таблица 1.xlsx")) 
-data=datacrude[5:nrow(datacrude),-c(1)]
-data=data[-nv,]
-colnames(data)=c("Country","Doctors","Deaths","GDP","Costs")
+datacrude =data.frame(read_excel("Таблица 1.xlsx")) #считывание таблицы
+data=datacrude[5:nrow(datacrude),-1]#удаление лишних строк и столбцов
+data=data[-nv,]#удаление строки в соответствиии с номером варианта
+colnames(data)=c("Country","Doctors","Deaths","GDP","Costs")#переименование столбцов
 
-data[,2:5]=apply(data[,2:5],2,function(x)scale( as.numeric(x)))#тут переменные из текста преобразуются в числа и стандартизируются
-data[,1]=factor(data[,1])
+data[,2:5]=apply(data[,2:5],2,function(x)scale(as.numeric(x)))#тут переменные из текста преобразуются в числа и стандартизируются
+data[,1]=factor(data[,1])#первая переменная из количественной преобразуется в номенативную
+
 
 #####################################Задание 1
 
@@ -28,17 +29,21 @@ plot(fit$height, xlab = "step",ylab="dist",type="b",col="blue",lwd=1,main="Ра�
 it=1:8
 sums=sapply(it, function(k) kmeans(data[,2:5], k)$tot.withinss)
 
-plot(it,sums,type = "b",col="red")
+plot(it,sums,type = "b",col="red",main = "Суммы внутригрупповых расстояний при разном числе кластеров")
 
+#функция, проводящая некоторый анализ и строящая графики для заданного числа кластеров
 getimage=function(k){
-  fit=kmeans(data[,2:5],k)
-print(fit$withinss)#внутригрупповые суммы
-print(fit$betweenss)  
+  fit=kmeans(data[,2:5],k)#строится модель
+cat("Внутригрупповые суммы:",fit$withinss,"\n")#внутригрупповые суммы
+cat("Общая сумма:", fit$betweenss,"\n") 
+cat("Матрица расстояний:\n")
 print(dist(fit$centers))#матрица расстояний
 
+#Добавляем кластер к фрейму данных
+library(dplyr)
 newdata=as_data_frame(data)%>%mutate(cluster=factor(fit$cluster))
 
-library(dplyr)
+#агрегирование данных по группам
 means=newdata[,2:6]%>%group_by(cluster)%>%summarise(
   meanCosts=mean(Costs),sdCosts=sd(Costs),
   meanDoctors=mean(Doctors),sdDoctors=sd(Doctors),
@@ -47,19 +52,25 @@ means=newdata[,2:6]%>%group_by(cluster)%>%summarise(
   )
 print(means)
 
-means=means[,c(1,2,4,6,8)]
 
-cs=c("red","green","blue","black","yellow")
-rg=range(means[-1])*1.05
-plot(as.numeric(means[1,2:5]),type="b",
-     col=cs[1],ylim = rg,ylab = "values of means")
-for(i in 2:k){
-  lines(as.numeric(means[i,2:5]),type="b",col=cs[i])
-}
+means=means[,c(1,2,4,6,8)]#берётся сабсет только из значений для средних
 
+lbs=c("cluster1","cluster2","cluster3","cluster4","cluster5")
 
 library(ggplot2)
 library(ggpubr)
+
+#здесь создаётся таблица со средними по каждой переменной и каждому классу в том виде, в каком удобней рисовать
+tmpdata=data.frame(x=1:4,means=as.numeric(means[1,2:5]),cluster=rep(lbs[1],4))
+for(i in 2:k){
+  tmpdata=rbind(tmpdata,data.frame(x=1:4,means=as.numeric(means[i,2:5]),cluster=rep(lbs[i],4)))
+}
+tmpdata$cluster=factor(tmpdata$cluster)
+
+ppp=ggplot(tmpdata,aes(x=x,y=means,col=cluster))+
+  geom_line()+
+  geom_point(size=4)
+
 
 pl1=ggplot(newdata, aes(x=Doctors, y=Deaths, col = cluster))+
   geom_point(size = 3)+
@@ -70,6 +81,9 @@ pl2=ggplot(newdata, aes(x=GDP, y=Costs, col = cluster))+
   theme_bw()
 
 pl3=ggplot(newdata, aes(x=GDP, y=Deaths, col = cluster))+
+  geom_point(size = 3)+
+  theme_bw()
+pl4=ggplot(newdata, aes(x=GDP, y=Doctors, col = cluster))+
   geom_point(size = 3)+
   theme_bw()
 
@@ -86,11 +100,11 @@ gdp = ggplot(newdata, aes(x=cluster, y=GDP))+
   geom_boxplot()+
   theme_bw()
 
-p1 <- ggarrange(pl1, pl2,pl3,
-                ncol = 3, nrow = 1)
+p1 <- ggarrange(pl1, pl2,pl3,pl4,
+                ncol = 2, nrow = 2)
 p2 <- ggarrange(costs, deaths, doctors, gdp,
                 ncol = 2, nrow = 2)
-ggarrange(p1, p2, ncol = 1, nrow = 2,heights=c(1,3))
+ggarrange(ppp,p1, p2, ncol = 1, nrow = 3,heights=c(1.3,2,3))
 }
 
 getimage(3)
@@ -107,7 +121,7 @@ library(corrplot)
 corrplot(cor(data))
 
 library(psych)
-principal(data[,-1],nfactors = 8,rotate = "none")
+principal(data[,-1],nfactors = 8,rotate = "none")#Создание модели
 
 fa.parallel(data[,-1],fa="pc",show.legend = T,main="Диаграмма каменистой осыпи с параллельным анализом")
 
@@ -126,10 +140,12 @@ data$CLASS=factor(data$CLASS)
 
 library(MASS)
 
+#линейный дискриминантный анализ
 ldadat <- lda(CLASS~.,data,method="t")
 ldadat$means#групповые средние
-(mat=ldadat$scaling)
+(mat=ldadat$scaling)#матрица дискриминантных функций
 #matrix(nrow=1,as.numeric(data[65,1:7]))%*%as.matrix(mat)
+#plot(ldadat)
 
 #функция для оценки ошибки 
 misclass <- function(pred, obs) {
@@ -163,9 +179,70 @@ misclass(rfp, data[,8])
 
 ###################################Задание 5
 
+data2 =data.frame(read_excel("Приложение 3.xlsx")) 
+data2= apply(data2,2,as.numeric)
+data2=data2[31:80,]
+(cluster=predict(rf, data2))
 
+data2=data.frame(cbind(data2,cluster))
+data2$cluster=factor(data2$cluster)
 
+library(ggplot2)
+library(ggpubr)
 
+ggarrange(
+  ggplot(data2,aes(x=X1,fill=cluster))+
+    geom_density(alpha=0.6),
+  ggplot(data2,aes(x=X2,fill=cluster))+
+    geom_density(alpha=0.6),
+  ggplot(data2,aes(x=X3,fill=cluster))+
+    geom_density(alpha=0.6),
+  ggplot(data2,aes(x=X4,fill=cluster))+
+    geom_density(alpha=0.6),
+  ggplot(data2,aes(x=X5,fill=cluster))+
+    geom_density(alpha=0.6),
+  ggplot(data2,aes(x=X6,fill=cluster))+
+    geom_density(alpha=0.6),
+  ggplot(data2,aes(x=X7,fill=cluster))+
+    geom_density(alpha=0.6),
+          ncol = 2, nrow = 4)
+
+ggarrange(
+  ggplot(data2,aes(x=cluster,y=X1))+
+    geom_boxplot(),
+  ggplot(data2,aes(x=cluster,y=X2))+
+    geom_boxplot(),
+  ggplot(data2,aes(x=cluster,y=X3))+
+    geom_boxplot(),
+  ggplot(data2,aes(x=cluster,y=X4))+
+    geom_boxplot(),
+  ggplot(data2,aes(x=cluster,y=X5))+
+    geom_boxplot(),
+  ggplot(data2,aes(x=cluster,y=X6))+
+    geom_boxplot(),
+  ggplot(data2,aes(x=cluster,y=X7))+
+    geom_boxplot(),
+  ncol = 2, nrow = 4)
+
+if(FALSE){
+  ggplot(data2,aes(x=X6,fill=cluster))+
+  geom_density(position = "stack")
+
+ggplot(data2,aes(x=X5,fill=cluster))+
+  geom_density(position = "fill")
+
+ggplot(data2,aes(x=cluster,y=X7))+
+  geom_boxplot()
+
+ggplot(data2,aes(x=cluster,y=X4))+
+  geom_boxplot()+ coord_flip()
+
+ggplot(data2,aes(x=X5,y=X1,col=cluster))+
+  geom_point(size=3)
+
+ggplot(data2, aes(x = X2, y = X3,col=cluster)) +
+ stat_density_2d(aes(fill = stat(level)), geom = "polygon")
+}
 
 
 

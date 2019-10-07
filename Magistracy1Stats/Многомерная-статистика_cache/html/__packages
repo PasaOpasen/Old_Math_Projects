@@ -1,0 +1,12 @@
+base
+knitr
+readxl
+dplyr
+ggplot2
+magrittr
+ggpubr
+corrplot
+psych
+MASS
+tree
+randomForest
