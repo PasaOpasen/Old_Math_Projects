@@ -137,6 +137,7 @@ cor(vm$scores)
 ###################################Задание 4
 data =data.frame(read_excel("Приложение 2.xlsx")) 
 data$CLASS=factor(data$CLASS)
+pairs(data[,1:7],col=data$CLASS,pch=16)
 
 library(MASS)
 

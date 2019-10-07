@@ -239,6 +239,11 @@ data =data.frame(read_excel("Приложение 2.xlsx"))
 data$CLASS=factor(data$CLASS)
 head(data,9)
 ```
+Визуализировать эти данные будет не лучшей идей, так переменных и кластеров довольно много:
+```{r,fig.height=10,fig.width=10}
+pairs(data[,1:7],col=data$CLASS,pch=16)
+```
+
 Проведём обучение через линейный дискриминантный анализ:
 ```{r, include=FALSE}
 library(MASS)
