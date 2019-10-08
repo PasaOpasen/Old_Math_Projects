@@ -8,7 +8,7 @@ x=1:length(y)
 #x=seq(1770,2050,length.out = n)
 #y=rchisq(n,14)
 
-#скользящее среднее
+#полиномы
 spanlist=c(0.01,0.015,0.02)
 plot(x,y,type="l",col="grey")
 for(i in 1:length(spanlist)){
@@ -42,6 +42,15 @@ for(i in 1:length(sparlist)){
 #lines(smooth.spline(x,y, cv=TRUE),col=i,lwd=2)
 legend("topleft",c(paste("spar =", sparlist)),col=1:length(sparlist),bty="n",lwd=2)
 
+
+#скользящее среднее
+library(caTools)
+k=c(3,5,9)
+plot(x,y,type="l",col="grey")
+for(i in 1:length(k)){
+  lines(x,runmean(y,k[i]),col=i,lwd=2)
+}
+legend("topleft",c(paste("k =", k)),col=1:length(k),bty="n",lwd=2)
 
 
 

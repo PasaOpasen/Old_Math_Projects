@@ -23,8 +23,8 @@ summary(price1)#минимальные характеристики
 t.test(price1)#тест Стьюдента для среднего
 
 vart=sd(price1)/mean(price1)*100
-print(paste("Коэффициент вариации равен",vart,"%"))
-
+cat("Коэффициент вариации равен",vart,"%\n")
+#так как коэффициент вариации < 30%, выборка достаточно однородная
 
 
 #Задание 3
@@ -53,8 +53,49 @@ plot(stl(forma,s.window = "periodic")$time.series,main="")
 
 
 
-
-
-
 #Задание 4
+
+n=150
+x=1:150
+y=matrix(rnorm(n*8,150,50),nrow=8)
+df=data.frame(x=x,y=y[1,])
+
+library(ggplot2)
+ggplot(df,aes(x=x,y=y))+
+  geom_line(col="green")+
+  geom_point(size=2)+
+  geom_smooth(method = lm)
+
+mt=lm(y~x,df)
+summary(mt)
+
+
+res=mt$residuals
+#скользящее среднее
+library(caTools)
+k=c(3,5,9)
+plot(x,res,type="l",col="grey")
+for(i in 1:length(k)){
+  lines(x,runmean(res,k[i]),col=i,lwd=2)
+}
+
+legend("topleft",c(paste("k =", k)),col=1:length(k),bty="n",lwd=2)
+
+
+
+library(corrplot)
+nn=20
+for(i in seq(1,n-nn,nn)){
+  cat("Times:",x[i:(i+nn-1)],"\n")
+  data=t(y[,i:(i+nn-1)])#транспонирование, чтобы строки стали переменными
+  corrplot(cor(data))
+}
+
+
+
+
+
+
+
+
 
