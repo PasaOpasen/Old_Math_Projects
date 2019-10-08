@@ -349,7 +349,7 @@ data2$cluster=factor(data2$cluster)
 head(data2,10)
 ```
 Построим диаграммы ядерной плотности для распределения каждой переменной X1-X7 по отнесенным группам, чтобы убедиться в правильности классификации:
-```{r,fig.height=9}
+```{r,fig.height=9, cache=TRUE}
 library(ggplot2)
 library(ggpubr)
 
@@ -372,7 +372,7 @@ ggarrange(
 ```
 
 Другой вариант --- ящики с усами:
-```{r,fig.height=9}
+```{r,fig.height=9, cache=TRUE}
 ggarrange(
   ggplot(data2,aes(x=cluster,y=X1))+
     geom_boxplot(),
@@ -392,7 +392,7 @@ ggarrange(
 ```
 
 Также лица Чернова:
-```{r}
+```{r, cache=TRUE}
 newdata=as_data_frame(data2)%>%group_by(cluster)%>%
     summarise_all(funs(mean))
   faces(newdata[,2:8])#рисуем лица
@@ -417,3 +417,47 @@ newdata=as_data_frame(data2)%>%group_by(cluster)%>%
 ***
 
 ## Временные ряды
+Используются две переменные:
+```{r}
+p1 = nchar("Дмитрий")#число букв в имени
+p2 = nchar("Пасько")#число букв в фамилии
+```
+
+### Задание 1
+
+### Задание 3
+Создадим и визуализируем временной ряд:
+```{r}
+library(ggplot2)
+
+yt=c(1133+ p1,	1222,	1354+ p1,	1389,	1342+ p2,	1377,	1491,	1684+ p2)
+data=data.frame(time=1:length(yt),values=yt)
+plot(data,type="b")
+```
+
+В целом, здесь наблюдается линейная составляющая. Построим линейную модель и регрессионную прямую:
+```{r}
+fit=lm(values~time,data)#создание модели
+ggplot(data,aes(x=time,y=values))+
+  geom_point()+
+  geom_smooth(method=lm)
+```
+
+Посмотрим информацию о модели:
+```{r}
+summary(fit)#информация о модели
+```
+Самое важное здесь --- модель описывает более 80% дисперсий (**Adjusted R-squared**), каждый её коэффициент (**Pr(>|t|)**) и она сама (**p-value**) статистически значимы. **Estimate** --- это коэффициенты модели, значит сама регресионная прямая имеет вид $$y=1098.57 + 61.93 t$$
+
+Теперь выполним прогноз для среднего и индивидульного значений при $t=9$: 
+```{r}
+#прогноз среднего
+predict(fit,data.frame(time = c(9)), se.fit=TRUE, interval="confidence", level=0.95)$fit
+#прогноз индивидуального
+predict(fit,data.frame(time = c(9)), se.fit=TRUE, interval="prediction", level=0.95)$fit
+
+```
+Здесь первое число --- само предсказанное значение, последующие --- границы доверительного интервала.
+
+### Задание 4
+

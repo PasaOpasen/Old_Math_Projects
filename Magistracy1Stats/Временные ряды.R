@@ -34,13 +34,13 @@ yt=c(1133+ p1,	1222,	1354+ p1,	1389,	1342+ p2,	1377,	1491,	1684+ p2)
 data=data.frame(time=1:length(yt),values=yt)
 plot(data,type="b")
 
-fit=lm(values~time,data)
+fit=lm(values~time,data)#создание модели
 ggplot(data,aes(x=time,y=values))+
   geom_point()+
   geom_smooth(method=lm)
 
-summary(fit)
-cf=fit$coefficients
+summary(fit)#информация о модели
+cf=fit$coefficients#коэффициенты
 
 #прогноз среднего
 predict(fit,data.frame(time = c(9)), se.fit=TRUE, interval="confidence", level=0.95)$fit
@@ -48,7 +48,8 @@ predict(fit,data.frame(time = c(9)), se.fit=TRUE, interval="confidence", level=0
 predict(fit,data.frame(time = c(9)), se.fit=TRUE, interval="prediction", level=0.95)$fit
 
 
-
+forma=ts(yt, start = 1,frequency = 1)
+plot(stl(forma,s.window = "periodic")$time.series,main="")
 
 
 
