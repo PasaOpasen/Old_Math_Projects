@@ -86,9 +86,14 @@ legend("topleft",c(paste("k =", k)),col=1:length(k),bty="n",lwd=2)
 library(corrplot)
 nn=20
 for(i in seq(1,n-nn,nn)){
-  cat("Times:",x[i:(i+nn-1)],"\n")
-  data=t(y[,i:(i+nn-1)])#транспонирование, чтобы строки стали переменными
-  corrplot(cor(data))
+  tmp=i:(i+nn-1)
+  cat("Times:",x[tmp],"\n")
+  data=t(y[,tmp])#транспонирование, чтобы строки стали переменными
+  cormatrix=cor(data)
+  lower=cormatrix[lower.tri(cormatrix)]
+  cat("Статистика треугольнику корреляционной матрицы \n")
+  print(summary(lower[lower!=0])) 
+  corrplot(cormatrix)
 }
 
 
