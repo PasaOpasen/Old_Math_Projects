@@ -1,0 +1,810 @@
+/* DEFAULTS
+----------------------------------------------------------*/
+
+html{
+  height:100%;
+}
+body{
+  position:relative;
+  min-height:100%;
+  overflow-y: scroll; 
+}
+#wrapper{
+  padding-bottom:70px;
+}
+#footer{
+  position:absolute;
+  bottom:0;
+  left:0;
+  z-index:500;
+  width:100%;
+  height:140px;
+  overflow:hidden;
+
+}
+
+/* background-color:#336699;--------------------------------------------------------------------------------*/
+
+#no-gradient-div1 
+{
+height: 250px;   /*240*/
+ 
+}
+
+
+#gradient-cs
+{
+
+background-image: -webkit-gradient(
+	linear,
+	left top,
+	left bottom,
+	color-stop(0, #F6F4F7),
+	color-stop(0.39, #FFFCFF),
+	color-stop(1, #ECEBF0)
+);
+background-image: -o-linear-gradient(bottom, #F6F4F7 0%, #FFFCFF 39%, #ECEBF0 100%);
+background-image: -moz-linear-gradient(bottom, #F6F4F7 0%, #FFFCFF 39%, #ECEBF0 100%);
+background-image: -webkit-linear-gradient(bottom, #F6F4F7 0%, #FFFCFF 39%, #ECEBF0 100%);
+background-image: -ms-linear-gradient(bottom, #F6F4F7 0%, #FFFCFF 39%, #ECEBF0 100%);
+background-image: linear-gradient(to bottom, #F6F4F7 0%, #FFFCFF 39%, #ECEBF0 100%);
+
+height: 710px;
+  
+}
+
+
+
+/*  fonts -----------------------------------------*/
+
+.caption
+{
+    color: #202020;
+    font-size: 11px;
+    
+    font-family: Verdana;
+    padding-right: 11px;
+}
+
+.lbcapt
+{
+    color:SteelBlue;
+    font-size: 11px;
+    
+    font-family: Verdana;
+    font-weight: bold;
+    
+    padding-right: 15px;
+    
+}
+
+.lbColumn
+{
+    color:Gray;
+    font-size:small;
+    font-family: Verdana;
+    font-weight: bold;
+    height:25px;
+
+    padding-top: 6px;
+    vertical-align: middle;
+}
+
+
+h2
+{
+    font-size: 26px;
+    font-family:Verdana;
+    color:#004466;
+
+}
+
+h4
+{
+    font-size: 16px;
+    font-family:verdana;
+    font-weight: normal;
+    color: #444444;
+}
+
+h5
+{
+    color: #444444;
+    font-family: Verdana;
+    font-size: 10pt;    
+    font-weight: normal;
+}
+
+h6
+{
+    font-size: 16px;
+    font-family: verdana;
+    color: #004466;
+    font-weight: bold;
+}
+
+h21
+{
+    font-size: 14px;
+    font-family: verdana;
+    color: #004466;
+    font-weight: bold;
+}
+
+hg5
+{
+    font-size: 15px;
+    font-family: verdana;
+    color:SteelBlue;
+    font-weight: bold;
+}
+
+hg6
+{
+    font-size: 11px;
+    font-family: verdana;
+    color:Gray;
+    font-weight: bold;
+}
+
+h7
+{
+    font-size: 11px;
+    font-family: verdana;
+    color: #777777;
+}
+
+hw7
+{
+    font-size: 11px;
+    font-family: verdana;
+    color:#004466;
+    font-weight: bold;
+}
+
+hg7
+{
+    font-size: 11px;
+    font-family: verdana;
+    color: SteelBlue;
+    font-weight: bold;
+}
+
+h8
+{
+    font-size: 18px;
+    font-family:verdana;
+    font-weight: normal;
+    color: #444444;
+}
+
+h9
+{
+    color: #444444;
+    font-family: Verdana;
+    font-size: 9pt;    
+    font-weight: normal;
+}
+
+h12
+{
+    font-size: 12px;
+    font-family: verdana;
+    color: #777777;
+}
+
+
+h14
+{
+  font-size: 12px;
+  font-family: verdana;
+  font-weight: bold;
+  color: #004466;
+}
+
+h15
+{
+  margin-left :5px;
+  font-size: 10px;
+  font-family: verdana;
+  vertical-align:super;
+  color: #444444;
+}        
+
+h16
+{
+  margin-left :3px;
+  font-size: 10px;
+  font-family: verdana;
+  text-decoration:line-through;
+  vertical-align:super;
+  color: #444444;
+}     
+
+h24
+{
+    font-size: 16px;
+    font-family: verdana;
+    color:Gray;
+    font-weight: bold;
+}
+
+/*  fonts -----------------------------------------*/
+
+
+/*  table styles -----------------------------------------*/
+
+.tr_style
+{
+     height: 100px;
+}
+
+.tr_style_line
+{
+     height:60px; 
+     border-color:Silver; 
+     border-width: 1px; 
+     border-top-style: solid;
+}
+
+.tr_style_line25
+{
+    height:25px; 
+    background-color:WhiteSmoke;    
+}
+
+.tr_style_h20
+{
+    height:20px; 
+}
+
+.tr_line_color
+{
+    background-color:#F8F8F8;    
+}
+
+.tbl_style
+{
+     width: 100%;
+}
+
+.tbl_style_icon
+{
+    width:70px; 
+    min-width:70px; 
+    vertical-align:top;    
+}
+
+
+.tbl_style_block_color
+{
+     width: 950px; 
+     min-width:950px;
+     border-color: #999999;
+     border-style: solid;
+     border-width: thin;
+}
+
+.tbl_style_block
+{
+     width: 900px; 
+     min-width:900px;
+}
+
+.tbl_style_block800
+{
+     width: 800px; 
+     min-width:800px;
+}
+
+
+.tbl_style_block13
+{
+     width: 1200px; 
+     min-width:1200px;
+}
+
+.tbl_style_header
+{
+    background-color:SteelBlue;
+    height:60px;
+}
+
+
+.tbl_style_block3
+{
+     width: 300px; 
+     min-width:300px;
+     text-align:center;  
+}
+
+.tbl_style_block33
+{
+     width: 300px; 
+     min-width:300px;
+     text-align:Right;  
+}
+
+.tbl_style_block_400
+{
+     width: 400px; 
+     min-width:400px;
+     text-align:Right;  
+}
+
+.tbl_style_block33_ru
+{
+     width: 300px; 
+     min-width:300px;
+     text-align:Right;  
+}
+
+.tbl_style_block4
+{
+     width: 660px; 
+     min-width:660px;
+}
+
+.tbl_style_block5
+{
+     width: 300px; 
+     min-width:300px;
+     text-align:center;  
+     vertical-align : top;
+}
+
+.tbl_style_bottom
+{
+     width: 980px; 
+     min-width:980px;
+     padding-top: 14px;
+     border-width: 1px;
+     border-top-style: solid; 
+     border-top-color: #999999;
+}
+
+.tbl_style_bottom2
+{
+     width: 980px; 
+     min-width:980px;
+     padding-top: 14px;
+}
+
+      
+.tbl_style_block6
+{
+     width: 250px; 
+     min-width:250px;
+}
+
+.tbl_style_block7
+{
+     width: 350px; 
+     min-width:350px;
+}
+
+.tbl_style_block8
+{
+     width: 360px; 
+     min-width:360px;
+     text-align:center;
+  
+}
+      
+.tbl_style_capt
+{
+     width: 290px; 
+     padding-left:10px;
+}
+        
+.td_padding 
+{
+  width: 130px; 
+  padding-left:20px;
+  
+  font-size: 12px;
+  font-family: verdana;
+  color: #004466;
+  font-weight: bold;
+}
+
+.td_price
+{
+  width: 100px;
+
+  font-size: 12px;
+  font-family: verdana;
+  font-weight: bold;
+  color:SteelBlue;
+  
+}   
+     
+.td_was
+{
+  width: 100px;
+
+  margin-left :3px;
+  font-size: 10px;
+  font-family: verdana;
+  color: #444444;
+}   
+
+        
+.td_cents
+{
+  width: 160px;
+  font-size: 10px;
+  font-family: verdana;
+  color: #444444;
+}        
+
+.td_button
+{
+    text-align:center;
+    width:200px    
+}
+        
+/*  table styles -----------------------------------------*/        
+
+
+.txtBoxStyle
+{
+ height:40px;  
+ width:250px;
+}
+
+.inline 
+{
+    display: inline;
+}
+
+/*  links styles --------------------------------------*/
+
+.mainOCRLink
+{
+    color:White;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: Verdana;
+    padding-right: 14px;
+    
+    -moz-transition: color 0.3s 0.03s ease;
+    -o-transition: color 0.3s 0.03s ease;
+    -webkit-transition: color 0.3s 0.03s ease;
+}
+
+.mainOCRLink:hover
+{
+    color:#00CCFF;
+    text-decoration: none;
+}
+
+.mainOCRLinkSM
+{
+    color:White;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: Verdana;
+    padding-right: 14px;
+    
+    -moz-transition: color 0.3s 0.03s ease;
+    -o-transition: color 0.3s 0.03s ease;
+    -webkit-transition: color 0.3s 0.03s ease;
+}
+
+.mainOCRLinkSM:hover
+{
+    color:#00CCFF;
+    text-decoration: none;
+}
+
+.mainOCRLink12
+{
+    color:Silver;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: Verdana;
+    padding-right: 5px;
+    
+    -moz-transition: color 0.3s 0.03s ease;
+    -o-transition: color 0.3s 0.03s ease;
+    -webkit-transition: color 0.3s 0.03s ease;
+}
+.mainOCRLink12:hover
+{
+    color:White;
+    text-decoration: none;
+}
+
+
+.mainOCRLink13
+{
+    color:SteelBlue;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: Verdana;
+    padding-right: 10px;
+    
+    -moz-transition: color 0.3s 0.03s ease;
+    -o-transition: color 0.3s 0.03s ease;
+    -webkit-transition: color 0.3s 0.03s ease;
+}
+.mainOCRLink13:hover
+{
+    color:Silver;
+    text-decoration: none;
+}
+
+.mainOCRLink14
+{
+    color:SteelBlue;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: Verdana;
+    padding-right: 9px;
+    
+    -moz-transition: color 0.3s 0.03s ease;
+    -o-transition: color 0.3s 0.03s ease;
+    -webkit-transition: color 0.3s 0.03s ease;
+}
+.mainOCRLink14:hover
+{
+    color:#999999;
+    text-decoration: none;
+}
+
+
+.lLink
+{
+    color:White;
+    text-decoration: none;
+    font-size: 14px;
+    
+    font-family: Verdana;
+    padding-right: 5px;
+    
+    font-weight: bold;
+    -moz-transition: color 0.2s 0.02s ease;
+    -o-transition: color 0.2s 0.02s ease;
+    -webkit-transition: color 0.2s 0.02s ease;
+}
+
+.lLink:hover
+{
+    color:#00CCFF;
+    text-decoration: none;
+}
+
+
+.rLink
+{
+    color:#CC3300;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 12px;
+    
+    font-family: Verdana;
+    padding-right: 5px;
+    
+}
+
+.rLink:hover
+{
+    color:#FF3300;
+    font-weight: bold;
+}
+
+.gLink
+{
+    color:#66FF33;
+    text-decoration: none;
+    font-size: 14px;
+    
+    font-family: Verdana;
+    padding-right: 5px;
+    padding-left: 5px;
+    
+    font-weight: bold;
+    -moz-transition: color 0.2s 0.02s ease;
+    -o-transition: color 0.2s 0.02s ease;
+    -webkit-transition: color 0.2s 0.02s ease;
+}
+
+.gLink:hover
+{
+    color:#00CCFF;
+    text-decoration: none;
+}
+
+.bLink
+{
+    color:SteelBlue;
+    font-size: 14px;
+    
+    font-family: Verdana;
+    padding-right: 5px;
+    
+    font-weight: bold;
+    -moz-transition: color 0.2s 0.02s ease;
+    -o-transition: color 0.2s 0.02s ease;
+    -webkit-transition: color 0.2s 0.02s ease;
+}
+
+.bLink:hover
+{
+    color:#404040;
+}
+
+.CLink
+{
+    color:Silver;
+    text-decoration: none;
+    font-size: 11px;
+    
+    font-family: Verdana;
+    padding-right: 7px;
+    padding-left: 4px;
+    font-weight: bold;
+    
+    -moz-transition: color 0.4s 0.02s ease;
+    -o-transition: color 0.4s 0.02s ease;
+    -webkit-transition: color 0.4s 0.02s ease;
+}
+
+.CLink:hover
+{
+    color:SteelBlue;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.CLink2
+{
+    color:Silver;
+    text-decoration: none;
+    font-size: 11px;
+    
+    font-family: Verdana;
+    padding-right: 7px;
+    font-weight: bold;
+    
+    -moz-transition: color 0.4s 0.02s ease;
+    -o-transition: color 0.4s 0.02s ease;
+    -webkit-transition: color 0.4s 0.02s ease;
+}
+
+.CLink2:hover
+{
+    color:SteelBlue;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+/* -- color:#009acd;   */
+
+.panelDiv
+{
+
+     margin-bottom: 5px;
+}
+
+.panelLine
+{
+    Height:30px;
+    color:Silver;
+    padding-top :5px; 
+    padding-left:15px; 
+    margin-top:10px; 
+    margin-bottom:10px;    
+}
+
+/*  links styles --------------------------------------*/
+
+
+/*  checkox --------------------------------------*/
+.btn-buy
+{
+    Width:160px;
+    Height:30px;
+    font-family: Verdana;
+    font-size:small;
+}
+
+
+.btn-buy
+{
+    Width:160px;
+    Height:30px;
+    font-family: Verdana;
+    font-size:small;
+}
+
+/*  button  ---------------------------------------*/
+.btn-custom-lighten.active {
+  color: rgba(255, 255, 255, 0.75);
+}
+.btn-custom-lighten {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #548cbb;
+  background-image: -moz-linear-gradient(top, #4682b4, #699bc4);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4682b4), to(#699bc4));
+  background-image: -webkit-linear-gradient(top, #4682b4, #699bc4);
+  background-image: -o-linear-gradient(top, #4682b4, #699bc4);
+  background-image: linear-gradient(to bottom, #4682b4, #699bc4);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4682b4', endColorstr='#ff699bc4', GradientType=0);
+  border-color: #699bc4 #699bc4 #3f75a2;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #699bc4;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.btn-custom-lighten:hover,
+.btn-custom-lighten:focus,
+.btn-custom-lighten:active,
+.btn-custom-lighten.active,
+.btn-custom-lighten.disabled,
+.btn-custom-lighten[disabled] {
+  color: #ffffff;
+  background-color: #699bc4;
+  *background-color: #568ebd;
+}
+.btn-custom-lighten:active,
+.btn-custom-lighten.active {
+  background-color: #4682b4 ;
+}
+
+
+
+
+/*  button  ---------------------------------------*/
+
+/* gray -----------------------------------------------------------------*/
+
+.btn-gray-darken.active {
+  color: rgba(255, 255, 255, 0.75);
+}
+.btn-gray-darken {
+ font-family:Verdana;
+  font-size:20px;
+  padding-left:50px;
+  padding-right:50px;
+ color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #969696;
+  background-image: -moz-linear-gradient(top, #a0a0a0, #878787);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#a0a0a0), to(#878787));
+  background-image: -webkit-linear-gradient(top, #a0a0a0, #878787);
+  background-image: -o-linear-gradient(top, #a0a0a0, #878787);
+  background-image: linear-gradient(to bottom, #a0a0a0, #878787);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffa0a0a0', endColorstr='#ff878787', GradientType=0);
+  border-color: #878787 #878787 #606060;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #878787;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.btn-gray-darken:hover,
+.btn-gray-darken:focus,
+.btn-gray-darken:active,
+.btn-gray-darken.active,
+.btn-gray-darken.disabled,
+.btn-gray-darken[disabled] {
+  color: #ffffff;
+  background-color: #878787;
+  *background-color: #7a7a7a;
+}
+.btn-gray-darken:active,
+.btn-gray-darken.active {
+  background-color: #6d6d6d ;
+}

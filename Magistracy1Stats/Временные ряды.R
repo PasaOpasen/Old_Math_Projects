@@ -54,8 +54,6 @@ ggplot(df,
 #plot(stl(forma, s.window = 21)$time.series,main="")
 
 
-
-
 price1 = c(
   40 + p1,43 + p1,40,80,
   74,40 + p2,55 + p2,42 + p2,
@@ -104,22 +102,31 @@ plot(stl(forma,s.window = "periodic")$time.series,main="")
 
 #Задание 4
 
-n=150
-x=1:150
-y=matrix(rnorm(n*8,150,50),nrow=8)
-df=data.frame(x=x,y=y[1,])
+library(readxl)
+data=data.frame(read_xlsx("РожьВсеГодаПустыхЛет.xlsx"))
+data[,-1]=apply(data[,-1], 2, as.numeric)#перевести в числа все строки
+y=t(data[,-1])
+ns=rownames(y)
+#y=apply(y,2,function(s) ifelse(is.na(s),median(s,na.rm = T),s))
+library(mice)
+imp=mice(y,seed=11)
+y=complete(imp,action = 1)
+
+x=sapply(ns, function(s) as.numeric(substr(s,2,nchar(s))))
+df=data.frame(x=x,y=y[,2])
 
 library(ggplot2)
 ggplot(df,aes(x=x,y=y))+
   geom_line(col="green")+
-  geom_point(size=2)+
-  geom_smooth(method = lm)
+  geom_point(size=2,na.rm = TRUE)+
+  geom_smooth(method = lm,na.rm = TRUE)
 
-mt=lm(y~x,df)
+mt=lm(y~x,df,na.rm = TRUE)
 summary(mt)
 
 
-res=mt$residuals
+x=x[!is.na(df$y)]
+res=mt$residuals[!is.na(df$y)]
 #скользящее среднее
 library(caTools)
 k=c(3,5,9)
@@ -134,13 +141,14 @@ legend("topleft",c(paste("k =", k)),col=1:length(k),bty="n",lwd=2)
 
 library(corrplot)
 nn=20
-for(i in seq(1,n-nn,nn)){
+
+for(i in seq(length(x)-80,length(x)-nn,nn)){
   tmp=i:(i+nn-1)
   cat("Times:",x[tmp],"\n")
-  data=t(y[,tmp])#транспонирование, чтобы строки стали переменными
+  data=y[tmp,]#транспонирование, чтобы строки стали переменными
   cormatrix=cor(data)
-  lower=cormatrix[lower.tri(cormatrix)]
-  cat("Статистика треугольнику корреляционной матрицы \n")
+  lower=abs(cormatrix[lower.tri(cormatrix)])
+  cat("Статистика по треугольнику корреляционной матрицы \n")
   print(summary(lower[lower!=0])) 
   corrplot(cormatrix)
 }
