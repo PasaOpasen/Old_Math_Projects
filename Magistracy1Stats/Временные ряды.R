@@ -41,12 +41,17 @@ ms= data.frame(ms)
 colnames(ms)=c("mean")
 rownames(ms)=levels(tb$Year)
 
+library(ggplot2)
+df=data.frame(time=as.numeric(levels(tb$Year)),price=ms$mean)
+ggplot(df,
+       aes(time,price))+
+  geom_point(size=3)+
+  geom_smooth(method = lm,se=F)+
+  geom_smooth(method =loess,col="red")
 
-x=as.numeric(levels(tb$Year))
-y=ms$mean
-plot(x,y,type="b")
 
-
+#forma=ts(df$price,start = min( df$time),frequency = 1)
+#plot(stl(forma, s.window = 21)$time.series,main="")
 
 
 
