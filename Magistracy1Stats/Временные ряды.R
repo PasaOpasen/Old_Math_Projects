@@ -6,6 +6,50 @@ p2 = nchar("Пасько")
 
 
 #Задание 1
+library(readxl)
+tab=data.frame(read_xlsx("Псевдоцены.xlsx")) 
+colnames(tab)=c("Price","Year","City","Distrinct")
+tab$Year=factor(tab$Year)
+tab$City=factor(tab$City)
+tab$Distrinct=factor(tab$Distrinct)
+
+library(dplyr)
+
+tib=data_frame(tab)[[1]]
+
+# по городам
+tb=tib%>%select(Price,Year,City)%>%group_by(Year,City)%>%
+  summarise(mean=mean(Price))
+ms=matrix(tb$mean,nrow=length(levels(tb$Year)))
+ms= data.frame(ms)
+colnames(ms)=levels(tb$City)
+rownames(ms)=levels(tb$Year)
+
+# по районам
+tb=tib%>%select(Price,Year,Distrinct)%>%group_by(Year,Distrinct)%>%
+  summarise(mean=mean(Price))
+ms=matrix(tb$mean,nrow=length(levels(tb$Year)))
+ms= data.frame(ms)
+colnames(ms)=levels(tb$Distrinct)
+rownames(ms)=levels(tb$Year)
+
+# по стране
+tb=tib%>%select(Price,Year)%>%group_by(Year)%>%
+  summarise(mean=mean(Price))
+ms=matrix(tb$mean,nrow=length(levels(tb$Year)))
+ms= data.frame(ms)
+colnames(ms)=c("mean")
+rownames(ms)=levels(tb$Year)
+
+
+x=as.numeric(levels(tb$Year))
+y=ms$mean
+plot(x,y,type="b")
+
+
+
+
+
 
 price1 = c(
   40 + p1,43 + p1,40,80,
