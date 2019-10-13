@@ -6,6 +6,54 @@ p2 = nchar("Пасько")
 
 
 #Задание 1
+
+library(readxl)
+library(dplyr)
+tab=data.frame(t(read_xlsx("Рожь18век.xlsx")))
+names(tab)=sapply( tab[1,], as.character)#поставить правильные названия
+tab=tab[-1,]#удалить строку с именами
+tab=data.frame(Year=sapply(rownames(tab),as.numeric),tab)
+tab=sapply(tab, as.numeric)#факторы перевести в числа
+head(as_data_frame(tab),10)
+
+tmptab=tab[,-1]
+means=list(rowMeans(tmptab,na.rm = T))
+for(i in 1:((ncol(tab)-1)/2)){
+  means[[i+1]]=rowMeans(tmptab[,c(i,i+1)],na.rm = T)
+}
+
+means=sapply(means,function(col)sapply(col, function(row) ifelse(is.nan(row),NA,row)))#Заменить все NaN на NA
+means=data.frame(tab[,1],means)
+names(means)=c("Год","ПоСтране","Район1","Район2","Район3","Район4","Район5","Район6","Район7","Район8","Район9")
+head(means)
+
+library(ggplot2)
+p1=  ggplot(means,aes(x=Год))+
+  geom_line(aes(y=ПоСтране),size=1)
+p2=  ggplot(means,aes(x=Год))+
+  geom_line(aes(y=Район1),size=1,col=2)
+p3=  ggplot(means,aes(x=Год))+
+geom_line(aes(y=Район2),size=1,col=3)
+p4=  ggplot(means,aes(x=Год))+
+geom_line(aes(y=Район3),size=1,col=5)
+p5=  ggplot(means,aes(x=Год))+
+geom_line(aes(y=Район4),size=1,col=6)
+p6= ggplot(means,aes(x=Год))+
+geom_line(aes(y=Район5),size=1,col=7)
+p7= ggplot(means,aes(x=Год))+
+geom_line(aes(y=Район6),size=1,col=8)
+p8=  ggplot(means,aes(x=Год))+
+geom_line(aes(y=Район7),size=1,col=9)
+p9=  ggplot(means,aes(x=Год))+
+geom_line(aes(y=Район8),size=1,col=10)
+p10=  ggplot(means,aes(x=Год))+
+  geom_line(aes(y=Район9),size=1,col=11)
+library(ggpubr)
+ggarrange(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,nrow=5,ncol=2)
+
+
+if(FALSE){
+  
 library(readxl)
 tab=data.frame(read_xlsx("Псевдоцены.xlsx")) 
 colnames(tab)=c("Price","Year","City","Distrinct")
@@ -48,7 +96,7 @@ ggplot(df,
   geom_point(size=3)+
   geom_smooth(method = lm,se=F)+
   geom_smooth(method =loess,col="red")
-
+}
 
 #forma=ts(df$price,start = min( df$time),frequency = 1)
 #plot(stl(forma, s.window = 21)$time.series,main="")
@@ -72,6 +120,8 @@ t.test(price1)#тест Стьюдента для среднего
 vart=sd(price1)/mean(price1)*100
 cat("Коэффициент вариации равен",vart,"%\n")
 #так как коэффициент вариации < 30%, выборка достаточно однородная
+
+t.test(means[,2],price1)
 
 
 #Задание 3

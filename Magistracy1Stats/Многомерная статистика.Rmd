@@ -425,6 +425,86 @@ p2 = nchar("Пасько")#число букв в фамилии
 ```
 
 ### Задание 1
+Прочитаем и обработаем данные:
+```{r}
+library(readxl)
+library(dplyr)
+tab=data.frame(t(read_xlsx("Рожь18век.xlsx")))
+names(tab)=sapply( tab[1,], as.character)#поставить правильные названия
+tab=tab[-1,]#удалить строку с именами
+tab=data.frame(Year=sapply(rownames(tab),as.numeric),tab)
+tab=sapply(tab, as.numeric)#факторы перевести в числа
+head(as_data_frame(tab),10)
+```
+Создадим фрейм со средними по годам для всей страны и её районов:
+```{r}
+tmptab=tab[,-1]
+means=list(rowMeans(tmptab,na.rm = T))
+for(i in 1:((ncol(tab)-1)/2)){
+  means[[i+1]]=rowMeans(tmptab[,c(i,i+1)],na.rm = T)
+}
+
+means=sapply(means,function(col)sapply(col, function(row) ifelse(is.nan(row),NA,row)))#Заменить все NaN на NA
+means=data.frame(tab[,1],means)
+names(means)=c("Year","Country","Distrinct1","Distrinct2","Distrinct3","Distrinct4","Distrinct5","Distrinct6","Distrinct7","Distrinct8","Distrinct9")
+head(means)
+```
+Визуализация полученных значений показывает, что в целом цена ведёт себя одинаково по всем регионам:
+```{r,fig.height=7}
+library(ggplot2)
+g1=  ggplot(means,aes(x=Year))+
+  geom_line(aes(y=Country),size=1)
+g2=  ggplot(means,aes(x=Year))+
+  geom_line(aes(y=Distrinct1),size=1,col=2)
+g3=  ggplot(means,aes(x=Year))+
+geom_line(aes(y=Distrinct2),size=1,col=3)
+g4=  ggplot(means,aes(x=Year))+
+geom_line(aes(y=Distrinct3),size=1,col=5)
+g5=  ggplot(means,aes(x=Year))+
+geom_line(aes(y=Distrinct4),size=1,col=6)
+g6= ggplot(means,aes(x=Year))+
+geom_line(aes(y=Distrinct5),size=1,col=7)
+g7= ggplot(means,aes(x=Year))+
+geom_line(aes(y=Distrinct6),size=1,col=8)
+g8=  ggplot(means,aes(x=Year))+
+geom_line(aes(y=Distrinct7),size=1,col=9)
+g9=  ggplot(means,aes(x=Year))+
+geom_line(aes(y=Distrinct8),size=1,col=10)
+g10=  ggplot(means,aes(x=Year))+
+  geom_line(aes(y=Distrinct9),size=1,col=11)
+library(ggpubr)
+ggarrange(g1,g2,g3,g4,g5,g6,g7,g8,g9,g10,nrow=5,ncol=2)
+```
+
+Зададим новый временной ряд:
+```{r}
+price1 = c(
+  40 + p1,43 + p1,40,80,
+  74,40 + p2,55 + p2,42 + p2,
+  42,50,40 + p2,43,43,
+  35 + p1,40 + p1,30,36 + p1,
+  50,30 + p1,29,45 + p1,
+  40,42,40,36,
+  50,30 + p1,24 + p2,
+  25 + p2,40,32 + p1,
+  30,20,30,25,32 + p2
+)
+
+summary(price1)#минимальные характеристики
+```
+
+Тест Стьюдента для среднего значения показывает значимое отличие среднего ряда от нуля:
+```{r}
+t.test(price1)#тест Стьюдента для среднего
+```
+а низкий коэффициент вариации говорит об однородности выборки
+```{r}
+vart=sd(price1)/mean(price1)*100
+cat("Коэффициент вариации равен",vart,"%\n")
+#так как коэффициент вариации < 30%, выборка достаточно однородная
+```
+
+
 
 ### Задание 3
 Создадим и визуализируем временной ряд:
