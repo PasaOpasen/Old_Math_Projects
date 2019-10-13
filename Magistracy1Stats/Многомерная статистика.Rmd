@@ -23,7 +23,7 @@ setwd("C:\\Users\\крендель\\Desktop\\MagicCode\\Magistracy1Stats")
 Для выполнения работы использовался язык **R** версии `r getRversion()`. Необходимые пакеты скачиваются командой
 ```{r,eval=FALSE}
 install.packages(c("readxl","dplyr","ggplot2","ggpubr","corrplot",
-                  "psych","MASS","tree","randomForest","TeachingDemos"))
+                  "psych","MASS","tree","randomForest","TeachingDemos","mice"))
 ```
 и подключаются
 ```{r}
@@ -37,6 +37,7 @@ library(MASS)
 library(tree)
 library(randomForest)
 library(TeachingDemos)
+library(mice)
 ```
 
 Также использовался номер варианта
@@ -455,9 +456,92 @@ summary(fit)#информация о модели
 predict(fit,data.frame(time = c(9)), se.fit=TRUE, interval="confidence", level=0.95)$fit
 #прогноз индивидуального
 predict(fit,data.frame(time = c(9)), se.fit=TRUE, interval="prediction", level=0.95)$fit
+```
 
+
+```{r}
 ```
 Здесь первое число --- само предсказанное значение, последующие --- границы доверительного интервала.
 
 ### Задание 4
+Считаем набор данных и проведём некоторую обработку:
+```{r, message=FALSE}
+library(readxl)
+data=data.frame(read_xlsx("РожьВсеГода.xlsx"))
+data[,-1]=apply(data[,-1], 2, as.numeric)#перевести в числа все строки
+y=t(data[,-1])#транспонирование для удобства
+
+#получить массив лет
+ns=rownames(y)
+x=sapply(ns, function(s) as.numeric(substr(s,2,nchar(s))))
+
+library(mice)#обработать пустые значения
+imp=mice(y,seed=11)
+y=complete(imp,action = 1)
+
+df=data.frame(x=x,y=y[,2])#объединить данные в фрейм
+
+print(df[sort(sample(1:nrow(df),13)),2,drop=FALSE]) #вывести 13 случайных строк
+```
+При этом пропущенные значения были обработаны по алгоритму [MICE](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.169.5745&rep=rep1&type=pdf), для дальнейшего исследования был взят второй район. Визуализировав данные по нему
+```{r}
+library(ggplot2)
+ggplot(df,aes(x=x,y=y))+
+  geom_line(col="green")+
+  geom_point(size=2)+
+  geom_smooth(method = lm)+
+  geom_smooth(se=F,col="red")
+```
+
+приходим к выводу, что в целом поведение цен можно описать линейной моделью, однако для обычной линейной модели здесь явно не будет выполняться требование гомоскедаксичности. Попробуем разные преобразования данных:
+```{r}
+summary(lm(y~x,df))
+summary(lm(sqrt(y)~x,df))
+summary(lm(log(y)~x,df))
+summary(lm(log(y)~log(x),df))
+```
+Видно, что модель с логарифмами описывает почти 85% дисперсий, поэтому в дальнейшем будем использовать её. Построи тот же график:
+```{r}
+library(ggplot2)
+ggplot(df,aes(x=log(x),y=log(y)))+
+  geom_line(col="green")+
+  geom_point(size=2)+
+  geom_smooth(method = lm)+
+  geom_smooth(se=F,col="red")
+```
+
+Для остатков полученной модели проведём сглаживание методом k-средних:
+```{r}
+mt=lm(log(y)~log(x),df)
+res=mt$residuals
+#скользящее среднее
+library(caTools)
+k=c(3,5,9)
+plot(x,res,type="l",col="grey")
+for(i in 1:length(k)){
+  lines(x,runmean(res,k[i]),col=i,lwd=2)
+}
+
+legend("topleft",c(paste("k =", k)),col=1:length(k),bty="n",lwd=2)
+```
+
+И последнее: визуализируем корреляции между всеми исходными районами за последние 60 лет наблюдений по отрезкам в 20 лет:
+```{r}
+library(corrplot)
+nn=20
+
+for(i in seq(length(x)-60,length(x)-nn,nn)){
+  tmp=i:(i+nn-1)
+  cat("Times:",x[tmp],"\n")
+  data=y[tmp,]#транспонирование, чтобы строки стали переменными
+  cormatrix=cor(data)
+  lower=abs(cormatrix[lower.tri(cormatrix)])
+  cat("Статистика по треугольнику корреляционной матрицы \n")
+  print(summary(lower[lower!=0])) 
+  corrplot(cormatrix)
+}
+```
+Наглядно видно, что ближе к концу наблюдений корреляция между переменными возрастает.
+
+
 

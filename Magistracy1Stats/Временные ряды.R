@@ -103,30 +103,43 @@ plot(stl(forma,s.window = "periodic")$time.series,main="")
 #Задание 4
 
 library(readxl)
-data=data.frame(read_xlsx("РожьВсеГодаПустыхЛет.xlsx"))
+data=data.frame(read_xlsx("РожьВсеГода.xlsx"))
 data[,-1]=apply(data[,-1], 2, as.numeric)#перевести в числа все строки
-y=t(data[,-1])
+y=t(data[,-1])#транспонирование для удобства
+
+#получить массив лет
 ns=rownames(y)
-#y=apply(y,2,function(s) ifelse(is.na(s),median(s,na.rm = T),s))
-library(mice)
+x=sapply(ns, function(s) as.numeric(substr(s,2,nchar(s))))
+
+library(mice)#обработать пустые значения
 imp=mice(y,seed=11)
 y=complete(imp,action = 1)
 
-x=sapply(ns, function(s) as.numeric(substr(s,2,nchar(s))))
-df=data.frame(x=x,y=y[,2])
+df=data.frame(x=x,y=y[,2])#объединить данные в фрейм
+
+print(df[sort(sample(1:nrow(df),13)),])
 
 library(ggplot2)
 ggplot(df,aes(x=x,y=y))+
   geom_line(col="green")+
-  geom_point(size=2,na.rm = TRUE)+
-  geom_smooth(method = lm,na.rm = TRUE)
+  geom_point(size=2)+
+  geom_smooth(method = lm)+
+  geom_smooth(se=F,col="red")
 
-mt=lm(y~x,df,na.rm = TRUE)
+mt=lm(y~x,df)
+summary(mt)
+mt=lm(log(y)~x,df)
+summary(mt)
+mt=lm(log(y)~log(x),df)
+summary(mt)
+mt=lm(sqrt(y)~x,df)
+summary(mt)
+mt=lm(log(y)~log(x)+I(log(x)^2),df)
 summary(mt)
 
-
 x=x[!is.na(df$y)]
-res=mt$residuals[!is.na(df$y)]
+mt=lm(log(y)~log(x),df)
+res=mt$residuals
 #скользящее среднее
 library(caTools)
 k=c(3,5,9)
