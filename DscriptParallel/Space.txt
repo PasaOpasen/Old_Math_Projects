@@ -1,0 +1,13 @@
+xmin= 100
+ymin= -100
+xmax= 300
+ymax= 100
+countS= 4
+countW= 400
+sourceCount= 3 40 40 40
+wbeg= 0.034
+wend= 3.4
+lamda= 51.0835913312694
+mu= 26.3157894736842
+ro= 2.7
+h= 1.5
