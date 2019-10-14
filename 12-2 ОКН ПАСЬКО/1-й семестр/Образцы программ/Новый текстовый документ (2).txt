@@ -1,0 +1,22 @@
+#include <iostream>
+# include <cstdlib>
+# include <cstdio>
+using namespace std;
+int main()
+{
+FILE *fp=fopen("input.txt", "r");
+FILE *pf=fopen("output.txt", "w");
+
+
+
+
+
+
+
+
+
+
+fclose(fp);
+fclose(pf);
+return 0;
+}
