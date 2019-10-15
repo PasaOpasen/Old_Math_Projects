@@ -1,7 +1,6 @@
 ---
 title: "Лабораторная по многомерной статистике"
 author: "Дмитрий Пасько"
-date: "07.10.2019"
 output: 
    html_document:
      toc: yes
@@ -23,7 +22,7 @@ setwd("C:\\Users\\крендель\\Desktop\\MagicCode\\Magistracy1Stats")
 Для выполнения работы использовался язык **R** версии `r getRversion()`. Необходимые пакеты скачиваются командой
 ```{r,eval=FALSE}
 install.packages(c("readxl","dplyr","ggplot2","ggpubr","corrplot",
-                  "psych","MASS","tree","randomForest","TeachingDemos","mice"))
+                  "psych","MASS","tree","randomForest","TeachingDemos","mice","corrgram"))
 ```
 и подключаются
 ```{r}
@@ -38,6 +37,7 @@ library(tree)
 library(randomForest)
 library(TeachingDemos)
 library(mice)
+library(corrgram)
 ```
 
 Также использовался номер варианта
@@ -46,7 +46,7 @@ library(mice)
 nv=7
 ```
 Дополнительная информация: 
-[огромная статья по построению моделей в R](https://ranalytics.github.io/data-mining/01-Data-Mining-Models-in-R.html), [cтатья по кластерному, факторному и дискриминантному анализу в R](https://rpubs.com/iezepov/e502lec7), [курс по анализу данных в R](https://stepik.org/course/129/syllabus), [курс по основам R как языка программирования](https://stepik.org/course/497/syllabus),  [курс по статистике в R](https://stepik.org/course/524/syllabus), [перечень основых функций языка](https://aakinshin.net/ru/posts/r-functions/),  [математические операции в R](https://ru.wikibooks.org/wiki/Язык_программирования_R/Математика),  [книги по R на моём GitHub](https://github.com/PasaOpasen/LittleHelps/tree/master/книги%20по%20языкам/R).
+[огромная статья по построению моделей в R](https://ranalytics.github.io/data-mining/01-Data-Mining-Models-in-R.html), [cтатья по кластерному, факторному и дискриминантному анализу в R](https://rpubs.com/iezepov/e502lec7), [курс по анализу данных в R](https://stepik.org/course/129/syllabus), [курс по основам R как языка программирования](https://stepik.org/course/497/syllabus),  [курс по статистике в R](https://stepik.org/course/524/syllabus), [перечень основых функций языка](https://aakinshin.net/ru/posts/r-functions/),  [математические операции в R](https://ru.wikibooks.org/wiki/Язык_программирования_R/Математика),  [книги по R на моём GitHub](https://github.com/PasaOpasen/LittleHelps/tree/master/книги%20по%20языкам/R), [набор ссылок](https://ru.stackoverflow.com/questions/506597/Книги-и-учебные-ресурсы-по-языку-r), [отличный сайт по R](https://www.statmethods.net).
 
 ***
 ## Многомерный анализ
@@ -607,7 +607,7 @@ legend("topleft",c(paste("k =", k)),col=1:length(k),bty="n",lwd=2)
 
 И последнее: визуализируем корреляции между всеми исходными районами за последние 60 лет наблюдений по отрезкам в 20 лет:
 ```{r}
-library(corrplot)
+library(corrgram)
 nn=20
 
 for(i in seq(length(x)-60,length(x)-nn,nn)){
@@ -618,7 +618,8 @@ for(i in seq(length(x)-60,length(x)-nn,nn)){
   lower=abs(cormatrix[lower.tri(cormatrix)])
   cat("Статистика по треугольнику корреляционной матрицы \n")
   print(summary(lower[lower!=0])) 
-  corrplot(cormatrix)
+  corrgram(cormatrix,order=FALSE, lower.panel=panel.shade,
+           upper.panel=panel.pie)
 }
 ```
 Наглядно видно, что ближе к концу наблюдений корреляция между переменными возрастает.
