@@ -26,18 +26,18 @@ install.packages(c("readxl","dplyr","ggplot2","ggpubr","corrplot",
 ```
 и подключаются
 ```{r}
-library(readxl)
-library(dplyr)
-library(ggplot2)
-library(ggpubr)
-library(corrplot)
-library(psych)
-library(MASS)
-library(tree)
-library(randomForest)
-library(TeachingDemos)
-library(mice)
-library(corrgram)
+library(readxl)#чтение из excel
+library(dplyr)#современные средства программирования, включая функциональное
+library(ggplot2)#красивые удобные графики
+library(ggpubr)#группировка изображений
+library(corrplot)#картинка для корреляционной матрицы
+library(psych)#факторный анализ
+library(MASS)#линейный дискриминантный анализ
+library(tree)#визуализация деревьев
+library(randomForest)#случайные леса
+library(TeachingDemos)#пиктограммы
+library(mice)#обработка отсутствующих значений
+library(corrgram)#коррелограммы
 ```
 
 Также использовался номер варианта
@@ -459,19 +459,19 @@ g2=  ggplot(means,aes(x=Year))+
 g3=  ggplot(means,aes(x=Year))+
 geom_line(aes(y=Distrinct2),size=1,col=3)
 g4=  ggplot(means,aes(x=Year))+
-geom_line(aes(y=Distrinct3),size=1,col=5)
+geom_line(aes(y=Distrinct3),size=1,col=4)
 g5=  ggplot(means,aes(x=Year))+
-geom_line(aes(y=Distrinct4),size=1,col=6)
+geom_line(aes(y=Distrinct4),size=1,col=5)
 g6= ggplot(means,aes(x=Year))+
-geom_line(aes(y=Distrinct5),size=1,col=7)
+geom_line(aes(y=Distrinct5),size=1,col=6)
 g7= ggplot(means,aes(x=Year))+
-geom_line(aes(y=Distrinct6),size=1,col=8)
+geom_line(aes(y=Distrinct6),size=1,col=7)
 g8=  ggplot(means,aes(x=Year))+
-geom_line(aes(y=Distrinct7),size=1,col=9)
+geom_line(aes(y=Distrinct7),size=1,col="chartreuse2")
 g9=  ggplot(means,aes(x=Year))+
-geom_line(aes(y=Distrinct8),size=1,col=10)
+geom_line(aes(y=Distrinct8),size=1,col="chocolate1")
 g10=  ggplot(means,aes(x=Year))+
-  geom_line(aes(y=Distrinct9),size=1,col=11)
+  geom_line(aes(y=Distrinct9),size=1,col="plum2")
 library(ggpubr)
 ggarrange(g1,g2,g3,g4,g5,g6,g7,g8,g9,g10,nrow=5,ncol=2)
 ```
