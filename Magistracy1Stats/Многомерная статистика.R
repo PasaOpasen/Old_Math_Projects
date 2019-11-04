@@ -23,6 +23,31 @@ plot(fit, labels = data$Country,xlab = "Countries")
 plot(fit$height, xlab = "step",ylab="dist",type="b",col="blue",lwd=1,main="Расстояния при объединении кластеров")
 
 
+mat=fit$merge
+resu=list()
+countries=as.character(data$Country)
+for(i in 1:nrow(mat)){
+  
+  if(mat[i,1]<0){
+    a=countries[-mat[i,1]]
+  }else{
+    a=as.character(resu[[mat[i,1]]])
+  }
+  
+  if(mat[i,2]<0){
+    b=countries[-mat[i,2]]
+  }else{
+    b=as.character(resu[[mat[i,2]]])
+  }
+
+  resu[[i]]=c(a,b)
+}
+names(resu)=paste("Шаг",1:nrow(mat),"расстояние", fit$height)
+print(resu)
+
+
+
+
 
 ####################################Задание 2
 
@@ -33,15 +58,24 @@ plot(it,sums,type = "b",col="red",main = "Суммы внутригруппов�
 
 #функция, проводящая некоторый анализ и строящая графики для заданного числа кластеров
 getimage=function(k){
-  fit=kmeans(data[,2:5],k)#строится модель
+  
+fit=kmeans(data[,2:5],k)#строится модель
+
 cat("Внутригрупповые суммы:",fit$withinss,"\n")#внутригрупповые суммы
 cat("Общая сумма:", fit$betweenss,"\n") 
 cat("Матрица расстояний:\n")
-print(dist(fit$centers))#матрица расстояний
+#print(dist(fit$centers))#матрица расстояний
+
+
 
 #Добавляем кластер к фрейму данных
 library(dplyr)
 newdata=as_data_frame(data)%>%mutate(cluster=factor(fit$cluster))
+#print(summary(aov(Costs~cluster,newdata)))
+
+#рисуются кластеры через главные компоненты
+library(cluster) 
+clusplot(newdata, newdata$cluster, color=TRUE, shade=TRUE, labels=2, lines=0)
 
 #агрегирование данных по группам
 means=newdata[,2:6]%>%group_by(cluster)%>%summarise(
@@ -66,6 +100,7 @@ for(i in 2:k){
   tmpdata=rbind(tmpdata,data.frame(x=1:4,means=as.numeric(means[i,2:5]),cluster=rep(lbs[i],4)))
 }
 tmpdata$cluster=factor(tmpdata$cluster)
+
 
 ppp=ggplot(tmpdata,aes(x=x,y=means,col=cluster))+
   geom_line()+

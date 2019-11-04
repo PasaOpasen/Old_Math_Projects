@@ -11,3 +11,8 @@ MASS
 tree
 randomForest
 TeachingDemos
+lattice
+mice
+corrgram
+plotly
+cluster
