@@ -141,8 +141,31 @@ p2 <- ggarrange(costs, deaths, doctors, gdp,
                 ncol = 2, nrow = 2)
 ggarrange(ppp,p1, p2, ncol = 1, nrow = 3,heights=c(1.3,2,3))
 }
+getimage2=function(k){
+  fit=kmeans(data[,2:5],k)#строится модель
+  
+  #Добавляем кластер к фрейму данных
+  library(dplyr)
+  newdata=as_data_frame(data)%>%mutate(cluster=factor(fit$cluster))
+  cat("Дисперсионный анализ для каждой переменной,",k,"кластеров \n")
+  cat("Затраты: \n")
+  print(summary(aov(Costs~cluster,newdata)))
+  cat("Смерти: \n")
+  print(summary(aov(Deaths~cluster,newdata)))
+  cat("Врачи: \n")
+  print(summary(aov(Doctors~cluster,newdata)))
+  cat("ВВП: \n")
+  print(summary(aov(GDP~cluster,newdata)))
+  
+  #рисуются кластеры через главные компоненты
+  #library(cluster) 
+  #print(clusplot(newdata, newdata$cluster, color=TRUE, shade=TRUE, labels=2, lines=0))
+  library(factoextra)
+  print( fviz_cluster(fit, data[, -1], ellipse.type = "norm"))
+}
 
 getimage(3)
+getimage2(3)
 
 
 getfaces=function(dataset){
