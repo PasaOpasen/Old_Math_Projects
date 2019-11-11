@@ -1,7 +1,7 @@
 PWD c:\Users\крендель\Desktop\MagicCode\Оптимальное управление
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\miktex\data\le\pdftex\pdflatex.fmt
-INPUT c:\Users\крендель\Desktop\MagicCode\Оптимальное управление\Алгоритмы.tex
-OUTPUT c:\Users\крендель\Desktop\MagicCode\Оптимальное управление\Алгоритмы.log
+INPUT c:\Users\крендель\Desktop\MagicCode\Оптимальное управление\Лабораторные.tex
+OUTPUT c:\Users\крендель\Desktop\MagicCode\Оптимальное управление\Лабораторные.log
 INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls
 INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls
 INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\size12.clo
@@ -94,9 +94,9 @@ INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics-cfg\color.cfg
 INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics-cfg\color.cfg
 INPUT C:\Program Files\MiKTeX 2.9\tex\latex\pdfpages\pppdftex.def
 INPUT C:\Program Files\MiKTeX 2.9\tex\latex\pdfpages\pppdftex.def
-INPUT c:\Users\крендель\Desktop\MagicCode\Оптимальное управление\Алгоритмы.aux
-INPUT c:\Users\крендель\Desktop\MagicCode\Оптимальное управление\Алгоритмы.aux
-OUTPUT c:\Users\крендель\Desktop\MagicCode\Оптимальное управление\Алгоритмы.aux
+INPUT c:\Users\крендель\Desktop\MagicCode\Оптимальное управление\Лабораторные.aux
+INPUT c:\Users\крендель\Desktop\MagicCode\Оптимальное управление\Лабораторные.aux
+OUTPUT c:\Users\крендель\Desktop\MagicCode\Оптимальное управление\Лабораторные.aux
 INPUT C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii
 INPUT C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii
 INPUT C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty
@@ -121,6 +121,7 @@ INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics\lscape.sty
 INPUT C:\Program Files\MiKTeX 2.9\tex\latex\graphics\lscape.sty
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\larm1728.tfm
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\labx1728.tfm
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\labx1200.tfm
 INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr8.tfm
 INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr6.tfm
 INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi12.tfm
@@ -142,22 +143,16 @@ INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd
 INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
-INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx12.tfm
-INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx8.tfm
-INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx6.tfm
-INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\labx1200.tfm
-OUTPUT c:\Users\крендель\Desktop\MagicCode\Оптимальное управление\Алгоритмы.pdf
+OUTPUT c:\Users\крендель\Desktop\MagicCode\Оптимальное управление\Лабораторные.pdf
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\pdftex\config\pdftex.map
-INPUT c:\Users\крендель\Desktop\MagicCode\Оптимальное управление\Алгоритмы.aux
+INPUT c:\Users\крендель\Desktop\MagicCode\Оптимальное управление\Лабораторные.aux
 INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\jknappen\ec\ecrm1200.tfm
-INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\labx1200.pk
-INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\labx1200.pk
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\larm1200.pk
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\larm1200.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\labx1200.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\labx1200.pk
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\labx1728.pk
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\labx1728.pk
-INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmbx12.pfb
-INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmbx12.pfb
 INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmex10.pfb
 INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmex10.pfb
 INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi12.pfb
@@ -166,13 +161,9 @@ INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi8.pfb
 INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi8.pfb
 INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr12.pfb
 INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr12.pfb
-INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr6.pfb
-INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr6.pfb
 INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr8.pfb
 INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr8.pfb
 INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy10.pfb
 INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy10.pfb
 INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy8.pfb
 INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy8.pfb
-INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\symbols\msbm10.pfb
-INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\symbols\msbm10.pfb
