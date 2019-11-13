@@ -203,9 +203,9 @@ legend("topleft",c(paste("k =", k)),col=1:length(k),bty="n",lwd=2)
 
 
 library(corrgram)
-nn=20
+nn=15
 
-for(i in seq(length(x)-60,length(x)-nn,nn)){
+for(i in seq(length(x)-nn*3,length(x)-nn,nn)){
   tmp=i:(i+nn-1)
   cat("Times:",x[tmp],"\n")
   data=y[tmp,]#транспонирование, чтобы строки стали переменными
