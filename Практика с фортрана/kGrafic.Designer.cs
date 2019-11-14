@@ -154,9 +154,9 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(81, 616);
+            this.button1.Location = new System.Drawing.Point(78, 634);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(138, 49);
+            this.button1.Size = new System.Drawing.Size(153, 73);
             this.button1.TabIndex = 29;
             this.button1.Text = "Пуск";
             this.button1.UseVisualStyleBackColor = true;
@@ -166,7 +166,7 @@
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Location = new System.Drawing.Point(83, 745);
+            this.button2.Location = new System.Drawing.Point(164, 745);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(137, 36);
             this.button2.TabIndex = 30;
@@ -269,9 +269,9 @@
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button3.Location = new System.Drawing.Point(83, 689);
+            this.button3.Location = new System.Drawing.Point(14, 745);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(136, 34);
+            this.button3.Size = new System.Drawing.Size(136, 36);
             this.button3.TabIndex = 42;
             this.button3.Text = "Сохранить";
             this.button3.UseVisualStyleBackColor = true;
@@ -291,9 +291,9 @@
             // 
             this.groupBox3.Controls.Add(this.radioButton6);
             this.groupBox3.Controls.Add(this.radioButton5);
-            this.groupBox3.Location = new System.Drawing.Point(27, 325);
+            this.groupBox3.Location = new System.Drawing.Point(28, 335);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(292, 91);
+            this.groupBox3.Size = new System.Drawing.Size(292, 61);
             this.groupBox3.TabIndex = 56;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Метод поиска корня";
@@ -323,7 +323,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(24, 111);
+            this.button4.Location = new System.Drawing.Point(11, 111);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(220, 91);
             this.button4.TabIndex = 57;
@@ -333,7 +333,7 @@
             // 
             // textBox13
             // 
-            this.textBox13.Location = new System.Drawing.Point(292, 144);
+            this.textBox13.Location = new System.Drawing.Point(277, 144);
             this.textBox13.Name = "textBox13";
             this.textBox13.Size = new System.Drawing.Size(39, 26);
             this.textBox13.TabIndex = 59;
@@ -343,7 +343,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(250, 147);
+            this.label14.Location = new System.Drawing.Point(235, 147);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(36, 19);
             this.label14.TabIndex = 58;

@@ -160,7 +160,7 @@ namespace Практика_с_фортрана
                   return 0;
               };
 
-            Q = (Complex al) => { Complex tmp = a * al; return 2 * Complex.Sin(tmp) / al; };
+            Q = (Complex al) =>  2 * Complex.Sin(a * al) / al;
 
             delta = (Complex al) =>
             {

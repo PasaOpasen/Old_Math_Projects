@@ -83,7 +83,7 @@
             // button5
             // 
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button5.Location = new System.Drawing.Point(530, 209);
+            this.button5.Location = new System.Drawing.Point(527, 222);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(225, 53);
             this.button5.TabIndex = 4;
@@ -95,7 +95,7 @@
             // 
             this.button6.BackColor = System.Drawing.Color.White;
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.Location = new System.Drawing.Point(475, 268);
+            this.button6.Location = new System.Drawing.Point(475, 294);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(226, 43);
             this.button6.TabIndex = 5;
@@ -107,7 +107,7 @@
             // 
             this.button7.BackColor = System.Drawing.Color.White;
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button7.Location = new System.Drawing.Point(383, 317);
+            this.button7.Location = new System.Drawing.Point(383, 352);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(226, 43);
             this.button7.TabIndex = 6;
