@@ -3,5 +3,11 @@
 		{
 			"path": "."
 		}
-	]
+	],
+	"extensions": {
+		"recommendations": []
+	},
+	"settings": {
+		"cSpell.enabled": false
+	}
 }

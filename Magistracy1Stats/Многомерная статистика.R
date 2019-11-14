@@ -230,11 +230,50 @@ newdata=as_data_frame(data)%>%group_by(CLASS)%>%
     summarise_all(funs(mean))
   faces(newdata[,2:8])#рисуем лица
 
+  
+  #проверка многомерного нормального распределения по каждому классу
+  tmp=numeric()
+  library(mvnormtest) 
+  
+for(i in 1:length(levels(data$CLASS))){
+  tmp[i]=mshapiro.test(t(data[data$CLASS == i, 1:7]))$p.value 
+} 
+  
 
 library(MASS)
+ 
+  # Функция вывода результатов классификации
+  Out_CTab <- function(model, group) {
+    # Таблица неточностей "Факт/Прогноз" по обучающей выборке
+    classified <- predict(model)$class  
+    t1 <- table(group, classified)  
+    # Точность классификации и расстояние Махалонобиса
+    Err_S <- mean(group != classified)
+    mahDist <- dist(model$means %*% model$scaling) 
+    cat("Точность классификации:",1-Err_S[1],'\n')
+    cat("Расстояния Махалонобиса:\n")
+    print(mahDist)
+    
+    # Таблица "Факт/Прогноз" и ошибка при скользящем контроле
+    t2 <-  table(group, update(model, CV = T)$class -> LDA.cv) 
+    Err_CV <- mean(group != LDA.cv) 
+    cat("Ошибка при скользящем контроле:",Err_CV[1],'\n')
+    Err_S.MahD <- c(Err_S, mahDist) 
+    Err_CV.N <- c(Err_CV, length(group)) 
+    cbind(t1, Err_S.MahD, t2, Err_CV.N)
+    
+    cat("Результаты многомерного дисперсионного анализа: \n")
+    ldam <- manova(as.matrix( data[,1:7]) ~ data$CLASS)
+    print(summary(ldam, test="Wilks"))
+    return(1)
+  }   
+  
 
 #линейный дискриминантный анализ
-ldadat <- lda(CLASS~.,data,method="t")
+ldadat <- lda(CLASS~.,data,method="moment")
+
+Out_CTab(ldadat,data$CLASS)
+
 ldadat$means#групповые средние
 (mat=ldadat$scaling)#матрица дискриминантных функций
 #matrix(nrow=1,as.numeric(data[65,1:7]))%*%as.matrix(mat)

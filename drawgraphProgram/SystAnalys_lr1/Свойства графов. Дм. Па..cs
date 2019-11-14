@@ -825,7 +825,7 @@ s = sr.ReadLine();
             Console.Write("-----------> Число независимости графа = {0}. Вершины максимального множества: ", g.IndependenceNumber(out p)); 
             p.Show();
             //Vectors v = new Vectors(g.GreatestIndepSubsets[0]);
-            for (int i = 0; i < p.n; i++) V[(int)p[i]-1].color = 1;
+            for (int i = 0; i < p.Deg; i++) V[(int)p[i]-1].color = 1;
             G.drawALLGraph(V, E);
 
             sw.Close();
@@ -875,7 +875,7 @@ s = sr.ReadLine();
             Console.WriteLine("Наименьшие (по мощности) доминирующие  множества:"); g.ShowSmallestDominSub();
             Console.WriteLine("-----------> Число доминирования равно {0}", g.DominationNumber);
             Vectors v = new Vectors(g.MinimalDominSubsets[0]);
-            for (int i = 0; i < v.n; i++) V[(int)v[i] - 1].color = 1;
+            for (int i = 0; i < v.Deg; i++) V[(int)v[i] - 1].color = 1;
             G.drawALLGraph(V, E);
 
             sw.Close();
@@ -927,13 +927,13 @@ s = sr.ReadLine();
             Console.WriteLine("-----------> Число вершинного покрытия равно {0}", g.VCoatingNumber);
             Vectors v = new Vectors(g.MinimalVCoatingSubsets[0]);
             for (int i=0;i<g.MinimalVCoatingSubsets.Count;i++)
-                if(g.MinimalVCoatingSubsets[i].n==g.VCoatingNumber)
+                if(g.MinimalVCoatingSubsets[i].Deg==g.VCoatingNumber)
                 {
                     v = new Vectors(g.MinimalVCoatingSubsets[i]);
                     break;
                 }
             
-            for (int i = 0; i < v.n; i++) V[(int)v[i] - 1].color = 1;
+            for (int i = 0; i < v.Deg; i++) V[(int)v[i] - 1].color = 1;
             G.drawALLGraph(V, E);
 
             sw.Close();
@@ -989,7 +989,7 @@ s = sr.ReadLine();
             //Console.WriteLine("Матрица смежности графа клик:"); g.CliquesGraph.A.PrintMatrix();
             Vectors v = new Vectors(g.GreatestCliquesSubsets[0]);
 
-            for (int i = 0; i < v.n; i++) V[(int)v[i] - 1].color = 1;
+            for (int i = 0; i < v.Deg; i++) V[(int)v[i] - 1].color = 1;
             G.drawALLGraph(V, E);
 
             sw.Close();
@@ -1048,7 +1048,7 @@ s = sr.ReadLine();
             //Console.WriteLine("Матрица смежности графа клик:"); g.CliquesGraph.A.PrintMatrix();
             Vectors v = new Vectors(g.GreatestCliquesSubsets[0]);
 
-            for (int i = 0; i < v.n; i++) V[(int)v[i] - 1].color = 1;
+            for (int i = 0; i < v.Deg; i++) V[(int)v[i] - 1].color = 1;
             //G.drawALLGraph(V, E);
 
             sw.Close();

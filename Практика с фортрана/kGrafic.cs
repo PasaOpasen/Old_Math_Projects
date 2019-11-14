@@ -73,7 +73,7 @@ namespace Практика_с_фортрана
                 if(checkBox1.Checked)
                 {
                 List<double> value = new List<double>(), newmas = new List<double>();
-                for (int j = 0; j < mas[i].n; j++)
+                for (int j = 0; j < mas[i].Deg; j++)
                 {
                     double wtf = РабКонсоль.delta(mas[i][j]).Abs;
                     if (wtf < 10 * eps)
@@ -87,8 +87,8 @@ namespace Практика_с_фортрана
                 }
 
 
-                if (radioButton1.Checked &&radioButton3.Checked) for(int j=0;j<mas[i].n;j++) chart1.Series[0].Points.AddXY(args[i], mas[i].DoubleMas[j]);
-                if (radioButton1.Checked && radioButton4.Checked) for (int j = 0; j < mas[i].n; j++) chart1.Series[0].Points.AddXY(args[i], mas[i].DoubleMas[j]/args[i]);
+                if (radioButton1.Checked &&radioButton3.Checked) for(int j=0;j<mas[i].Deg;j++) chart1.Series[0].Points.AddXY(args[i], mas[i].DoubleMas[j]);
+                if (radioButton1.Checked && radioButton4.Checked) for (int j = 0; j < mas[i].Deg; j++) chart1.Series[0].Points.AddXY(args[i], mas[i].DoubleMas[j]/args[i]);
                 textBox13.Text = РабКонсоль.w.ToString();
             }
             if(radioButton2.Checked) CurvesShow(mas,args);
@@ -101,7 +101,7 @@ namespace Практика_с_фортрана
             while(list.Count>0)
             {
                 for(int i=0;i<list.Count;i++)
-                    if(list[i].n<1)
+                    if(list[i].Deg<1)
                     {
                         list.RemoveAt(i);
                         arg.RemoveAt(i);
@@ -109,13 +109,13 @@ namespace Практика_с_фортрана
                     }
 
                 for (int i = 1; i < list.Count; i++)
-                   if (list[i].n == 1 && list[i -1].n == 1)
+                   if (list[i].Deg == 1 && list[i -1].Deg == 1)
                     {
                         list.RemoveAt(i-1);
                         arg.RemoveAt(i-1);
                         i--;
                     }
-                else if(list[i].n<list[i-1].n)
+                else if(list[i].Deg<list[i-1].Deg)
                     {
                         list.RemoveAt(i);
                         arg.RemoveAt(i);
@@ -130,9 +130,9 @@ namespace Практика_с_фортрана
 
                 for(int i=0;i<list.Count;i++)
                 {
-                    //list[i].Show();list[i].n.Show();
-                    chart1.Series[k].Points.Add(arg[i],list[i][list[i].n-1]);
-                    list[i] = new Vectors(list[i], 0, list[i].n - 2);
+                    //list[i].Show();list[i].Deg.Show();
+                    chart1.Series[k].Points.Add(arg[i],list[i][list[i].Deg-1]);
+                    list[i] = new Vectors(list[i], 0, list[i].Deg - 2);
                 }
                 k++;
             }

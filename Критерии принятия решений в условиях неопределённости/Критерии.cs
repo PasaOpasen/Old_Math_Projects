@@ -233,7 +233,7 @@ namespace Критерии_принятия_решений_в_условиях_�
 
             textBox1.Text = "";
             Vectors q = new Vectors(dataGridView2.ColumnCount);
-            for (int i = 0; i < q.n; i++) q[i] = Convert.ToDouble(dataGridView2.Rows[0].Cells[i].Value);
+            for (int i = 0; i < q.Deg; i++) q[i] = Convert.ToDouble(dataGridView2.Rows[0].Cells[i].Value);
             double a = Convert.ToDouble(textBox2.Text), b = Convert.ToDouble(textBox3.Text);
 
             Vectors v;
@@ -302,7 +302,7 @@ namespace Критерии_принятия_решений_в_условиях_�
         }
         private void Fill(Vectors v)
         {
-            for (int i = 0; i < v.n; i++) dataGridView3.Rows[i].Cells[0].Value = v[i];
+            for (int i = 0; i < v.Deg; i++) dataGridView3.Rows[i].Cells[0].Value = v[i];
         }
     }
 }
