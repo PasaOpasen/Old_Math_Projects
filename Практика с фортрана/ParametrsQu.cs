@@ -27,7 +27,26 @@ namespace Практика_с_фортрана
             textBox2.Text = РабКонсоль.epsroot.ToString();
             textBox3.Text = РабКонсоль.polesBeg.ToString();
             textBox12.Text = РабКонсоль.polesEnd.ToString();
+            textBox13.Text = РабКонсоль.ro.ToString();
             numericUpDown1.Value = РабКонсоль.countroot;
+
+            double sqr(double q) => q * q;
+
+            textBox6.TextChanged += (o, e) =>
+            {
+                textBox4.Text = (Convert.ToDouble(textBox13.Text) / sqr(Convert.ToDouble(textBox6.Text))).ToString();
+            };
+            textBox8.TextChanged += (o, e) =>
+            {
+                textBox10.Text = (Convert.ToDouble(textBox13.Text) / sqr(Convert.ToDouble(textBox8.Text))).ToString();
+            };
+
+            textBox13.TextChanged += (o, e) =>
+            {
+                textBox4.Text = (Convert.ToDouble(textBox13.Text) / sqr(Convert.ToDouble(textBox6.Text))).ToString();
+                textBox10.Text = (Convert.ToDouble(textBox13.Text) / sqr(Convert.ToDouble(textBox8.Text))).ToString();
+            };
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -45,6 +64,8 @@ namespace Практика_с_фортрана
             РабКонсоль.countroot = Convert.ToInt32(numericUpDown1.Value);
             РабКонсоль.polesBeg = Convert.ToDouble(textBox3.Text);
             РабКонсоль.polesEnd = Convert.ToDouble(textBox12.Text);
+            РабКонсоль.ro = Convert.ToDouble(textBox13.Text);
+
             this.Close();
         }
     }
