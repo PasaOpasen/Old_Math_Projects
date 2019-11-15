@@ -244,9 +244,10 @@ library(MASS)
  
   # Функция вывода результатов классификации
   Out_CTab <- function(model, group) {
-    # Таблица неточностей "Факт/Прогноз" по обучающей выборке
+  cat("Таблица неточностей \"Факт/Прогноз\" по обучающей выборке: \n") 
     classified <- predict(model)$class  
-    t1 <- table(group, classified)  
+    t1 <- table(group, classified) 
+    print(t1)
     # Точность классификации и расстояние Махалонобиса
     Err_S <- mean(group != classified)
     mahDist <- dist(model$means %*% model$scaling) 
@@ -265,7 +266,6 @@ library(MASS)
     cat("Результаты многомерного дисперсионного анализа: \n")
     ldam <- manova(as.matrix( data[,1:7]) ~ data$CLASS)
     print(summary(ldam, test="Wilks"))
-    return(1)
   }   
   
 
@@ -276,8 +276,86 @@ Out_CTab(ldadat,data$CLASS)
 
 ldadat$means#групповые средние
 (mat=ldadat$scaling)#матрица дискриминантных функций
-#matrix(nrow=1,as.numeric(data[65,1:7]))%*%as.matrix(mat)
-#plot(ldadat)
+plot(ldadat)
+
+
+#матрицы, обратные матрицам ковариации для каждого класса
+covinv=function(df){
+  res=list()
+  for(i in 1:length(levels(df$CLASS)))
+    res[[i]]= tryCatch({df[df$CLASS==i,1:7] %>% as.matrix() %>% cov() %>% solve},error=function(r) NA)
+    #res[[i]]=df[df$CLASS==i,1:7] %>% as.matrix() %>% cov() %>% solve
+  res
+}
+
+#расстояния Махаланобиса от элемента до каждого из классов
+distance=function(means,covs, elem){
+  res=c()
+  for(i in 1:nrow(means)){
+    vec=(means[i,]-elem)
+     res[i]=(vec%*%covs[[i]])%*%vec
+  }
+   
+  return(sqrt(res))
+}
+
+#поиск номера элемента в датафрейме
+find.number=function(df,elem){
+  sm=0
+  i=0
+  len=length(elem)
+  while (sm!=len) {
+    i=i+1
+    v=ifelse(df[i,]==elem,T,F)
+    sm=sum(v)
+  }
+  return(i)
+}
+
+acc=0#точность
+#while (!near(acc,1)) 
+for(k in 1:40){
+  
+ldadat <- lda(CLASS~.,data,method="moment")
+means=ldadat$means
+cov.mat=covinv(data)
+
+
+#для всех неправильно найденных найти расстояния до кластеров, отнесённых экспертами
+prclass=predict(ldadat, data[,1:7])$class
+st=data[data$CLASS!=prclass,]
+acc=1-nrow(st)/nrow(data)
+cat("Точность классификации:",acc,'\n')
+
+if(nrow(st)==1){
+  number.of.max.distance=1
+}else{
+  distances=c()
+for(i in 1:nrow(st)){
+  cls=as.numeric(st[i,8])
+  vec=(means[cls,]-as.numeric(st[i,1:7]))
+  if(is.na(cov.mat[[cls]])){
+    distances[i]=NA
+  }else{
+  distances[i]=(vec%*%cov.mat[[cls]])%*%vec    
+  }
+}
+distances=sqrt(distances)
+#номер элемента (в таблице неверно отнесённых) с максимальным расстоянием для своего кластера
+number.of.max.distance=which.max(distances)
+}
+
+tt=st[number.of.max.distance,]#сам элемент
+cat("Неправильно отнесённый элемент с максимальным расстоянием (",max(distances,na.rm = T),")\n")
+#номер того же элемента, но в исходном фрейме
+number.of.max.distance.new=find.number(data,tt)
+print(data[number.of.max.distance.new,])
+#сделать замену на кластер с минимальным расстоянием
+data[number.of.max.distance.new,8]=predict(ldadat, tt[,1:7])$class#levels(data$CLASS)[which.min(distance(ldadat$means,cov.mat,as.numeric(tt[,-8])))]  
+cat("Заменяется на\n")
+print(data[number.of.max.distance.new,])
+}
+
 
 #функция для оценки ошибки 
 misclass <- function(pred, obs) {
