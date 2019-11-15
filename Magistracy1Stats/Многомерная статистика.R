@@ -226,14 +226,23 @@ data =data.frame(read_excel("Приложение 2.xlsx"))
 data$CLASS=factor(data$CLASS)
 pairs(data[,1:7],col=data$CLASS,pch=16)
 
-newdata=as_data_frame(data)%>%group_by(CLASS)%>%
+#лица Чернова
+showfaces=function(){
+  newdata=as_data_frame(data)%>%group_by(CLASS)%>%
     summarise_all(funs(mean))
-  faces(newdata[,2:8])#рисуем лица
+  print(faces(newdata[,2:8]))#рисуем лица
+}
+showfaces()
+#визуализация кластеров через главные компоненты
+showimage=function(){
+  library(factoextra)
+  print( fviz_cluster(list(data=data[,1:7],cluster=data[,8]), ellipse.type = "norm"))
+}
 
   
-  #проверка многомерного нормального распределения по каждому классу
-  tmp=numeric()
-  library(mvnormtest) 
+#проверка многомерного нормального распределения по каждому классу
+tmp=numeric()
+library(mvnormtest) 
   
 for(i in 1:length(levels(data$CLASS))){
   tmp[i]=mshapiro.test(t(data[data$CLASS == i, 1:7]))$p.value 
@@ -241,9 +250,8 @@ for(i in 1:length(levels(data$CLASS))){
   
 
 library(MASS)
- 
-  # Функция вывода результатов классификации
-  Out_CTab <- function(model, group) {
+# Функция вывода результатов классификации
+Out_CTab <- function(model, group) {
   cat("Таблица неточностей \"Факт/Прогноз\" по обучающей выборке: \n") 
     classified <- predict(model)$class  
     t1 <- table(group, classified) 
@@ -313,19 +321,22 @@ find.number=function(df,elem){
 }
 
 acc=0#точность
-#while (!near(acc,1)) 
-for(k in 1:40){
+repeat{ 
+#for(k in 1:40){
   
+#showfaces()
+  showimage()
+    
 ldadat <- lda(CLASS~.,data,method="moment")
 means=ldadat$means
 cov.mat=covinv(data)
-
 
 #для всех неправильно найденных найти расстояния до кластеров, отнесённых экспертами
 prclass=predict(ldadat, data[,1:7])$class
 st=data[data$CLASS!=prclass,]
 acc=1-nrow(st)/nrow(data)
 cat("Точность классификации:",acc,'\n')
+if(near(acc,1)) break
 
 if(nrow(st)==1){
   number.of.max.distance=1
@@ -390,9 +401,9 @@ misclass(rfp, data[,8])
 ###################################Задание 5
 
 data2 =data.frame(read_excel("Приложение 3.xlsx")) 
-data2= apply(data2,2,as.numeric)
+data2= apply(data2,2,as.numeric) %>% as_data_frame()
 data2=data2[31:80,]
-(cluster=predict(rf, data2))
+(cluster=predict(rf, data2)$class)
 
 data2=data.frame(cbind(data2,cluster))
 data2$cluster=factor(data2$cluster)

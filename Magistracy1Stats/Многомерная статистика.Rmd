@@ -25,7 +25,7 @@ setwd("C:\\Users\\крендель\\Desktop\\MagicCode\\Magistracy1Stats")
 ```{r,eval=FALSE}
 install.packages(c("readxl","dplyr","ggplot2","ggpubr","corrplot",
                   "psych","MASS","tree","randomForest","TeachingDemos","mice",
-                  "corrgram","magrittr","plotly"))
+                  "corrgram","magrittr","plotly","factoextra"))
 ```
 и подключаются
 ```{r}
@@ -43,6 +43,7 @@ library(mice)#обработка отсутствующих значений
 library(corrgram)#коррелограммы
 library(magrittr)#конвеерный оператор
 library(plotly)#интерактивная графика
+library(factoextra)#графика по главным компонентам
 ```
 
 Также использовался номер варианта
@@ -352,61 +353,170 @@ data =data.frame(read_excel("Приложение 2.xlsx"))
 data$CLASS=factor(data$CLASS)
 data %>% tbl_df()
 ```
-Визуализировать эти данные будет не лучшей идей, так переменных и кластеров довольно много:
+**Визуализация**:
 ```{r,fig.height=10,fig.width=10}
 pairs(data[,1:7],col=data$CLASS,pch=16)
 ```
 
-Лица Чернова показывают, что в двух случаях между парами групп сильной разницы нет:
+Напишем несколько вспомогательных функций:
 ```{r}
-newdata=as_data_frame(data)%>%group_by(CLASS)%>%
+library(MASS)
+#лица Чернова
+showfaces=function(){
+  newdata=as_data_frame(data)%>%group_by(CLASS)%>%
     summarise_all(funs(mean))
-  faces(newdata[,2:8])#рисуем лица
+  print(faces(newdata[,2:8]))#рисуем лица
+}
+#визуализация кластеров через главные компоненты
+showimage=function(){
+  library(factoextra)
+  print( fviz_cluster(list(data=data[,1:7],cluster=data[,8]), ellipse.type = "norm"))
+}
+
+#матрицы, обратные матрицам ковариации для каждого класса
+covinv=function(df){
+  res=list()
+  for(i in 1:length(levels(df$CLASS)))
+    res[[i]]= tryCatch({df[df$CLASS==i,1:7] %>% as.matrix() %>% cov() %>% solve},error=function(r) NA)
+    #res[[i]]=df[df$CLASS==i,1:7] %>% as.matrix() %>% cov() %>% solve
+  res
+}
+
+#расстояния Махаланобиса от элемента до каждого из классов
+distance=function(means,covs, elem){
+  res=c()
+  for(i in 1:nrow(means)){
+    vec=(means[i,]-elem)
+     res[i]=(vec%*%covs[[i]])%*%vec
+  }
+   
+  return(sqrt(res))
+}
+
+#поиск номера элемента в датафрейме
+find.number=function(df,elem){
+  sm=0
+  i=0
+  len=length(elem)
+  while (sm!=len) {
+    i=i+1
+    v=ifelse(df[i,]==elem,T,F)
+    sm=sum(v)
+  }
+  return(i)
+} 
+  
 ```
 
 
-Проведём обучение через линейный дискриминантный анализ:
+Лица Чернова показывают, что в двух случаях между парами групп сильной разницы нет:
+```{r,results="hide"}
+showfaces()
+```
+
+Проведём обучение через *линейный дискриминантный анализ*:
 ```{r, include=FALSE}
-library(MASS)
-ldadat <- lda(CLASS~.,data,method="t")
+ldadat <- lda(CLASS~.,data,method="moment")
 ```
 ```{r, eval=FALSE}
-library(MASS)
-ldadat <- lda(CLASS~.,data,method="t")
+ldadat <- lda(CLASS~.,data,method="moment")
 ```
-Характеристики модели:
+**Результаты обучения**:
 ```{r}
-ldadat$means#групповые средние
-(mat=ldadat$scaling)#матрица дискриминантных функций
+# Функция вывода результатов классификации
+Out_CTab <- function(model, group) {
+  cat("Таблица неточностей \"Факт/Прогноз\" по обучающей выборке: \n") 
+    classified <- predict(model)$class  
+    t1 <- table(group, classified) 
+    print(t1)
+    # Точность классификации и расстояние Махалонобиса
+    Err_S <- mean(group != classified)
+    mahDist <- dist(model$means %*% model$scaling) 
+    cat("Точность классификации:",1-Err_S[1],'\n')
+    cat("Расстояния Махалонобиса:\n")
+    print(mahDist)
+    
+    # Таблица "Факт/Прогноз" и ошибка при скользящем контроле
+    t2 <-  table(group, update(model, CV = T)$class -> LDA.cv) 
+    Err_CV <- mean(group != LDA.cv) 
+    cat("Ошибка при скользящем контроле:",Err_CV[1],'\n')
+    Err_S.MahD <- c(Err_S, mahDist) 
+    Err_CV.N <- c(Err_CV, length(group)) 
+    cbind(t1, Err_S.MahD, t2, Err_CV.N)
+    
+    cat("Результаты многомерного дисперсионного анализа: \n")
+    ldam <- manova(as.matrix( data[,1:7]) ~ data$CLASS)
+    print(summary(ldam, test="Wilks"))
+  }  
+Out_CTab(ldadat,data$CLASS)
 ```
-Напишем функцию для удобной оценки ошибки обучения
-```{r}
-#функция для оценки ошибки 
-misclass <- function(pred, obs) {
-   tbl <- table(pred, obs)
-   sum <- colSums(tbl)
-   dia <- diag(tbl)
-   msc <- (sum - dia)/sum * 100
-   m.m <- mean(msc)
-   cat("Classification table:", "\n")
-   print(tbl)
-   cat("Misclassification errors:", "\n")
-   print(round(msc, 1))
+
+Откорректируем классификацию, чтобы добиться стопроцентной точности:
+```{r,cache=T}
+acc=0#точность
+repeat{ 
+  showimage()
+    
+ldadat <- lda(CLASS~.,data,method="moment")
+means=ldadat$means
+cov.mat=covinv(data)
+
+#для всех неправильно найденных найти расстояния до кластеров, отнесённых экспертами
+prclass=predict(ldadat, data[,1:7])$class
+st=data[data$CLASS!=prclass,]
+acc=1-nrow(st)/nrow(data)
+cat("Точность классификации:",acc,'\n')
+if(near(acc,1)) break
+
+if(nrow(st)==1){
+  number.of.max.distance=1
+}else{
+  distances=c()
+for(i in 1:nrow(st)){
+  cls=as.numeric(st[i,8])
+  vec=(means[cls,]-as.numeric(st[i,1:7]))
+  if(is.na(cov.mat[[cls]])){
+    distances[i]=NA
+  }else{
+  distances[i]=(vec%*%cov.mat[[cls]])%*%vec    
   }
+}
+distances=sqrt(distances)
+#номер элемента (в таблице неверно отнесённых) с максимальным расстоянием для своего кластера
+number.of.max.distance=which.max(distances)
+}
+
+tt=st[number.of.max.distance,]#сам элемент
+cat("Неправильно отнесённый элемент с максимальным расстоянием (",max(distances,na.rm = T),")\n")
+#номер того же элемента, но в исходном фрейме
+number.of.max.distance.new=find.number(data,tt)
+print(data[number.of.max.distance.new,])
+#сделать замену на кластер с минимальным расстоянием
+data[number.of.max.distance.new,8]=predict(ldadat, tt[,1:7])$class#levels(data$CLASS)[which.min(distance(ldadat$means,cov.mat,as.numeric(tt[,-8])))]  
+cat("Заменяется на\n")
+print(data[number.of.max.distance.new,])
+}
 ```
-И применим её для значений, предсказанных моделью на обучающей выборке:
+
+**Результаты для полученной модели**:
+```{r,fig.width=9}
+Out_CTab(ldadat,data$CLASS)
+cat("Групповые средние:\n")
+ldadat$means
+cat("Матрица дискриминантных функций:\n")
+ldadat$scaling
+plot(ldadat)
+
+rf=lda(CLASS~.,data,method="moment")#фиксируется модель для следующего задания
+```
+
+**Исправленная модель**:
 ```{r}
-misclass(predict(ldadat, data[,1:7])$class, data[,8])
+data %>% tbl_df()
 ```
-Видно, что для некоторых переменных имеется ошибка более чем в 30%, что означает негодность выбранной модели обучения. Модель "Breiman's random forest" справляется с этой задачей лучше:
-```{r,fig.height=7,fig.width=7}
-library(randomForest)
-rf <- randomForest(data[,8] ~ ., data=data[,1:7])
-rfp <- predict(rf, data[,1:7])
-#MDSplot(randomForest(data[,-8]), data[,8])
-misclass(rfp, data[,8])
-```
-Ошибка нулевая, все данные отнесены правильно. Правило, по которому наблюдение относится в ту или иную группу примерно сделующее:
+
+  
+Ошибка нулевая, все данные отнесены правильно. *Правило, по которому наблюдение относится в ту или иную группу* примерно сделующее (если попробовать иерархический анализ):
 ```{r}
 library(tree)
 datatree <- tree(data[,8] ~ ., data[,-8])
@@ -416,18 +526,19 @@ text(datatree)
 
 ### Задание 5
 
-Считаем тестовые данные и проведём их классификацию по уже построенной модели:
+**Считаем тестовые данные и проведём их классификацию по уже построенной модели**:
 ```{r}
 data2 =data.frame(read_excel("Приложение 3.xlsx")) 
-data2= apply(data2,2,as.numeric)
+data2= apply(data2,2,as.numeric) %>% as_data_frame()
 data2=data2[31:80,]
-cluster=predict(rf, data2)
+
+cluster=predict(rf, data2)$class
 data2=data.frame(cbind(data2,cluster))
 data2$cluster=factor(data2$cluster)
 
-head(data2,10)
+data2 %>% tbl_df()
 ```
-Построим диаграммы ядерной плотности для распределения каждой переменной X1-X7 по отнесенным группам, чтобы убедиться в правильности классификации:
+Построим **диаграммы ядерной плотности** для распределения каждой переменной X1-X7 по отнесенным группам, чтобы убедиться в правильности классификации:
 ```{r,fig.height=9, cache=TRUE}
 library(ggplot2)
 library(ggpubr)
@@ -450,7 +561,7 @@ ggarrange(
           ncol = 2, nrow = 4)
 ```
 
-Другой вариант --- ящики с усами:
+Другой вариант --- **ящики с усами**:
 ```{r,fig.height=9, cache=TRUE}
 ggarrange(
   ggplot(data2,aes(x=cluster,y=X1))+
@@ -470,26 +581,19 @@ ggarrange(
   ncol = 2, nrow = 4)
 ```
 
-Также лица Чернова:
+Также **лица Чернова**:
 ```{r, cache=TRUE}
 newdata=as_data_frame(data2)%>%group_by(cluster)%>%
     summarise_all(funs(mean))
   faces(newdata[,2:8])#рисуем лица
 ```
 
+**Визуализация через главные компоненты**:
+```{r}
+  print( fviz_cluster(list(data=data2[,1:7],cluster=data2[,8]), ellipse.type = "norm"))
+```
+
 В целом качество такое же, как в обучающей выборке.
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
