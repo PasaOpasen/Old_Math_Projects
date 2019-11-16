@@ -39,7 +39,7 @@ namespace Практика_с_фортрана
         public static ComplexFunc delta;
         public static Func<double, double> q;
 
-        public static double c = 1.1, w = 2, c1 = 1, c2 = 2, m1 = 1, m2 = 1, a = 1, h = 2, h1 = 1,ro=1;
+        public static double c = 1.1, w = 2, c1 = 1, c2 = 2, m1 = 1, m2 = 1, a = 1, h = 2, h1 = 1, ro = 1;
         public static Func<double, double> k = (double omega) => omega / c;
         public static Func<double, double> k1 = (double omega) => omega / c1;
         public static Func<double, double> k2 = (double omega) => omega / c2;
@@ -104,7 +104,7 @@ namespace Практика_с_фортрана
         {
             get
             {
-                if (t11 < 0) t11 = Math.Min(k1(w), k2(w)) / 2;
+                if (t11 < 0) t11 = Math.Min(k1(w), k2(w)) / 4;
                 return t11;
             }
             set
@@ -116,7 +116,7 @@ namespace Практика_с_фортрана
         {
             get
             {
-                if (t44 < 0) t44 = Math.Max(k1(w), k2(w)) * 2;
+                if (t44 < 0) t44 = Math.Max(k1(w), k2(w)) + 1;
                 return t44;
             }
             set
@@ -160,7 +160,7 @@ namespace Практика_с_фортрана
                   return 0;
               };
 
-            Q = (Complex al) =>  2 * Complex.Sin(a * al) / al;
+            Q = (Complex al) => 2 * Complex.Sin(a * al) / al;
 
             delta = (Complex al) =>
             {
