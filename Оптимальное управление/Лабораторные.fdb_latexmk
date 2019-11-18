@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1573903618 "c:/Users/крендель/Desktop/MagicCode/Оптимальное управление/Лабораторные.tex" "c:/Users/крендель/Desktop/MagicCode/Оптимальное управление/Лабораторные.pdf" "Лабораторные" 1573903621
+["pdflatex"] 1574093033 "c:/Users/крендель/Desktop/MagicCode/Оптимальное управление/Лабораторные.tex" "c:/Users/крендель/Desktop/MagicCode/Оптимальное управление/Лабораторные.pdf" "Лабораторные" 1574093036
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/jknappen/ec/ecrm1200.tfm" 993062126 3152 4850ff0163852b7fab34bd55e1197f28 ""
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1233951848 1004 54797486969f23fa377b128694d548df ""
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1233951848 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -7,6 +7,9 @@
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msam7.tfm" 1233951854 928 2dc8d444221b7a635bb58038579b861a ""
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msbm10.tfm" 1233951854 908 2921f8a10601f252058503cc6570e581 ""
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msbm7.tfm" 1233951854 940 228d6584342e91276bf566bcf9716b83 ""
+  "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmbx12.tfm" 1136765053 1324 c910af8c371558dc20f2d7822f66fe64 ""
+  "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmbx6.tfm" 1136765053 1344 8a0be4fe4d376203000810ad4dc81558 ""
+  "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmbx8.tfm" 1136765053 1332 1fde11373e221473104d6cc5993f046e ""
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmex10.tfm" 1136765053 992 662f679a0b3d2d53c1b94050fdaa3f50 ""
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmmi12.tfm" 1136765053 1524 4414a8315f39513458b80dfc63bff03a ""
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmmi6.tfm" 1136765053 1512 f21f83efb36853c0b70002322c1ab3ad ""
@@ -17,10 +20,12 @@
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmsy10.tfm" 1136765053 1124 6c73e740cf17375f03eec0ee63599741 ""
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmsy6.tfm" 1136765053 1116 933a60c408fc0a863a92debe84b2d294 ""
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmsy8.tfm" 1136765053 1120 8b7d695260f3cff42e636090a8002094 ""
+  "C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb" 1247596666 32080 340ef9bf63678554ee606688e7b5339d ""
   "C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb" 1247596667 30251 6afa5cb1d0204815a708a080681d4674 ""
   "C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi12.pfb" 1247596667 36741 0ee9e374ec3e30da87cdfb0ea3575226 ""
   "C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb" 1247596666 35469 dcf3a5f2fc1862f5952e3ee5eb1d98c4 ""
   "C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb" 1247596667 32722 d7379af29a190c3f453aba36302ff5a9 ""
+  "C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb" 1247596667 32734 69e00a6b65cedb993666e42eedb3d48f ""
   "C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb" 1247596667 32726 39f0f9e62e84beb801509898a605dbd5 ""
   "C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1247596667 32569 5e5ddc8df908dea60932f3c484a54c0d ""
   "C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb" 1247596667 32626 5abc8bb2f28aa647d4c70f8ea38cc0d3 ""
@@ -83,8 +88,8 @@
   "C:/Program Files/MiKTeX 2.9/tex/latex/tools/calc.sty" 1544472630 10212 357072c1d20578a30d6387d8a22e72ab ""
   "C:/Program Files/MiKTeX 2.9/tex/latex/tools/indentfirst.sty" 1544472628 1615 dba466e323af4fcd4a6acb87444d96c3 ""
   "C:/Program Files/MiKTeX 2.9/tex/latex/xcolor/xcolor.sty" 1463135581 57049 34128738f682d033422ca125f82e5d62 ""
-  "c:/Users/крендель/Desktop/MagicCode/Оптимальное управление/Лабораторные.aux" 1573903620 545 4eb4beea750cdbc986b751a3dbea965e ""
-  "c:/Users/крендель/Desktop/MagicCode/Оптимальное управление/Лабораторные.tex" 1573903616 2217 dcb2d2e6fc827833ceebee2836016a1b ""
+  "c:/Users/крендель/Desktop/MagicCode/Оптимальное управление/Лабораторные.aux" 1574093035 791 463c61aa1a2832005d3fac042d0b69dd ""
+  "c:/Users/крендель/Desktop/MagicCode/Оптимальное управление/Лабораторные.tex" 1574093033 6180 283aadda34b3dc4ee226b071060db9fe ""
   (generated)
   "c:/Users/крендель/Desktop/MagicCode/Оптимальное управление/Лабораторные.pdf"
   "c:/Users/крендель/Desktop/MagicCode/Оптимальное управление/Лабораторные.log"

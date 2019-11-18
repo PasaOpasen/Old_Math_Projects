@@ -61,4 +61,116 @@
 
 \section{Лабораторная 2}
 
+{\bfЗадача}:
+\begin{equation}
+    \begin{cases}
+        \dot x_1 =x_2, & x_1(0)=1,\\
+        \dot x_2=x_1+u,& x_2(0)=1, t \in [0,10]
+    \end{cases}
+\end{equation}
+\begin{equation}
+    I=\int_0^{10} u^2 - x_1 dt \rightarrow \min.
+\end{equation}
+
+{\bf Решение}:
+
+Задача для функции Гамильтона
+\begin{equation}
+    H=x_1-u^2 +p_1 x_2 +p_2 (x_1 +u) \rightarrow \max_u
+\end{equation}
+имеет решение 
+\begin{equation}
+    \df{H}{u}=-2u+p_2=0 \Rightarrow u=\dfrac{p_2}{2}.
+\end{equation}
+Для сопряжённых переменных система дифференциальных уравнений
+\begin{equation}
+    \begin{cases}
+       \dot p_1 = - \df{H}{x_1}=-1-p_2, & p_1(10)=0,\\
+       \dot p_2 = - \df{H}{x_2}=-p_1, & p_2(10)=0
+    \end{cases}
+\end{equation}
+имеет решение в виде
+\begin{equation}
+    \begin{cases}
+        p_1= C_1 e^t - C_2 e^{-t},\\
+        p_2 = -C_1 e^t - C_2 e^{-t} -1,
+    \end{cases}
+\end{equation}
+где $C_1 = -\dfrac{e^{-10}}{2},C_2 = -\dfrac{e^{10}}{2}$. Тогда система для ${\bf x}$ имеет вид
+\begin{equation}
+    \begin{cases}
+        \dot x_1 =x_2, & x_1(0)=1,\\
+        \dot x_2=x_1+\dfrac{e^{-10}}{4}e^t + \dfrac{e^{10}}{4}e^{-t}-\dfrac{1}{2},& x_2(0)=1.
+    \end{cases}
+\end{equation}
+Введём константы $a=\dfrac{e^{-10}}{4},b=\dfrac{e^{10}}{4},c=-\dfrac{1}{2}$, тогда общее решение системы имеет вид
+\begin{equation}
+    \begin{cases}
+        x_1 =\dfrac{1}{4}\left(a e^t (2t-1) - b e^{-t} (2t+1)-4c  \right) +\dfrac{1}{2} C_1 (e^t + e^{-t}) + \dfrac{1}{2} C_2 (e^t - e^{-t}),\\
+        x_2=\dfrac{1}{4} e^{-t} \left(a e^{2t} (2t+1) +b (2t-1) \right) +\dfrac{1}{2} C_1 (e^t-e^{-t})+\dfrac{1}{2} C_2 (e^t + e^{-t}).
+    \end{cases}
+\end{equation}
+
+Из граничных условий находим: $C_1=1+\dfrac{1}{4}(a+b+4c),C_2 = 1+\dfrac{1}{4}(b-a)$.
+
+\section{Лабораторная 3}
+{\bf Задача}:
+\begin{equation}
+    \dot x = x+u , 0\leq u \leq 3, x(0)=1, t \in [0,4],
+\end{equation}
+\begin{equation}
+    I=\int_0^4 3 u dt - x(4) \rightarrow \min.
+\end{equation}
+{\bf Решение}:
+
+Из задачи для функции Гамильтона 
+\begin{equation}
+    H=-3u+p(x+u)=u(p-3)+px \rightarrow \max
+\end{equation}
+следует
+\begin{equation}
+    u=
+    \begin{cases}
+        3, & p-3 >0,\\
+        0, & p-3<0
+    \end{cases} 
+    \Leftrightarrow
+    \begin{cases}
+        3, & p >3,\\
+        0, & p<3
+    \end{cases} 
+\end{equation}
+
+Для $p$ имеем задачу
+\begin{equation}
+    \dot p = - \df{H}{x}=-p,p(4)=-\df{(-x(4))}{x(4)}=1,
+\end{equation}
+откуда 
+\begin{equation}
+    p=C_1 e^{-t} \Rightarrow p(4) = C_1 e^{-4} = 1 \Rightarrow C_1=e^4 \Rightarrow p= e^4 e^{-t}.
+\end{equation}
+Тогда $p=3$ при $t=4-\ln 3$. Поскольку функция $p$ убывающая, функция $u$ принимает вид
+\begin{equation}
+    u=
+    \begin{cases}
+        3, & t \in [0,4-\ln 3],\\
+        0, & t \in [4-\ln 3,4]
+    \end{cases} 
+\end{equation}
+Из уравнения $\dot x = x +u$ следует $x=C_1 e^t -u$. Тогда на отрезке $t \in [0,4-\ln 3]$ решается задача
+\begin{equation}
+    x=C_1 e^t -3,x(0)=1 \Rightarrow C_1 -3 =1 \Rightarrow C_1=4 \Rightarrow x=4 e^t -3, x(4-\ln 3)=\dfrac{4}{3} e^4 -3.
+\end{equation}
+Аналогично для отрезка $t \in [4-\ln 3,4]$:
+\begin{equation}
+    x=C_1 e^t,x(4-\ln 3)=\dfrac{4}{3} e^4 -3 \Rightarrow C_1 = e^{\ln 3 - 4} \left(\dfrac{4}{3} e^4 -3  \right)=4- 9 e^{-4} \Rightarrow x=(4-9e^{-4})e^t.
+\end{equation}
+В итоге для траектории:
+\begin{equation}
+    \begin{cases}
+        x=4 e^t -3, & t \in [0,4-\ln 3],\\
+        x=(4-9e^{-4})e^t & t \in [4-\ln 3,4].
+    \end{cases}
+\end{equation}
+
 \end{document}
