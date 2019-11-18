@@ -173,4 +173,62 @@
     \end{cases}
 \end{equation}
 
+\section{Лабораторная 4}
+
+{\bfЗадача}:
+\begin{equation}
+    \begin{cases}
+        \dot x_1 =-x_2, & x_1(0)=1,\\
+        \dot x_2=-x_1+u,& x_2(0)=2, t \in [0,1], 0\leq u \leq 2
+    \end{cases}
+\end{equation}
+\begin{equation}
+    I=\int_0^{1} x_2 + u dt +x_2(1) \rightarrow \min.
+\end{equation}
+
+{\bf Решение}:
+
+Из задачи для функции Гамильтона:
+\begin{equation}
+    H=-u-x_2-p_1 x_2 + p_2 (u-x_1)=(p_1-1) u - p_1 x_2 -p_2 x_1 -x_2 \rightarrow \max_u
+\end{equation}
+следует
+\begin{equation}
+    u=
+    \begin{cases}
+        2,&p_2>1\\
+        0,&p_2<1
+    \end{cases}.
+\end{equation}
+
+Задача для сопряженных переменных
+\begin{equation}
+    \begin{cases}
+        \dot p_1 = -\df{H}{x_1}=p_2, &p_1(1)=0\\
+        \dot p_2=- \df{H}{x_2}=p_1+1, &p_2(1)=-\df{(x_2(1))}{x_2(1)}=-1
+    \end{cases}
+\end{equation}
+имеет решение
+\begin{equation}
+    \begin{cases}
+        p_1=\dfrac{1}{2}C_1 (e^t+e^{-t})+\dfrac{1}{2} C_2 (e^t-e^{-t})-1,\\
+        p_2=\dfrac{1}{2}C_1 (e^t-e^{-t})+\dfrac{1}{2} C_2 (e^t+e^{-t})
+    \end{cases},
+\end{equation}
+где $C_1=e,C_2=-e$. В сокращённом виде:
+\begin{equation}
+    \begin{cases}
+        p_1=e \cdot e^{-t}-1,\\
+        p_2=-e \cdot e^{-t}
+    \end{cases}.
+\end{equation}
+Очевидно, что $p_2<0$ всегда, откуда $u=0$. В этом случае система дифференциальных уравнений для ${\bf x}$ имеет решение
+\begin{equation}
+    \begin{cases}
+        x_1=C_1 e^t + C_2 e^{-t},\\
+        x_2=-C_1 e^t + C_2 e^{-t}
+    \end{cases},
+\end{equation}
+где $C_1=-0.5$, $C_2=1.5$.
+
 \end{document}
