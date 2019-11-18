@@ -127,7 +127,7 @@ t.test(means[,2],price1)
 #Задание 3
 library(ggplot2)
 
-yt=c(1133+ p1,	1222,	1354+ p1,	1389,	1342+ p2,	1377,	1491,	1684+ p2)
+yt=c(1133+p1,1222,1354+p1,1389,1342+p2,1377,1491,1684+p2)
 data=data.frame(time=1:length(yt),values=yt)
 plot(data,type="b")
 
@@ -138,6 +138,9 @@ ggplot(data,aes(x=time,y=values))+
 
 summary(fit)#информация о модели
 cf=fit$coefficients#коэффициенты
+
+anova(fit,levels(0.05))
+
 
 #прогноз среднего
 predict(fit,data.frame(time = c(9)), se.fit=TRUE, interval="confidence", level=0.95)$fit
