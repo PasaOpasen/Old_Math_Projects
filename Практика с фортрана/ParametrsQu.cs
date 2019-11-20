@@ -28,6 +28,7 @@ namespace Практика_с_фортрана
             textBox3.Text = РабКонсоль.polesBeg.ToString();
             textBox12.Text = РабКонсоль.polesEnd.ToString();
             textBox13.Text = РабКонсоль.ro.ToString();
+            textBox14.Text = РабКонсоль.xzero.ToString();
             numericUpDown1.Value = РабКонсоль.countroot;
 
             double sqr(double q) => q * q;
@@ -65,6 +66,7 @@ namespace Практика_с_фортрана
             РабКонсоль.polesBeg = Convert.ToDouble(textBox3.Text);
             РабКонсоль.polesEnd = Convert.ToDouble(textBox12.Text);
             РабКонсоль.ro = Convert.ToDouble(textBox13.Text);
+            РабКонсоль.xzero= Convert.ToDouble(textBox14.Text);
 
             this.Close();
         }

@@ -99,12 +99,12 @@ namespace Практика_с_фортрана
         #endregion
 
         #region Параметры интегрирования
-        private static double t11 = 0, t44 = 15;
+        private static double t11 = 0, t44 = -1;
         public static double t1
         {
             get
             {
-                if (t11 < 0) t11 = Math.Min(k1(w), k2(w)) / 4;
+                if (t11 <= 0) t11 = Math.Min(k1(w), k2(w)) / 4;
                 return t11;
             }
             set
@@ -116,7 +116,7 @@ namespace Практика_с_фортрана
         {
             get
             {
-                if (t44 < 0) t44 = Math.Max(k1(w), k2(w)) + 1;
+                if (t44 <= 0) t44 = Math.Max(k1(w), k2(w)) + 1;
                 return t44;
             }
             set
@@ -148,19 +148,20 @@ namespace Практика_с_фортрана
         public static void SetPolesDef() => SetPoles(РабКонсоль.polesBeg, РабКонсоль.polesEnd, РабКонсоль.steproot, РабКонсоль.epsroot, РабКонсоль.countroot);
         #endregion
 
+        public static double xzero = 20;
 
         [STAThread]
         public static void Main(string[] args)
         {
             FuncMethods.DefInteg.Residue.eps = eps;
 
-            q = (double x) =>
-              {
-                  if (x.Abs() < a) return 1;
-                  return 0;
-              };
+            q = (double x) => 0;
+            //{
+            //    if (x.Abs() < a) return 1;
+            //    return 0;
+            //};
 
-            Q = (Complex al) => 2 * Complex.Sin(a * al) / al;
+            Q = (Complex al) => Complex.Exp(new Complex(0, xzero) * al); //2 * Complex.Sin(a * al) / al;
 
             delta = (Complex al) =>
             {
@@ -187,7 +188,7 @@ namespace Практика_с_фортрана
             {
                 ComplexFunc f = (Complex q) =>
                 {
-                    ComplexFunc fe = (Complex w) => tmp(w) * Complex.Ch(-Complex.I * q.Re * w);
+                    ComplexFunc fe = (Complex w) => tmp(w) * Complex.Ch(new Complex(0,-q.Re) * w);
                     return 1.0 / Math.PI * FuncMethods.DefInteg.GaussKronrod.DINN_GK(fe, t1, t2, t3, t4, tm, tp, eps, pr, gr);
                 };
                 return f(x);
@@ -207,7 +208,7 @@ namespace Практика_с_фортрана
 
             uRes = (double x, double z) =>
               {
-                  ComplexFunc K, QE = (Complex s) => Q(s) * Complex.Exp(-Complex.I * s * x);
+                  ComplexFunc K, QE = (Complex s) => Q(s) * Complex.Exp(-Complex.I* x * s );
                   if (z > -h1) K = (Complex s) => K1Up(s, z);
                   else K = (Complex s) => K2Up(s, z);
 
@@ -216,7 +217,7 @@ namespace Практика_с_фортрана
               };
             uResdx = (double x, double z) =>
             {
-                ComplexFunc K, QE = (Complex s) => (-Complex.I * s) * Q(s) * Complex.Exp(-Complex.I * s * x);
+                ComplexFunc K, QE = (Complex s) => (-Complex.I * s) * Q(s) * Complex.Exp(-Complex.I* x * s );
                 if (z > -h1) K = (Complex s) => K1Up(s, z);
                 else K = (Complex s) => K2Up(s, z);
 
