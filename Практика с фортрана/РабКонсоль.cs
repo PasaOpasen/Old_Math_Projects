@@ -99,7 +99,7 @@ namespace Практика_с_фортрана
         #endregion
 
         #region Параметры интегрирования
-        private static double t11 = 0, t44 = -1;
+        private static double t11 = -1, t44 = -1;
         public static double t1
         {
             get
@@ -125,7 +125,7 @@ namespace Практика_с_фортрана
             }
         }
 
-        public static double t2 = t1, t3 = t1, tm = 0.03, tp = 0, eps = 1e-8, pr = 1e-2, gr = 1e4;
+        public static double t2 = t1, t3 = t1, tm = 0.01, tp = 0, eps = 1e-8, pr = 1e-2, gr = 1e4;
         #endregion
 
         #region Поиск полюсов
@@ -148,7 +148,7 @@ namespace Практика_с_фортрана
         public static void SetPolesDef() => SetPoles(РабКонсоль.polesBeg, РабКонсоль.polesEnd, РабКонсоль.steproot, РабКонсоль.epsroot, РабКонсоль.countroot);
         #endregion
 
-        public static double xzero = 20;
+        public static double xzero = 1;
 
         [STAThread]
         public static void Main(string[] args)
@@ -173,23 +173,21 @@ namespace Практика_с_фортрана
 
             U = (Complex al, Complex z) =>
              {
-                 Complex s = Q(al);
-                 if (z.Re > -h1) return K1(al, z) * s;
-                 else return K2(al, z) * s;
+                 if (z.Re > -h1) return K1(al, z) ;
+                 else return K2(al, z) ;
              };
             U_ = (Complex al, Complex z) =>
              {
-                 Complex s = Q(al);
-                 if (z.Re > -h1) return K1_(al, z) * s;
-                 else return K2_(al, z) * s;
+                 if (z.Re > -h1) return K1_(al, z) ;
+                 else return K2_(al, z) ;
              };
 
             Complex fx(double x, double z, ComplexFunc tmp)
             {
                 ComplexFunc f = (Complex q) =>
                 {
-                    ComplexFunc fe = (Complex w) => tmp(w) * Complex.Ch(new Complex(0,-q.Re) * w);
-                    return 1.0 / Math.PI * FuncMethods.DefInteg.GaussKronrod.DINN_GK(fe, t1, t2, t3, t4, tm, tp, eps, pr, gr);
+                    ComplexFunc fe = (Complex w) => tmp(w) * Complex.Ch(new Complex(0,xzero-q.Re) * w);
+                    return (1.0 / Math.PI) * FuncMethods.DefInteg.GaussKronrod.DINN_GK(fe, t1, t2, t3, t4, tm, tp, eps, pr, gr);
                 };
                 return f(x);
             }
@@ -208,7 +206,7 @@ namespace Практика_с_фортрана
 
             uRes = (double x, double z) =>
               {
-                  ComplexFunc K, QE = (Complex s) => Q(s) * Complex.Exp(-Complex.I* x * s );
+                  ComplexFunc K, QE = (Complex s) => Complex.Exp(new Complex(0,xzero-x) * s );
                   if (z > -h1) K = (Complex s) => K1Up(s, z);
                   else K = (Complex s) => K2Up(s, z);
 
@@ -217,7 +215,7 @@ namespace Практика_с_фортрана
               };
             uResdx = (double x, double z) =>
             {
-                ComplexFunc K, QE = (Complex s) => (-Complex.I * s) * Q(s) * Complex.Exp(-Complex.I* x * s );
+                ComplexFunc K, QE = (Complex s) => (-Complex.I * s) * Complex.Exp(new Complex(0, xzero - x) * s);
                 if (z > -h1) K = (Complex s) => K1Up(s, z);
                 else K = (Complex s) => K2Up(s, z);
 
@@ -226,7 +224,7 @@ namespace Практика_с_фортрана
             };
             uResdz = (double x, double z) =>
             {
-                ComplexFunc K, QE = (Complex s) => Q(s) * Complex.Exp(-Complex.I * s * x);
+                ComplexFunc K, QE = (Complex s) => Complex.Exp(new Complex(0, xzero - x) * s);
                 if (z > -h1) K = (Complex s) => K1Up_(s, z);
                 else K = (Complex s) => K2Up_(s, z);
 
@@ -238,22 +236,22 @@ namespace Практика_с_фортрана
 
             uk1 = (double x, double z) =>
             {
-                ComplexFunc Tmp = (Complex s) => K1(s, z) * Q(s);
+                ComplexFunc Tmp = (Complex s) => K1(s, z);
                 return fx(x, z, Tmp);
             };
             uk2 = (double x, double z) =>
             {
-                ComplexFunc Tmp = (Complex s) => K2(s, z) * Q(s);
+                ComplexFunc Tmp = (Complex s) => K2(s, z);
                 return fx(x, z, Tmp);
             };
             uk1_ = (double x, double z) =>
             {
-                ComplexFunc Tmp = (Complex s) => K1_(s, z) * Q(s);
+                ComplexFunc Tmp = (Complex s) => K1_(s, z);
                 return fx(x, z, Tmp);
             };
             uk2_ = (double x, double z) =>
             {
-                ComplexFunc Tmp = (Complex s) => K2_(s, z) * Q(s);
+                ComplexFunc Tmp = (Complex s) => K2_(s, z);
                 return fx(x, z, Tmp);
             };
 
