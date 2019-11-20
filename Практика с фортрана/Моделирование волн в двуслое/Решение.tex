@@ -253,23 +253,18 @@ $$\Delta=\E{-\s{1}}{h_1}(\m{2}\s{2}\sh(\s{2}(h-h_1))-\m{1}\s{1}\ch(\s{2}(h-h_1))
 \section{Численная проверка граничных условий}
 Теперь проверим решение численно. В качестве нагрузки $q$ возьмём функцию
 \[
-q(x) =
-\begin{cases}
-1, & \text{если $|x|\leq a$;} \\
-0, & \text{если $|x|>a$,}
-\end{cases}.
+q(x) = \delta (x_0-x).
 \]
 Её трансформанта:
-\begin{multline}
-  Q(\alpha)=\int_{-\infty}^{\infty}q(x)e^{ix\alpha} dx=\int_{-a}^{a}e^{ix\alpha} dx=\frac{1}{i\alpha}e^{ix\alpha}|_{x=-a}^{x=a}=\frac{1}{i\alpha}\left(e^{i\alpha a}-e^{-i\alpha a} \right)=\\
-=\frac{1}{i\alpha}\left(\cos(a\alpha)+i\sin(a\alpha)-\cos(a\alpha)+i\sin(a\alpha) \right)=2\frac{\sin(a\alpha)}{\alpha} .  
-\end{multline}
+\begin{equation}
+  Q(\alpha)= e^{i \alpha x_0}.  
+\end{equation}
 
-Поскольку трансформанты являются функциями комплексного переменного, а в каждом из четырёх граничных условий устанавливается равенство между двумя функциями комплексного переменного, сравнивать их будем по модулю (чтобы не нагромождать график множеством кривых, которые должны накладываться друг на друга). Параллельно будем проверять условия для образов этих трансформант (найденных численно обратным преобразованием Фурье), которые являются функциями тоже комплексного переменного (сравнение ведётся по действительной части). В следующих примерах зафиксированы параметры: $c_1=1, c_2=2, h_1=h_2=1, \mu_1=1, \mu_2=1.6, a=3, \omega=2$.
+Поскольку трансформанты являются функциями комплексного переменного, а в каждом из четырёх граничных условий устанавливается равенство между двумя функциями комплексного переменного, сравнивать их будем по модулю (чтобы не нагромождать график множеством кривых, которые должны накладываться друг на друга). Параллельно будем проверять условия для образов этих трансформант (найденных численно обратным преобразованием Фурье), которые являются функциями тоже комплексного переменного (сравнение ведётся по действительной части). В следующих примерах зафиксированы параметры: $c_1=1, c_2=2, h_1=h_2=1, \mu_1=1, \mu_2=1.6, \omega=2, x_0=1$.
 
 \begin{figure}[h!]
 \noindent\centering{
-\includegraphics[width=\linewidth]{11.png}
+\includegraphics[width=0.7\linewidth]{11.png}
 }
 \caption{Первое граничное условие в трансформантах}
 \label{figCurves}
@@ -277,17 +272,17 @@ q(x) =
 
 \begin{figure}[h!]
 \noindent\centering{
-\includegraphics[width=170mm]{12.png}
+\includegraphics[width=0.7\linewidth]{12.png}
 }
 \caption{Первое граничное условие после обратного преобразования Фурье}
 \label{figCurves}
 \end{figure}
 
-Как видно, в трансформантах первое граничное условие выполняется точно (Рис. 2), но обратное преобразование Фурье (подсчёт несобственного интеграла) приводит к приближённому результату (Рис.3) в следствие погрешностей квадратурных формул и ошибок округления. Можно управлять точностью интегрирования для конкретной функции, зная её действительные полюса и совершая их обход при интегрировании. Из практики решения подобных задач известно, что полюса функции $U(\alpha,z)$ совпадают с нулями $\Delta$ \cite{g89,new}.
+Как видно, в трансформантах первое граничное условие выполняется точно (Рис. 2), но обратное преобразование Фурье (подсчёт несобственного интеграла) приводит к приближённому результату (Рис.3) в следствие погрешностей квадратурных формул и ошибок округления. Можно управлять точностью интегрирования для конкретной функции, зная её действительные полюса и совершая их обход при интегрировании. Из практики решения подобных задач известно, что полюса функции $U(\alpha,z)$ совпадают с нулями $\Delta$.
 
 \begin{figure}[h!]
 \noindent\centering{
-\includegraphics[width=170mm]{31.png}
+\includegraphics[width=0.9\linewidth]{31.png}
 }
 \caption{Третье граничное условие в трансформантах}
 \label{figCurves}
@@ -318,7 +313,7 @@ q(x) =
 \label{figCurves}
 \end{figure}
 
-Скачки в трансформантах (Рис. 4, Рис. 6) говорят о том, что вблизи этих скачков находятся полюса функции. Наличие у функции полюсов на некотором множестве становится серьёзной проблемой при интегрировании по этому множеству, поскольку без использования специальных методов и без знания о настоящем положении полюсов численное значение интеграла может существенно отличаться от истинного. А поскольку в конкретном случае искомая функция задана через интеграл, неправильные вычисления способны сильно исказить многие свойства этой функции, в том числе и непрерывность. Эта проблема в данном случае решается следующим образом: по лемме Жордана (\cite{new,tfkp,korn}) мы имеем право заменить интеграл
+Скачки в трансформантах (Рис. 4, Рис. 6) говорят о том, что вблизи этих скачков находятся полюса функции. Наличие у функции полюсов на некотором множестве становится серьёзной проблемой при интегрировании по этому множеству, поскольку без использования специальных методов и без знания о настоящем положении полюсов численное значение интеграла может существенно отличаться от истинного. А поскольку в конкретном случае искомая функция задана через интеграл, неправильные вычисления способны сильно исказить многие свойства этой функции, в том числе и непрерывность. Эта проблема в данном случае решается следующим образом: по лемме Жордана мы имеем право заменить интеграл
 $$u(x,z) =\frac{1}{2\pi} \int^{\infty}_{-\infty} U(\alpha, z) e^{-i \alpha x} d\alpha$$
 интегралом
 $$u(x,z) =\frac{1}{2\pi} \int_{\Gamma\cup C_R} U(\alpha, z) e^{-i \alpha x} d\alpha \rightarrow\frac{1}{2\pi} \int_{\Gamma} U(\alpha, z) e^{-i \alpha x} d\alpha, R\rightarrow \infty,$$
@@ -431,7 +426,7 @@ $$u(x,z) =\frac{1}{2\pi} \int_{\Gamma'} U(\alpha, z) (e^{-i \alpha x}+e^{i \alph
 
 \begin{figure}[h!]
 \noindent\centering{
-\includegraphics[width=12cm]{zn.png}
+\includegraphics[width=0.6\linewidth]{zn.png}
 }
 \caption{Кривые $\zeta_n(\omega), \omega \in [1,14]$, при фиксированных параметрах $c_1=h_1=h_2=\mu_1=1,c_2=1.4,\mu_2=2$}
 \label{figCurves}
@@ -454,7 +449,7 @@ $$u(x,z) =\frac{1}{2\pi} \int_{\Gamma'} U(\alpha, z) (e^{-i \alpha x}+e^{i \alph
 
 \begin{figure}[h!]
 \noindent\centering{
-\includegraphics[width=\linewidth]{znnew.png}
+\includegraphics[width=0.95\linewidth]{znnew.png}
 }
 \caption{Кривые $\zeta_n(\omega), \omega \in [1,14]$, при фиксированных параметрах $c_1=h_1=h_2=\mu_1=1,c_2=1.4,\mu_2=2$ и $\varepsilon = 10^{-3}$}
 \label{figCurves} 
@@ -465,25 +460,25 @@ $$u(x,z) =\frac{1}{2\pi} \int_{\Gamma'} U(\alpha, z) (e^{-i \alpha x}+e^{i \alph
 
 \begin{figure}[h!]
 \noindent\centering{
-\includegraphics[width=\linewidth]{101.png}
+\includegraphics[width=0.95\linewidth]{101.png}
 }
-\caption{График действительной, мнимой частей и модуля $u(x,z)$ при $z=-1.6, x \in [3;60], c_1=h_1=h_2=a=\mu_1=1, c_2=2,\mu_2=1.3,\omega=4$, посчитанных прямым интегрированием}
+\caption{График действительной, мнимой частей и модуля $u(x,z)$ при $z=-1.6, x \in [3;60], c_1=h_1=h_2=x_0=\mu_1=1, c_2=2,\mu_2=1.3,\omega=4$, посчитанных прямым интегрированием}
 \label{figCurves}
 \end{figure}
 
 \begin{figure}[h!]
 \noindent\centering{
-\includegraphics[width=\linewidth]{102.png}
+\includegraphics[width=0.95\linewidth]{102.png}
 }
-\caption{График действительной, мнимой частей и модуля $u(x,z)$ при $z=-0.4, x \in [10;45], c_1=h_1=h_2=\mu_1=1, c_2=1.2,\mu_2=1.1,\omega=a=2$, посчитанных прямым интегрированием и через вычеты}
+\caption{График действительной, мнимой частей и модуля $u(x,z)$ при $z=-0.4, x \in [10;45], c_1=h_1=h_2=\mu_1=1, c_2=1.2,\mu_2=1.1,\omega=2$, посчитанных прямым интегрированием и через вычеты}
 \label{figCurves}
 \end{figure}
 
 \begin{figure}[h!]
 \noindent\centering{
-\includegraphics[width=\linewidth]{103.png}
+\includegraphics[width=0.95\linewidth]{103.png}
 }
-\caption{График действительной, мнимой частей и модуля $u(x,z)$ при $x=15, z \in [-5;0], c_1=a=\mu_1=1, c_2=h_1=2, h_2=3, \mu_2=1.2$, посчитанных прямым интегрированием}
+\caption{График действительной, мнимой частей и модуля $u(x,z)$ при $x=15, z \in [-5;0], c_1=\mu_1=1, c_2=h_1=2, h_2=3, \mu_2=1.2$, посчитанных прямым интегрированием}
 \label{figCurves}
 \end{figure}
 
@@ -491,37 +486,37 @@ $$u(x,z) =\frac{1}{2\pi} \int_{\Gamma'} U(\alpha, z) (e^{-i \alpha x}+e^{i \alph
 \noindent\centering{
 \includegraphics[width=\linewidth]{1104.png}
 }
-            \caption{График зависимости мнимой части и модуля $u(x,z)$ от частоты при $x=1, z=-2, c_1=a=\mu_1=h_1=1, c_2=1.4, h_2=2, \mu_2=0.5, \omega \in [1;12]$}
+            \caption{График зависимости мнимой части и модуля $u(x,z)$ от частоты при $x=1, z=-2, c_1=\mu_1=h_1=1, c_2=1.4, h_2=2, \mu_2=0.5, \omega \in [1;12]$}
             \label{figCurves}
             \end{figure}  
             
             \begin{figure}[h!]
                 \noindent\centering{
-                \includegraphics[width=\linewidth]{105.png}
+                \includegraphics[width=0.95\linewidth]{105.png}
                 }
-                \caption{График модуля $u(x,z)$ при $x \in [-4;4], z \in [-3;0], c_1=a=\mu_1=h_1=1, c_2=h_2=2, \mu_2=1.4, \omega =5$}
+                \caption{График модуля $u(x,z)$ при $x \in [-4;4], z \in [-3;0], c_1=\mu_1=h_1=1, c_2=h_2=2, \mu_2=1.4, \omega =5$}
                 \label{figCurves}
                 \end{figure}
 
     \begin{figure}[h!]
     \noindent\centering{
-    \includegraphics[width=\linewidth]{106.png}
+    \includegraphics[width=0.95\linewidth]{106.png}
   }
-    \caption{График действительной части $u(x,z)$ при $x \in [-7;7], z \in [-3;0], c_1=\mu_1=h_1=1, c_2=h_2=\mu_2=2, \omega =4, a=1.5$}
+    \caption{График действительной части $u(x,z)$ при $x \in [-7;7], z \in [-3;0], c_1=\mu_1=h_1=1, c_2=h_2=\mu_2=2, \omega =4$}
     \label{figCurves}
     \end{figure}  
 
     \begin{figure}[h!]
         \noindent\centering{
-        \includegraphics[width=\linewidth]{107.png}
+        \includegraphics[width=0.95\linewidth]{107.png}
       }
-        \caption{График модуля $u(x,z)$ при $x \in [-8;12], z \in [-4;0], c_1=\mu_1=a=1, c_2=h_1=h_2=2, \omega =9, \mu_2=1.1$}
+        \caption{График модуля $u(x,z)$ при $x \in [-8;12], z \in [-4;0], c_1=\mu_1=1, c_2=h_1=h_2=2, \omega =9, \mu_2=1.1$}
         \label{figCurves}
         \end{figure} 
 
         \begin{figure}[h!]
             \noindent\centering{
-            \includegraphics[width=\linewidth]{108.png}
+            \includegraphics[width=0.95\linewidth]{108.png}
           }
             \caption{Вид сверху на предыдущий график (линии уровня)}
             \label{figCurves}
@@ -529,9 +524,9 @@ $$u(x,z) =\frac{1}{2\pi} \int_{\Gamma'} U(\alpha, z) (e^{-i \alpha x}+e^{i \alph
     
 \begin{figure}[h!]
 \noindent\centering{
-\includegraphics[width=\linewidth]{109.png}
+\includegraphics[width=0.95\linewidth]{109.png}
 }
-\caption{Действительная часть $u(x,z), x \in [-4;15], z\in [-3;0], c_1=h_2=\mu_1=a=1, \mu_2=c_2=h_2=2, \omega=8$}
+\caption{Действительная часть $u(x,z), x \in [-4;15], z\in [-3;0], c_1=h_2=\mu_1=1, \mu_2=c_2=h_2=2, \omega=8$}
 \label{figCurves}
 \end{figure}        
 
