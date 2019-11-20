@@ -52,15 +52,8 @@ network %>% predict_classes(test_images[1:10,])
 
 
 
-
 digit <- train_images[5,,]
 plot(as.raster(digit, max = 255))
-
-
-
-train_images <- array_reshape(train_images, c(60000, 28 * 28))
-
-
 
 
 
