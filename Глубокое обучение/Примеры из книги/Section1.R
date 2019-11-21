@@ -398,6 +398,146 @@ result <- model %>% evaluate(test_data, test_targets)
 
 
 
+#Listing 4.1. Hold-out validation
+indices <- sample(1:nrow(data), size = 0.80 * nrow(data))               
+evaluation_data  <- data[-indices, ]                                    
+training_data <- data[indices, ]                                        
+
+model <- get_model()                                                    
+model %>% train(training_data)                                          
+validation_score <- model %>% evaluate(validation_data)                 
+
+model <- get_model()                                                    
+model %>% train(data)                                                   
+test_score <- model %>% evaluate(test_data)                             
+
+
+
+#Listing 4.2. K-fold cross-validation
+k <- 4
+indices <- sample(1:nrow(data))
+folds <- cut(indices, breaks = k, labels = FALSE)
+
+validation_scores <- c()
+for (i in 1:k) {
+  
+  validation_indices <- which(folds == i, arr.ind = TRUE)
+  validation_data <- data[validation_indices,]                          
+  training_data <- data[-validation_indices,]                           
+  
+  model <- get_model()                                                  
+  model %>% train(training_data)
+  results <- model %>% evaluate(validation_data)
+  validation_scores <- c(validation_scores, results$accuracy)
+}
+
+validation_score <- mean(validation_scores)                             
+
+model <- get_model()                                                    
+model %>% train(data)                                                   
+results <- model %>% evaluate(test_data)                                
+
+
+
+#Listing 4.3. Original model
+library(keras)
+
+model <- keras_model_sequential() %>%
+  layer_dense(units = 16, activation = "relu", input_shape = c(10000)) %>%
+  layer_dense(units = 16, activation = "relu") %>%
+  layer_dense(units = 1, activation = "sigmoid")
+
+
+#Listing 4.4. Version of the model with lower capacity
+model <- keras_model_sequential() %>%
+  layer_dense(units = 4, activation = "relu", input_shape = c(10000)) %>%
+  layer_dense(units = 4, activation = "relu") %>%
+  layer_dense(units = 1, activation = "sigmoid")
+
+
+#Listing 4.5. Version of the model with higher capacity
+model <- keras_model_sequential() %>%
+  layer_dense(units = 512, activation = "relu", input_shape = c(10000)) %>%
+  layer_dense(units = 512, activation = "relu") %>%
+  layer_dense(units = 1, activation = "sigmoid")
+
+
+
+#Listing 4.6. Adding L2 weight regularization to the model
+model <- keras_model_sequential() %>%
+  layer_dense(units = 16, kernel_regularizer = regularizer_l2(0.001),
+              activation = "relu", input_shape = c(10000)) %>%
+  layer_dense(units = 16, kernel_regularizer = regularizer_l2(0.001),
+              activation = "relu") %>%
+  layer_dense(units = 1, activation = "sigmoid")
+
+
+
+#Listing 4.7. Different weight regularizers available in Keras
+regularizer_l1(0.001)
+regularizer_l1_l2(l1 = 0.001, l2 = 0.001)
+
+
+
+#Listing 4.8. Adding dropout to the IMDB network
+model <- keras_model_sequential() %>%
+  layer_dense(units = 16, activation = "relu", input_shape = c(10000)) %>%
+  layer_dropout(rate = 0.5) %>%
+  layer_dense(units = 16, activation = "relu") %>%
+  layer_dropout(rate = 0.5) %>%
+  layer_dense(units = 1, activation = "sigmoid")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
