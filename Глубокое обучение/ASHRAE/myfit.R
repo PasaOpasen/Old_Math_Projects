@@ -1,12 +1,8 @@
 
-score=function(target,predict){
-  s=sum((log(1+predict)-log(1+target))^2)/length(target)
-  sqrt(s)
-}
-predpred=function(model,df) round(abs(predict(model,df[,-2])),2)
-
-
 library(data.table)
+library(dplyr)
+library(mice)
+library(magrittr)
 
 build=fread("building_metadata.csv")
 
@@ -17,35 +13,88 @@ lev=levels(weather$timestamp)
 train$timestamp=factor(train$timestamp,levels = lev)
 
 train2=merge(train,build,by="building_id")
-library(dplyr)
-library(mice)
-library(magrittr)
-train2=full_join(train2,weather)
+
+train2=full_join(train2,weather) 
+train2=train2%>% 
+  tbl_df() %>% 
+  filter(!is.na(building_id))%>% 
+  filter(abs(meter_reading-median(meter_reading,na.rm=T))<=1.5*IQR(meter_reading,na.rm=T))%>%
+  filter(abs(square_feet-median(square_feet,na.rm=T))<=1.5*IQR(square_feet,na.rm=T))%>%
+  filter(abs(floor_count-median(floor_count,na.rm=T))<=1.5*IQR(floor_count,na.rm=T))%>%
+  filter(abs(air_temperature-median(air_temperature,na.rm=T))<=1.5*IQR(air_temperature,na.rm=T))%>%
+  filter(abs(cloud_coverage-median(cloud_coverage,na.rm=T))<=1.5*IQR(cloud_coverage,na.rm=T))%>%
+  filter(abs(dew_temperature-median(dew_temperature,na.rm=T))<=1.5*IQR(dew_temperature,na.rm=T))%>%
+  filter(abs(precip_depth_1_hr-median(precip_depth_1_hr,na.rm=T))<=1.5*IQR(precip_depth_1_hr,na.rm=T))%>%
+  filter(abs(sea_level_pressure-median(sea_level_pressure,na.rm=T))<=1.5*IQR(sea_level_pressure,na.rm=T))%>%
+  filter(abs(wind_speed-median(wind_speed,na.rm=T))<=1.5*IQR(wind_speed,na.rm=T))%>%
+  mutate(
+    #building_id=factor(building_id),
+    meter=factor(meter),
+    #site_id=factor(site_id),
+    floor_count=factor(floor_count),
+    primary_use=factor(primary_use,levels(factor(build$primary_use))),
+    cloud_coverage=factor(cloud_coverage),
+    how_old=as.POSIXlt(substr(as.character(timestamp), 1, 10))$year-year_built+1900,
+    wind_direction=factor(round(wind_direction/60)),
+    precip_depth_1_hr=factor(sign(precip_depth_1_hr))
+  )
+
+train2=train2 %>% mutate(how_old=ifelse(how_old>0,how_old,0))%>% filter(abs(how_old-median(how_old,na.rm=T))<=1.5*IQR(how_old,na.rm=T))
+
+#удалить дату и год постройки
+train2=train2[,-c(3,8)]
+
+#удалить номер здания и район, так как объединение по ним уже произошло
+train2=train2[,-c(1,4)]
+
+train2 %>%
+  sample_n(50000) %>%
+  ggplot(aes(meter_reading)) +
+  geom_histogram(fill = "green") +
+  xlab("Meter Reading") +
+  ylab("Count") +
+  ggtitle("Logarithmic Distribution of Meter Readings") +
+  scale_x_log10()
+
+#удаляю число этажей, так как там больше половины наблюдений NA
+#train2= train2[,-5]
+
+#удаляю возраст: там тоже много NA (чуть больше половины)
+#train2= train2[,-12]
+
+summary(train2)#удалить дату и год постройки
+train2=train2[,-c(3,8)]
+
+#удалить номер здания и район, так как объединение по ним уже произошло
+train2=train2[,-c(1,4)]
+
+train2 %>%
+  sample_n(50000) %>%
+  ggplot(aes(meter_reading)) +
+  geom_histogram(fill = "green") +
+  xlab("Meter Reading") +
+  ylab("Count") +
+  ggtitle("Logarithmic Distribution of Meter Readings") +
+  scale_x_log10()
+
+
+#удаляю число этажей, так как там больше половины наблюдений NA
+#train2= train2[,-5]
+
+#удаляю возраст: там тоже много NA (чуть больше половины)
+#train2= train2[,-12]
+
+summary(train2)
 
 #удаляю наблюдения с пропущенными значениями
 #train2=na.omit(train2)
-train2=train2 %>% mice() %>% complete()
 
 #узнаю, на что делится число строк
 vc=4:23
 number=(nrow(train2)%%vc ==0)[1]+3
 step=nrow(train2)/number
 
-
-#train2=merge(train2,weather,by.x="site_id",by.y = "timestamp")
-
 colnames(train2)
-train2=tbl_df(train2) %>% 
-  mutate(
-    building_id=factor(building_id),
-    meter=factor(meter),
-    site_id=factor(site_id),
-    floor_count=factor(floor_count),
-    primary_use=factor(primary_use),
-    cloud_coverage=factor(cloud_coverage),
-    how_old=as.POSIXlt(substr(as.character(timestamp), 1, 10))$year-year_built+1900,
-    wind_direction=wind_direction/180*pi
-  )
 
 meter.lev=levels(train2$meter)
 floor_count.lev=levels(train2$floor_count)
@@ -54,36 +103,38 @@ cloud_coverage.lev=levels(train2$cloud_coverage)
 l.lev=list(meter.lev,floor_count.lev,primary_use.lev,cloud_coverage.lev)
 save(file="levels.rdata",l.lev)
 
-#удалить дату и год постройки
-train2=train2[,-c(3,8)]
-
-#удалить номер здания и район, так как объединение по ним уже произошло
-train2=train2[,-c(1,4)]
 
 #удаляю переменную, которая хз чо такое (глубина осадков)
-train2=train2[,-9]
+#train2=train2[,-9]
 
+train2=train2 %>% na.omit() %>% mutate(cloud_coverage=factor(cloud_coverage,levels = c("0","2","4","6","8","9")))
+#train2=train2 %>% mice() %>% complete()
 (NAMES=colnames(train2))
+
+
+
+score=function(target,predict){
+  s=sum((log(1+predict)-log(1+target))^2)/length(target)
+  sqrt(s)
+}
+scorelog=function(target,predict){
+  s=sum((log(1+target)-predict)^2)/length(target)
+  sqrt(s)
+}
+predpred=function(model,df) round(abs(predict(model,df[,-2])),2)
 
 
 fit=lm(meter_reading~
        (primary_use+
-            square_feet+
-         I(square_feet^2)+
-          I(square_feet^3)+
-         floor_count+
+          poly(square_feet,2)  +
          air_temperature+
          cloud_coverage+
          dew_temperature+
-           abs(air_temperature-dew_temperature)+
-         I( abs(air_temperature-dew_temperature)^2)+
+         #abs(air_temperature-dew_temperature)+
          sea_level_pressure+
          wind_direction+
          wind_speed+
-       #  I(wind_direction*wind_speed)  +
-       #   precip_depth_1_hr+
-         sqrt(how_old)+
-         how_old)^2,
+          precip_depth_1_hr),
        train2)
 summary(fit)
 #97 блять процентов!!!!
@@ -92,7 +143,7 @@ summary(fit)
 tg=train2$meter_reading
 res1=predpred(fit,train2) #0.5883174
 
-score(tg,res1)
+scorelog(tg,res1)
 
 score(tg,runif(length(tg),0,20))
 
@@ -107,7 +158,7 @@ score(tg,runif(length(tg),0,20))
 library(caret)
 set.seed(1998)
 rc=nrow(train2)
-p.80=sample(1:rc,round(rc*0.1))
+p.80=sample(1:rc,round(rc*0.001))
 p.20=(1:rc)[-p.80]
 
 #p.80=1:400
@@ -142,21 +193,17 @@ CT_model <- train(meter_reading~
                     primary_use+
                     square_feet+
                     I(square_feet^2)+
-                    floor_count+
                     air_temperature+
                     cloud_coverage+
                     dew_temperature+
                     sea_level_pressure+
                     wind_direction+
-                    wind_speed+
-                    sqrt(how_old)+
-                    #I(how_old^2)
-                    how_old,
+                    wind_speed,
                   data= data.80, method = "ctree")
 summary(CT_model)
 
-res3=predpred(CT_model,train2) #0.3253814 при 0.1 от обучающей
-score(tg,res3)
+res3=predpred(CT_model,train2[1:500,]) #0.3253814 при 0.1 от обучающей
+scorelog(train2[1:500,2],res3)
 
 
 
@@ -186,7 +233,7 @@ res4=predpred(R_model,train2) #0.3069017 при 0.05 от обучающей
 score(tg,res4)
 
 
-p.80=sample(1:rc,round(rc*0.05))
+p.80=sample(1:rc,round(rc*0.01))
 p.20=(1:rc)[-p.80]
 data.80=train2[p.80,]#обучение
 data.20=train2[p.20,]#тест, который добавлю к обучению
@@ -215,11 +262,11 @@ if(F){
   #модели-кандидаты
 methods=c(
        #  'rpart1SE',
-          'lm'#,
-       #   'ppr',
-        #  'gbm',
-         #'ctree'#,
-          #'ranger'
+          'lm',
+          'ppr',
+          'gbm',
+         'ctree',
+          'ranger'
          )
 
 
@@ -227,27 +274,24 @@ results=list()
 for(i in seq(methods)){
   cat("---------METHOD",methods[i] ," \n")
  time= system.time(
-  Lm_model <- train(meter_reading~
-                      primary_use+
-                      square_feet+
-                      I(square_feet^2)+
-                      floor_count+
+  Lm_model <- train(  
+    primary_use+
+                      poly(square_feet,2)  +
                       air_temperature+
                       cloud_coverage+
                       dew_temperature+
                       sea_level_pressure+
                       wind_direction+
                       wind_speed+
-                      sqrt(how_old)+
-                      how_old, 
+                      precip_depth_1_hr, 
                     data= data.80, method = methods[i])
   )
   #summary(Lm_model)
   
   res2=round(abs(predict(Lm_model,data.80[,-2])),2) 
-  sc=score(tg[p.80],res2)
+  sc=scorelog(tg[p.80],res2)
   cat("***************************score",sc,"\n")
-  sc2=score(tg[p.20],round(abs(predict(Lm_model,data.20[,-2])),2))
+  sc2=scorelog(tg[p.20],round(abs(predict(Lm_model,data.20[,-2])),2))
   cat("***************************score",sc2,"\n")
   
   results[[i]]=list(
