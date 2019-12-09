@@ -17,6 +17,7 @@ let mutable g=1.0
 let mutable h1=1.0
 let mutable h2=2.0
 let mutable x0=0.0
+let mutable c1,c2,omega,ro,k1,k2,mu1,mu2=0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
 
 let mutable t1=0.0
 let mutable t2=0.0
@@ -27,6 +28,14 @@ let mutable pr=0.01
 let mutable gr=1e4
 
 
+let sigmak kw (a:Number.Complex) =
+    if a.Abs > kw then Number.Complex.Sqrt((a - kw) * (a + kw))
+    else
+        let tmp = Number.Complex.I * Number.Complex.Sqrt((kw - a) * (kw + a))
+        if a.Im * a.Re > 0.0 then tmp
+        else -tmp
+
+
 [<EntryPoint>]
 let main argv = 
    // значения параметров из файла
@@ -35,7 +44,10 @@ let main argv =
     Array.iter( fun p -> printf "%f \n" p) params
 
 
-
+    k1<-c1/omega
+    k2<-c2/omega
+    let sigma1=sigmak k1
+    let sigma2=sigmak k2
 
     //функции
 
