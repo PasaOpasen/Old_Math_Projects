@@ -18,7 +18,7 @@ let mutable h1=1.0
 let mutable h2=2.0
 let mutable x0=0.
 let mutable c1,c2,omega,ro,k1,k2,mu1,mu2=0.,0.,0.,0.,0.,0.,0.,0.
-let mutable xmin,xmax,ymin,ymax,xcount,ycount=0.,1.,0.,1.,40,40
+let mutable xmin,xmax,ymin,ymax,xcount,ycount=0.,1.,4.,1.,40,40
 
 let mutable t1=0.
 let mutable t2=0.
@@ -56,24 +56,21 @@ let main argv =
     //tex:$Qe(alpha,x)=Q(\alpha)*exp(-i \alpha x)=exp(-i \alpha (x_0-x))$
     let Qexp (alpha:Number.Complex) x = Number.Complex.Exp(Number.Complex(0.,-1.0)*alpha*(x0-x))
     let Delta alpha=0
-    let K1 (alpha:Number.Complex) (z:float)  =alpha*z
-    let K2 (alpha:Number.Complex) (z:float)  =z*alpha
+    let K1 (alpha:Number.Complex) (z:float)  =alpha/alpha.Abs*z
+    let K2 (alpha:Number.Complex) (z:float)  =z*alpha.Arg
 
     let u x z=
         if z > -h1 then FuncMethods.DefInteg.GaussKronrod.DINN_GK( (fun alpha->(K1 alpha z) * (Qexp alpha x)), t1, t1, t1, t2, tm ,0., eps, pr, gr)
         else FuncMethods.DefInteg.GaussKronrod.DINN_GK( (fun alpha->(K2 alpha z) * (Qexp alpha x)), t1, t1, t1, t2, tm ,0., eps, pr, gr)
     
-    let values =Array2D.create xcount ycount (float,float)
-    let Real (c:Number.Complex) = c.Re
-    let Imag (c:Number.Complex) = c.Im
-    let GetTuple (c:Number.Complex)= (Real , Imag)
+    let values =Array2D.init xcount ycount (fun i j -> Number.Complex(0.))
 
-    let (xnet:float[])=Expendator.Seq(xmin,xmax,xcount)
-    let (ynet:float[])=Expendator.Seq(ymin,ymax,ycount)
+    let xnet=Expendator.Seq(xmin,xmax,xcount)
+    let ynet=Expendator.Seq(ymin,ymax,ycount)
 
     for i in 0..xcount-1 do
        Parallel.For(0, ycount, 
-           fun j-> values.[i,j]<- (u xnet.[i] ynet.[j]|> GetTuple))|> ignore
+           fun j-> values.[i,j]<- (u xnet.[i] ynet.[j]))|> ignore
        printf "%u from %u \n" (i+1) xcount
        
             
