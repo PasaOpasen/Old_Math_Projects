@@ -5,6 +5,7 @@ open МатКлассы
 open System.IO
 open System
 open System.Threading.Tasks
+open System.Diagnostics
 
 //глобальные переменные
 let mutable a=1.0
@@ -15,10 +16,10 @@ let mutable e=1.0
 let mutable f=1.0
 let mutable g=1.0
 let mutable h1=1.0
-let mutable h2=2.0
+let mutable h2=1.0
 let mutable x0=0.
 let mutable c1,c2,omega,ro,k1,k2,mu1,mu2=0.,0.,0.,0.,0.,0.,0.,0.
-let mutable xmin,xmax,ymin,ymax,xcount,ycount=0.,1.,0.,-2.,30,30
+let mutable xmin,xmax,ymin,ymax,xcount,ycount=0.,3.,0.,-2.,30,30
 
 let mutable t1=0.
 let mutable t2=0.
@@ -56,8 +57,8 @@ let main argv =
     //tex:$Qe(alpha,x)=Q(\alpha)*exp(-i \alpha x)=exp(-i \alpha (x_0-x))$
     let Qexp (alpha:Number.Complex) x = Number.Complex.Exp(Number.Complex(0.,-1.0)*alpha*(x0-x))
     let Delta alpha=0
-    let K1 (alpha:Number.Complex) (z:float)  =alpha/alpha.Abs*z
-    let K2 (alpha:Number.Complex) (z:float)  =z*alpha.Arg
+    let K1 (alpha:Number.Complex) (z:float)  =Number.Complex.Sin(alpha*z)/(alpha+1.)
+    let K2 (alpha:Number.Complex) (z:float)  =Number.Complex.Cos(alpha*z)/(alpha+1.)
 
     let u x z=
         if z > -h1 then FuncMethods.DefInteg.GaussKronrod.DINN_GK( (fun alpha->(K1 alpha z) * (Qexp alpha x)), t1, t1, t1, t2, tm ,0., eps, pr, gr)
@@ -86,7 +87,11 @@ let main argv =
                 file.WriteLine("{0} {1}",values.[i,j].Re,values.[i,j].Im)
                      )
     
-    
-    
+    printf "Run script..."
+    Expendator.StartProcessOnly("MakeGrafics.r",true )
+    let PrSt (file:string)=Process.Start(file)|>ignore
+    "u.pdf" |>PrSt
+    "Abs u.html" |>PrSt
+    "Re u.html" |>PrSt
     
     0
