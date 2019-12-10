@@ -18,7 +18,7 @@ let mutable h1=1.0
 let mutable h2=2.0
 let mutable x0=0.
 let mutable c1,c2,omega,ro,k1,k2,mu1,mu2=0.,0.,0.,0.,0.,0.,0.,0.
-let mutable xmin,xmax,ymin,ymax,xcount,ycount=0.,1.,4.,1.,40,40
+let mutable xmin,xmax,ymin,ymax,xcount,ycount=0.,1.,0.,-2.,30,30
 
 let mutable t1=0.
 let mutable t2=0.
@@ -73,6 +73,20 @@ let main argv =
            fun j-> values.[i,j]<- (u xnet.[i] ynet.[j]))|> ignore
        printf "%u from %u \n" (i+1) xcount
        
-            
+    
 
+    let SimpleWrite name (array:string[])=Expendator.WriteInFile(name,array)
+    xnet|> Array.map (fun number->number.ToString())|>SimpleWrite "x.txt"
+    ynet|> Array.map (fun number->number.ToString())|>SimpleWrite "y.txt"
+    
+
+    using (System.IO.File.CreateText("u.txt")) (fun file->
+        for i in 0..xcount-1 do
+            for j in 0..ycount-1 do
+                file.WriteLine("{0} {1}",values.[i,j].Re,values.[i,j].Im)
+                     )
+    
+    
+    
+    
     0
