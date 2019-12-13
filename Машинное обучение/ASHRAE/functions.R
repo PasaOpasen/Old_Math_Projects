@@ -11,6 +11,10 @@ Score=function(model,df,deg=2){
 pr=predpred(model,df)
 score(df$meter_reading,pr^deg)
 }
+ScoreLog=function(model,df){
+  pr=predpred(model,df)
+  score(df$meter_reading,exp(pr))
+}
 
 ScoreBinary=function(model,df){
   s=predict(model,df[,-2])

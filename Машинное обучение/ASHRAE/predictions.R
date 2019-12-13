@@ -22,7 +22,7 @@ load("weathertest.rdata")
 #load("weathermiced.rdata")
 
 
-V=8400*17#34
+V=8400*34
 ct=41697600/V
 
 NAs=0
@@ -37,16 +37,9 @@ test2=left_join(test2,weather.test)
 if(is.na(mean(test2$air_temperature))){
   #test2=merge(test,build,by="building_id")%>%na.omit()
   #test2=left_join(test2,weather) 
-  test2[,-4]%<>% mice(method = "sample",m=2) %>% complete()#у них жопа с данными, есть несостыковки в датах, ну и хуй с ними
-  if(is.na(mean(test2$air_tempetarure))){
-   test2$air_temperature=runif(V,-29,48)
-   test2$dew_temperature=runif(V,-35,27)
-   test2$precip_depth_1_hr=runif(V,-10,343)
-   test2$sea_level_pressure=runif(V,973,1045)
-   test2$wind_direction=runif(V,-3.1415,3.1415)
-   test2$wind_speed=runif(V,0,17)
-   test2$cloud_coverage=sample(0:9,V,T)
-  }
+  test2[,-4]%<>% mice(method = "sample",m=3) %>% complete()#у них жопа с данными, есть несостыковки в датах, ну и хуй с ними
+ # test2[,-4]=  preProcess(test2[,-4],method= "knnImpute")
+  test2$cloud_coverage=factor(test2$cloud_coverage,as.character(0:9))
 }
 
 

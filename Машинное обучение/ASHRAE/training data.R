@@ -6,13 +6,13 @@ load("weathermiced.rdata")
 
 
 train=fread("train.csv")
-train=train %>% tbl_df() %>% filter(abs(meter_reading-median(meter_reading))<=1.5*IQR(meter_reading))
+train=train %>% tbl_df() #%>% filter(abs(meter_reading-median(meter_reading))<=1.5*IQR(meter_reading))
 
 weather %<>%tbl_df() %>% 
   mutate(
-    cloud_coverage=factor(round(cloud_coverage)%%10),
+    #cloud_coverage=factor(round(cloud_coverage)%%10),
     #precip_depth_1_hr=factor(sign(precip_depth_1_hr)),
-    wind_direction=wind_direction/180*pi,
+    wind_direction=wind_direction/180-1,
     timestamp=as.factor(timestamp)
   ) 
 lev=levels(weather$timestamp)
@@ -34,45 +34,50 @@ train2%<>% tbl_df() %>%
     meter=factor(meter),
     floor_count=factor(floor_count),#>=5,labels=c("more5","less5")),
     primary_use=factor(primary_use,levels(factor(build$primary_use))),
-    how_old=as.POSIXlt(substr(as.character(timestamp), 1, 10))$year-year_built+1900,
-    wind_direction=wind_direction-pi
+    how_old=as.POSIXlt(substr(as.character(timestamp), 1, 10))$year-year_built+1900
   ) %>% select(-building_id,-timestamp,-site_id,-year_built)# %>% 
  # mutate(
    # how_old=ifelse(how_old<0,0,how_old),
   #  sea_level_pressure=sea_level_pressure-900
   #) 
+
+
+
 save(file="train2.rdata",train2)
 
 load("train2.rdata")
 tg=train2$meter_reading
 
+t3=createDataPartition(train2,list=F,p=0.05)
 
 train3 <- train2 %>% 
   group_by(meter,primary_use,floor_count) %>% 
-  filter(abs(meter_reading-median(meter_reading))<=1.5*IQR(meter_reading)) %>% 
-  sample_n(min(n(),300)) %>%na.omit()
+ # filter(abs(meter_reading-median(meter_reading))<=1.5*IQR(meter_reading)) %>% 
+  sample_n(min(n(),800)) %>%na.omit()
 
 tg2=train3$meter_reading
 
 save(file="ttgg.rdata",train3,tg2)
 load("ttgg.rdata")#------------------------------------------------------------------------
+train3 %<>% na.omit()
+train3 %<>%   #group_by(meter,
+                #       primary_use,
+                 #      floor_count) %>% 
+  filter(abs(meter_reading-median(meter_reading))<=1.5*IQR(meter_reading)) 
 
+mt=createDataPartition(train3$meter,1,0.04,list=F)
+pr=createDataPartition(train3$primary_use,1,0.04,list=F)
+fc=createDataPartition(train3$floor_count,1,0.04,list=F)
 
-control <- trainControl(method="repeatedcv", number=10, repeats=3)#трёхкратная десятиблочная кросс-валидация
-
+s=unique(c(mt,pr,fc)) 
 
 ############модели
-train.fit <- train3 %>% 
-  group_by(meter,
-           primary_use,
-           floor_count#,
-           #cloud_coverage,
-           #precip_depth_1_hr
-           ) %>% 
-  sample_n(min(n(),10))
+train.fit <- train3[s,] 
 
+save(file="tmptmp.rdata",train.fit)
+load("tmptmp.rdata")
 
-train.class=train3 %>% mutate(
+train.class=train.fit %>% mutate(
   meter_reading=ifelse(meter_reading==0,0,1)
 ) %>% mutate(
   meter_reading=factor(meter_reading,levels = c("0","1"))
@@ -214,34 +219,54 @@ if(F){
 
 
 fit.class <- train(meter_reading~.,
-              data= train.class, method = "ranger")
+              data= train.class, method = "ranger",trControl=trainControl(
+                method = "oob",
+                number = 6  ))
 
 ScoreBinary(fit.class ,train.class)
 
-fit.nonzero <- train(sqrt(meter_reading)~
+save(file="rangerclass.rdata",fit.class)
+
+ScoreBinary(fit.class ,train3[sample(1:2000000,5000),]%>% mutate(
+  meter_reading=ifelse(meter_reading==0,0,1)
+) %>% mutate(
+  meter_reading=factor(meter_reading,levels = c("0","1"))
+))
+
+
+
+
+
+fit.nonzero <- train(
+  log(meter_reading)~
                 meter+
                 primary_use+
-                poly(square_feet,4)  +
+                poly(log(square_feet),3)  +
                 primary_use:square_feet+
                 sigmoid(air_temperature)+
                 floor_count+
                 tanh(dew_temperature)+
                 sigmoid(air_temperature):tanh(dew_temperature)+
-                sqrt(sea_level_pressure)+
-                I(sea_level_pressure^0.3)+
-                I(wind_direction/3.1415926535898) +
-                wind_speed+
+                I((sea_level_pressure^2-1)/20000)+
+                wind_direction +
+                I(sqrt(wind_speed+1))+
                 tanh(precip_depth_1_hr)+
                 sigmoid(how_old/10),
-              data= train3 %>% filter(meter_reading>0), method = "ranger")
+              data= train3 %>% filter(meter_reading>0)
+  ,  method = "ranger",
+  trControl=trainControl(
+    method = "oob",
+    number = 5  ) 
+  )
 
-Score(fit.nonzero,train3 %>% filter(meter_reading>0)) #1.864324
+ScoreLog(fit.nonzero,train3%>% filter(meter_reading>0)) #0.3443867
 
 
 Combpredict=function(df,deg=2){
-
-  predict(fit.nonzero,df)^deg * (as.numeric(predict(fit.class,df))-1)
+ exp(predict(fit.nonzero,df)) * (as.numeric(predict(fit.class,df))-1)
 }
+
+score(train3$meter_reading,Combpredict(train3[,-2]))#0.2521707
 
 save(file = "fitRanger.rdata",fit.class,fit.nonzero,Combpredict)
 
