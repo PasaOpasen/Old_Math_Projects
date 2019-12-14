@@ -34,7 +34,7 @@ namespace Покоординатная_минимизация
                 s.ReadLine();
                 for (int i = 0; i < 5000; i++)
                 {
-                    tmp = s.ReadLine().Split(',').ToArray().Select(n => Convert.ToInt16(n)).ToArray();
+                    tmp = s.ReadLine().Split(',').Select(n => Convert.ToInt16(n)).ToArray();
                     choice_0[i] = Convert.ToByte(tmp[1]);
                     choice_1[i] = Convert.ToByte(tmp[2]);
                     choice_2[i] = Convert.ToByte(tmp[3]);
@@ -49,7 +49,7 @@ namespace Покоординатная_минимизация
                 }
             }
         }
-        static Func<byte[], int> preference_costs = (byte[] arr) =>
+        static Func<byte[], double> preference_costs = (byte[] arr) =>
             {
                 byte[] sum = new byte[5000];
                 int s = 0;
@@ -146,9 +146,9 @@ namespace Покоординатная_минимизация
             }
             best = score(res);
         }
-        static void WriteData(double reslt)
+        static void WriteData(double reslt,string acc="")
         {
-            using (var s = new StreamWriter($"res {reslt}.csv"))
+            using (var s = new StreamWriter($"res {acc} {reslt}.csv"))
             {
                 s.WriteLine("family_id,assigned_day");
                 for (int i = 0; i < res.Length; i++)
@@ -156,9 +156,10 @@ namespace Покоординатная_минимизация
             }
         }
 
+        static int[] GetRange()=> Enumerable.Range(0, 5000).ToArray();
         static int[] GetRandom()
         {
-            var s = Enumerable.Range(0, 5000).ToArray();
+            var s = GetRange();
             Random r = new Random();
             int tmp1,tmp2;
             int tmp;
@@ -173,21 +174,31 @@ namespace Покоординатная_минимизация
             return s;
         }
 
-        static bool MakeResult(Func<byte[], double> fun)
+        /// <summary>
+        /// Копирует массив res указанное число раз
+        /// </summary>
+        /// <param name="samplecount"></param>
+        /// <returns></returns>
+        static byte[][] GetNresCopy(int samplecount=100)
         {
-
-            bool existprogress = false;
-
-            byte[][] mat = new byte[100][];
-            for (int i = 0; i < 100; i++)
+            byte[][] mat = new byte[samplecount][];
+            for (int i = 0; i < samplecount; i++)
             {
                 ref var m = ref mat[i];
                 m = new byte[5000];
                 for (int j = 0; j < m.Length; j++)
                     m[j] = res[j];
             }
+            return mat;
+        }
+        static bool MakeCoordMin(Func<byte[], double> fun)
+        {
 
-            var numbers = GetRandom();
+            bool existprogress = false;
+
+            byte[][] mat = GetNresCopy();
+
+            var numbers = GetRange(); //GetRandom();
             double[] results = new double[100];
             foreach(var nb in numbers)
             {
@@ -219,22 +230,95 @@ namespace Покоординатная_минимизация
 
             return existprogress;
         }
-        static void MakeResult2(Func<byte[],double> fun)
+
+        /// <summary>
+        /// Минимицация по случайной выборке
+        /// </summary>
+        /// <param name="fun">Минимизируемая функция</param>
+        /// <param name="samplecount">Число образцов, размерность множетсва примеров, из которого будет искаться лучший</param>
+        /// <param name="rows">В скольки строках за раз меняются значения</param>
+        /// <param name="range">Максимальный по модулю сдвиг, то есть к координатам вектора будут прибавляться целые числа от -range до range (включая 0, но он маловероятен)</param>
+        /// <returns></returns>
+        static bool MakeSampleBest(Func<byte[], double> fun,int samplecount=100,int rows = 10,int range=5)
         {
-            while (MakeResult(fun))
+            bool exist = false;
+
+            var mat = GetNresCopy(samplecount);
+
+            var numbers = GetRandom();
+            double[] results = new double[samplecount];
+            Random r = new Random();
+            for(int tt=0;tt<numbers.Length;tt+=rows)
+            {     
+                for (byte i = 0; i < samplecount; i++)
+                {
+                    ref var row = ref mat[i];
+                    int add;
+                    for (int h = 0; h < rows; h++)
+                    {
+                        add=row[numbers[tt + h]]+(Math.Sign(r.NextDouble() - 0.5) * r.Next(1, range));
+                        if (add < 1) add = 1;
+                        else if (add > 100) add = 100;
+                        row[numbers[tt + h]] = (byte)add;
+                    }
+                        
+                }
+                    
+                results = mat.AsParallel().Select(arr => fun(arr)).ToArray();
+                double bst = results.Min();
+                int n = 0;
+                for (int i = 0; i < results.Length; i++)
+                    if (results[i] == bst)
+                    {
+                        n = i + 1;
+                        break;
+                    }
+
+                if (best > bst)
+                {
+                    best = bst;
+                    exist = true;
+                    res = mat[n];
+                    Console.WriteLine($"best score = {best}; iter = {(tt+1)/rows}");
+                }
+
+                for (byte i = 0; i < samplecount; i++)
+                {
+                    ref var row = ref mat[i];
+                    for (int h = 0; h < rows; h++)
+                        row[numbers[tt + h]] = res[numbers[tt + h]];
+                }
+            }
+
+            return exist;
+        }
+
+        static void MakeResult2( Func<byte[],double> fun,string acc="")
+        {
+            while (MakeCoordMin(fun))
             {
                 Console.WriteLine("Записывается в файл");
-                WriteData(best);
+                WriteData(best,acc);
+            }
+            return;
+        }
+        static void MakeResult3(Func<byte[], double> fun, string acc = "")
+        {
+            while (MakeSampleBest(fun,200,5,1))
+            {
+                Console.WriteLine("Записывается в файл");
+                WriteData(best, acc);
             }
             return;
         }
 
-        static byte[][] begins = new byte[1000][];
+        static readonly int countbegins = 1000;
+        static byte[][] begins = new byte[countbegins][];
         static void ReadBegins()
         {
             using(var s=new StreamReader("begins.csv"))
             {
-                for(int i=0;i<1000;i++)
+                for(int i=0;i< countbegins; i++)
                 {
                     ref var bg = ref begins[i];
                     bg = new byte[5000];
@@ -254,15 +338,17 @@ namespace Покоординатная_минимизация
             // var t = preference_costs(res);
             // var s = accounting_penalty(res);
             ReadBegins();
-            for(int y = 0; y < 1000; y++)
+            for(int y = 0; y < countbegins; y++)
             {
-                res = begins[y];
-                          
-                Console.WriteLine($"----------------ITERATION {y}. Begin score = {best}");
-                best = accounting_penalty(res);
-                MakeResult2(accounting_penalty);
+                ReadRES();
+                //res = begins[y];
+
+                Console.WriteLine($"----------------ITERATION {y+1}. Begin score = {best}");
+                //best = preference_costs(res);
+                //MakeResult2(preference_costs, "prf");
                 best = score(res);
                 MakeResult2(score);
+               // MakeResult3(score);
             }
             
            
