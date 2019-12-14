@@ -33,7 +33,7 @@ accounting.penalty=function(dayvec){
     group_by(d) %>% summarise(sums=sum(peop)) %$%sums 
   
   if(sum(N<125|N>300)>0) {
-    return(1e19)
+    return(1e20)
     }
   
   N2=c(N,N[100])[2:101]
@@ -44,8 +44,21 @@ accounting.penalty=function(dayvec){
 score=function(dayvec) preference.cost(dayvec)+accounting.penalty(dayvec)
 
 
-dayvec=sample(1:100,5000,replace = T)
-score(dayvec)
+ct=0
+repeat{
+  
+  dayvec=sample(1:100,5000,replace = T)
+  sc=score(dayvec)
+  if(sc<1e20){
+    write_csv(dayvec %>% tbl_df(),"begins.csv",append = T)
+    ct=ct+1
+    cat(sc,'\n')
+  }
+  
+ if(ct==1000)  break
+}
+
+
 
 
 

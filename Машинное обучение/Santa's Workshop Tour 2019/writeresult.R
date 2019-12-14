@@ -1,4 +1,4 @@
 
-res=read_csv("sample_submission.csv")
+res=read_csv("res.csv")
 res$assigned_day=best.res
 write_csv(res,"res.csv")
