@@ -59,6 +59,19 @@ repeat{
 }
 
 
+best.res=dayvec
+x=1:100
+one=function(x){
+  mat=rep(best.res,100) %>% matrix(nrow = 5000,byrow = F)
+    mat[1,]=x
+  num=apply(mat, 2, score)
+  num[num>=1e19]=median(num[num<1e19])
+  num
+}
+
+s=one(1:100)
+ggplot(data.frame(x=1:100,y=s),aes(x,y))+geom_line(col="blue")
+
 
 
 

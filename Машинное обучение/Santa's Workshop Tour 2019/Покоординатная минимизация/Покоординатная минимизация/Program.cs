@@ -49,6 +49,21 @@ namespace Покоординатная_минимизация
                 }
             }
         }
+
+        static Func<byte[], bool> wall = (byte[] arr) =>
+          {
+                //******************
+                short[] count = new short[100];
+                for (int i = 0; i < arr.Length; i++)
+                    count[arr[i] - 1] += n_people[i];
+
+                for (int i = 0; i < count.Length; i++)
+                    if (count[i] < 125 || count[i] > 300)
+                        return true;
+              //**************
+              return false;
+          };
+
         static Func<byte[], double> preference_costs = (byte[] arr) =>
             {
                 byte[] sum = new byte[5000];
@@ -134,7 +149,24 @@ namespace Покоординатная_минимизация
                    sum += (count[i] - 125) / 400.0 * Math.Pow(count[i], 0.5 + 0.02 * Math.Abs(count[i] - count[i + 1]));
                return sum + (count[99] - 125) / 400.0 * Math.Sqrt(count[99]);
            };
-        static Func<byte[], double> score = (byte[] arr) => preference_costs(arr) + accounting_penalty(arr);
+        static Func<byte[], double> preference_costs2 = (byte[] arr) =>
+        {
+            if (wall(arr))
+                return 1e20;
+            return preference_costs(arr);
+        };
+        static Func<byte[], double> accounting_penalty2 = (byte[] arr) =>
+        {
+            if (wall(arr))
+                return 1e20;
+            return accounting_penalty(arr);
+        };
+
+        static Func<byte[], double> score = (byte[] arr) => {
+            //if (wall(arr))
+            //    return 1e20;
+           return preference_costs(arr) + accounting_penalty(arr);
+        };
 
         static void ReadRES()
         {
@@ -338,17 +370,27 @@ namespace Покоординатная_минимизация
             // var t = preference_costs(res);
             // var s = accounting_penalty(res);
             ReadBegins();
+
+             ReadRES();
             for(int y = 0; y < countbegins; y++)
             {
-                ReadRES();
-                //res = begins[y];
+                
+               // res = begins[y];
 
                 Console.WriteLine($"----------------ITERATION {y+1}. Begin score = {best}");
-                //best = preference_costs(res);
-                //MakeResult2(preference_costs, "prf");
+                best = preference_costs2(res);
+                MakeResult2(preference_costs2, "prf");
+
                 best = score(res);
                 MakeResult2(score);
-               // MakeResult3(score);
+
+                // MakeResult3(score);
+
+                //best = accounting_penalty(res);
+                //MakeResult2(accounting_penalty, "acc");
+
+                //best = score(res);
+                //MakeResult2(score);
             }
             
            
