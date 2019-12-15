@@ -162,6 +162,142 @@ namespace Покоординатная_минимизация
             return accounting_penalty(arr);
         };
 
+        /// <summary>
+        /// Функция, делающая то же самое, что и preference_costs2, но возвращающая ещё массив индексов, упорядоченных по убыванию вклада элементов входного массива
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        static double PreferenceCosts(byte[] arr,ref int[] order)
+        {
+            //if (wall(arr))
+            //    return 1e20;
+
+            byte[] sum = new byte[5000];
+            int[] sums = new int[5000];
+
+            for (int i = 0; i < arr.Length; i++)
+                if (arr[i] == choice_0[i])
+                {
+                    sum[i]++;
+                }
+            for (int i = 0; i < arr.Length; i++)
+                if (arr[i] == choice_1[i])
+                {
+                    sum[i]++;
+                    sums[i] += 50;
+                }
+            for (int i = 0; i < arr.Length; i++)
+                if (arr[i] == choice_2[i])
+                {
+                    sum[i]++;
+                    sums[i] += 50 + 9 * n_people[i];
+                }
+            for (int i = 0; i < arr.Length; i++)
+                if (arr[i] == choice_3[i])
+                {
+                    sum[i]++;
+                    sums[i] += 100 + 9 * n_people[i];
+                }
+            for (int i = 0; i < arr.Length; i++)
+                if (arr[i] == choice_4[i])
+                {
+                    sum[i]++;
+                    sums[i] += 200 + 9 * n_people[i];
+                }
+            for (int i = 0; i < arr.Length; i++)
+                if (arr[i] == choice_5[i])
+                {
+                    sum[i]++;
+                    sums[i] += 200 + 18 * n_people[i];
+                }
+            for (int i = 0; i < arr.Length; i++)
+                if (arr[i] == choice_6[i])
+                {
+                    sum[i]++;
+                    sums[i] += 300 + 18 * n_people[i];
+                }
+            for (int i = 0; i < arr.Length; i++)
+                if (arr[i] == choice_7[i])
+                {
+                    sum[i]++;
+                    sums[i] += 300 + 36 * n_people[i];
+                }
+            for (int i = 0; i < arr.Length; i++)
+                if (arr[i] == choice_8[i])
+                {
+                    sum[i]++;
+                    sums[i] += 400 + 36 * n_people[i];
+                }
+            for (int i = 0; i < arr.Length; i++)
+                if (arr[i] == choice_9[i])
+                {
+                    sum[i]++;
+                    sums[i] += 500 + (36 + 199) * n_people[i];
+                }
+            for (int i = 0; i < sum.Length; i++)
+                if (sum[i] == 0)
+                    sums[i] += (500 + (36 + 398) * n_people[i]);
+
+
+            (int, int)[] Fs = new (int, int)[5000];
+            for (int i = 0; i < sums.Length; i++)
+                Fs[i] = (i, sums[i]);
+
+
+            order = Fs.OrderByDescending(t => t.Item2).Select(t => t.Item1).ToArray();
+
+            return sums.Sum();
+        }
+        static void SuperMinimizingPreferenceCosts()
+        {
+            int[] order=new int[1];
+            bool existresult;
+            double bst;
+            byte[][] mat = GetNresCopy();
+            double[] results = new double[100];
+
+
+            do
+            {
+                existresult = false;
+                best = PreferenceCosts(res, ref order);
+                foreach(int nb in order)
+                {
+                    for (byte i = 0; i < 100; i++)
+                        mat[i][nb] = (byte)(i + 1);
+                    results = mat.AsParallel().Select(arr => preference_costs2(arr)).ToArray();
+                    bst = results.Min();
+                    int n = 0;
+                    for (int i = 0; i < results.Length; i++)
+                        if (results[i] == bst)
+                        {
+                            n = i + 1;
+                            break;
+                        }
+
+                    byte bn = (byte)n;
+                    for (byte i = 0; i < 100; i++)
+                        mat[i][nb] = bn;
+
+                    if (bst < best)
+                    {
+                        res = mat[0];
+                        best = bst;
+                        existresult = true;
+                        Console.WriteLine($"best score = {Math.Round(best, 3)}; iter = {nb}");
+
+                        break;
+                    }
+                }
+
+
+            } while (existresult);
+
+        }
+
+
+
         static Func<byte[], double> score = (byte[] arr) => {
             //if (wall(arr))
             //    return 1e20;
@@ -225,6 +361,7 @@ namespace Покоординатная_минимизация
         }
         static bool MakeCoordMin(Func<byte[], double> fun)
         {
+            best = fun(res);
 
             bool existprogress = false;
 
@@ -255,7 +392,7 @@ namespace Покоординатная_минимизация
                     best = bst;
                     existprogress = true;
                     res = mat[0];
-                    Console.WriteLine($"best score = {best}; iter = {nb}");
+                    Console.WriteLine($"best score = {Math.Round(best,3)}; iter = {nb}");
                 }
                                           
             }
@@ -343,6 +480,19 @@ namespace Покоординатная_минимизация
             }
             return;
         }
+        static void MakeResult4(string acc = "")
+        {
+            while (MakeCoordMin(preference_costs2)||MakeCoordMin(accounting_penalty))
+            {
+                Console.WriteLine("Записывается в файл");
+                WriteData(best, acc);
+                MakeResult2(score);
+            }
+            return;
+        }
+
+
+
 
         static readonly int countbegins = 1000;
         static byte[][] begins = new byte[countbegins][];
@@ -378,8 +528,11 @@ namespace Покоординатная_минимизация
                // res = begins[y];
 
                 Console.WriteLine($"----------------ITERATION {y+1}. Begin score = {best}");
-                best = preference_costs2(res);
-                MakeResult2(preference_costs2, "prf");
+                //MakeResult4("all");
+                //best = preference_costs2(res);
+                //MakeResult2(preference_costs2, "prf");
+
+                SuperMinimizingPreferenceCosts();
 
                 best = score(res);
                 MakeResult2(score);
