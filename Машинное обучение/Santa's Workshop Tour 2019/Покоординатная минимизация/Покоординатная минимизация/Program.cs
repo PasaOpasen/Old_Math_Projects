@@ -245,7 +245,7 @@ namespace Покоординатная_минимизация
                 Fs[i] = (i, sums[i]);
 
 
-            order = Fs.OrderByDescending(t => t.Item2).Select(t => t.Item1).ToArray();
+            order = Fs.Where(t=>t.Item2>0).OrderByDescending(t => t.Item2).Select(t => t.Item1).ToArray();
 
             return sums.Sum();
         }
@@ -256,14 +256,17 @@ namespace Покоординатная_минимизация
             double bst;
             byte[][] mat = GetNresCopy();
             double[] results = new double[100];
+            int iter;
 
 
             do
             {
                 existresult = false;
                 best = PreferenceCosts(res, ref order);
+                iter = 0;
                 foreach(int nb in order)
                 {
+                    iter++;
                     for (byte i = 0; i < 100; i++)
                         mat[i][nb] = (byte)(i + 1);
                     results = mat.AsParallel().Select(arr => preference_costs2(arr)).ToArray();
@@ -285,7 +288,7 @@ namespace Покоординатная_минимизация
                         res = mat[0];
                         best = bst;
                         existresult = true;
-                        Console.WriteLine($"best score = {Math.Round(best, 3)}; iter = {nb}");
+                        Console.WriteLine($"best score = {Math.Round(best, 3)}; index = {nb}; iteration = {iter}");
 
                         break;
                     }
@@ -294,6 +297,8 @@ namespace Покоординатная_минимизация
 
             } while (existresult);
 
+            Console.WriteLine("Записывается в файл");
+            WriteData(best, "prfmod");
         }
 
 
@@ -492,8 +497,6 @@ namespace Покоординатная_минимизация
         }
 
 
-
-
         static readonly int countbegins = 1000;
         static byte[][] begins = new byte[countbegins][];
         static void ReadBegins()
@@ -529,13 +532,19 @@ namespace Покоординатная_минимизация
 
                 Console.WriteLine($"----------------ITERATION {y+1}. Begin score = {best}");
                 //MakeResult4("all");
-                //best = preference_costs2(res);
-                //MakeResult2(preference_costs2, "prf");
+                best = preference_costs2(res);
+                MakeResult2(preference_costs2, "prf");
 
-                SuperMinimizingPreferenceCosts();
+               // SuperMinimizingPreferenceCosts();
 
                 best = score(res);
-                MakeResult2(score);
+                MakeResult2(score); 
+
+                //best = accounting_penalty(res);
+                //MakeCoordMin(accounting_penalty);
+                //Console.WriteLine("Записывается в файл");
+                //WriteData(best, "acc");
+
 
                 // MakeResult3(score);
 
