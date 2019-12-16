@@ -65,8 +65,6 @@ acc_cost <- function(daily_occupancy){
 }
 
 
-
-
 sapply(2:8,function(n){
   sapply(0:10, function(ch){
     if(ch == 0) return(0)
@@ -170,6 +168,95 @@ opt_pred <-function(cur_pred,ntimes = 1){
   return(res)
 }
 
+set.seed(123)
+n <- 5000
+m <- 5000
+x <- 1:n
+n_Fi = sample(x, m, replace=F)
+opt_pred_2 <-function(cur_pred,ntimes = 1){
+  
+  cur_score <- cost_function(cur_pred)
+  
+  cur_pd <- cur_pred %>% inner_join(data, by = "family_id")
+  for(fc in 0:9) cur_pd[,paste0("cchoice_",fc)] <- (cur_pd[,paste0("choice_",fc)] == cur_pd[,"assigned_day"])*fc
+  cur_pd[,"cchoice_10"] <- (rowSums(cur_pd[,paste0("cchoice_",0:9)])==0)*10
+  cur_pd[cur_pd[,paste0("choice_",0)] == cur_pd[,"assigned_day"],"cchoice_10"] <- 0
+  cur_pd$cur_choice <- as.character(rowSums(cur_pd[,paste0("cchoice_",0:10)]))
+  
+  cur_pd$assigned_day <- factor(cur_pred$assigned_day, levels = 1:100,labels = 1:100)
+  cur_daily_occ <- cur_pd %>% group_by(assigned_day) %>% summarize(s = sum(n_people)) %>% select(s) %>% pull
+  cur_acc_cost <- acc_cost(cur_daily_occ)
+  cur_penalty <- cur_score - cur_acc_cost
+  
+  ac <- as.character(0:9)
+  
+  # loop ntimes over each family 
+  for(fn in 1:ntimes){
+    cur_epoch_score <- cur_score
+    cur_epoch_start <- Sys.time()
+    for (fi in n_Fi){ 
+      # use the random number created above
+      # loop over each family choice
+      f <- as.character(cur_pred[fi,"family_id"])
+      fcur_pd <- subset(cur_pd,family_id == f)
+      fcur_choice <- fcur_pd[1,"cur_choice"]
+      fcur_day <- fcur_pd[1,"assigned_day"]
+      fcur_ni <- fcur_pd[1,"n_people"]
+      fcur_n <- as.character(fcur_ni)
+      fcur_penalty <- nch[fcur_choice,fcur_n]
+      
+      #temp_daily_occ
+      tdo <- cur_daily_occ
+      tdo[fcur_day] <- tdo[fcur_day]-fcur_ni
+      
+      f_scores <- sapply(ac,function(pick){
+        
+        temp_penalty <- cur_penalty - fcur_penalty + nch[pick,fcur_n]
+        
+        ftemp_day <- fcur_pd[1,paste0("choice_",pick)]
+        tdo[ftemp_day] <- tdo[ftemp_day]+fcur_ni
+        temp_acc_cost <- acc_cost(tdo)
+        
+        temp_score <- temp_penalty + temp_acc_cost 
+        return(temp_score)
+        
+      })
+      
+      # update new choice
+      
+      f_scores = f_scores[which(cur_score > f_scores)]
+      fnew_choice <- names(which.max(f_scores))
+      # optimise f_scores into one better choice at a time
+      
+      if(length(f_scores)==0){}
+      else if(f_scores[fnew_choice] < cur_score){
+        cpff <- which(cur_pd$family_id == f)
+        cur_pd[cpff,"cur_choice"] <- fnew_choice
+        
+        fnew_day <- fcur_pd[1,paste0("choice_",fnew_choice)]
+        cur_pd[cpff,"assigned_day"] <- fnew_day
+        
+        cur_daily_occ <- tdo
+        cur_daily_occ[fnew_day] <- cur_daily_occ[fnew_day] + fcur_ni
+        cur_score <- f_scores[fnew_choice]
+        
+        cur_penalty <- cur_penalty - fcur_penalty + nch[fnew_choice,fcur_n]
+      }
+      
+    }
+    print(paste("epoch:",fn,"; score:",cur_score))
+    print(Sys.time()-cur_epoch_start)
+    if(cur_score == cur_epoch_score) break()
+    cur_epoch_score <- cur_score
+  }
+  
+  res <- list()
+  res[[1]] <- cur_pd %>% select(family_id,assigned_day)
+  res[[2]] <- cur_score
+  return(res)
+}
+
+
 
 paths=list.files("samples")
 for(pth in paths){
@@ -178,7 +265,7 @@ gab = read.csv(paste0(getwd(),"/samples/",fpath))
 #gab$assigned_day=sample(1:100,5000,replace = T) %>% matrix(ncol=1)
 rownames(gab) <- submission$family_id
 
-opt_gab <- opt_pred(gab,100)
+opt_gab <- opt_pred_2(gab,100)
 opt_score <- opt_gab[[2]]
 print(opt_score)
 

@@ -7,7 +7,7 @@ using System.IO;
 
 namespace Покоординатная_минимизация
 {
-    class Program
+   static class Program
     {
 
         static int[] family_id = Enumerable.Range(0, 5000).ToArray();
@@ -24,7 +24,21 @@ namespace Покоординатная_минимизация
              choice_9 = new byte[5000],
              n_people = new byte[5000],
              res = new byte[5000];
-       static double best;
+        static double best;
+        static (int, int)[] Fs = new (int, int)[5000];
+
+        /// <summary>
+        /// Всевозможные комбинации пар от 1 до 100
+        /// </summary>
+        static (byte, byte)[] combinations2;
+        static Program()
+        {
+            combinations2 = new (byte, byte)[10000];
+            for (int n1 = 0; n1 < 100; n1++)
+                for (int n2 = 0; n2 < 100; n2++)
+                    combinations2[n1 * 100 + n2] = ((byte)(n1+1), (byte)(n2+1));
+        }
+
 
         static void ReadData()
         {
@@ -68,69 +82,62 @@ namespace Покоординатная_минимизация
             {
                 byte[] sum = new byte[5000];
                 int s = 0;
-
                 for (int i = 0; i < arr.Length; i++)
+                {
+                    bool sm = false;
+
                     if (arr[i] == choice_0[i])
                     {
-                        sum[i]++;
+                        sm = true;
                     }
-                for (int i = 0; i < arr.Length; i++)
                     if (arr[i] == choice_1[i])
                     {
-                        sum[i]++;
+                        sm = true;
                         s += 50;
                     }
-                for (int i = 0; i < arr.Length; i++)
                     if (arr[i] == choice_2[i])
                     {
-                        sum[i]++;
+                        sm = true;
                         s += 50 + 9 * n_people[i];
                     }
-                for (int i = 0; i < arr.Length; i++)
                     if (arr[i] == choice_3[i])
                     {
-                        sum[i]++;
+                        sm = true;
                         s += 100 + 9 * n_people[i];
                     }
-                for (int i = 0; i < arr.Length; i++)
                     if (arr[i] == choice_4[i])
                     {
-                        sum[i]++;
+                        sm = true;
                         s += 200 + 9 * n_people[i];
                     }
-                for (int i = 0; i < arr.Length; i++)
                     if (arr[i] == choice_5[i])
                     {
-                        sum[i]++;
+                        sm = true;
                         s += 200 + 18 * n_people[i];
                     }
-                for (int i = 0; i < arr.Length; i++)
                     if (arr[i] == choice_6[i])
                     {
-                        sum[i]++;
+                        sm = true;
                         s += 300 + 18 * n_people[i];
                     }
-                for (int i = 0; i < arr.Length; i++)
                     if (arr[i] == choice_7[i])
                     {
-                        sum[i]++;
+                        sm = true;
                         s += 300 + 36 * n_people[i];
                     }
-                for (int i = 0; i < arr.Length; i++)
                     if (arr[i] == choice_8[i])
                     {
-                        sum[i]++;
+                        sm = true;
                         s += 400 + 36 * n_people[i];
                     }
-                for (int i = 0; i < arr.Length; i++)
                     if (arr[i] == choice_9[i])
                     {
-                        sum[i]++;
-                        s += 500 + (36 + 199) * n_people[i];
+                        sm = true;
+                        s+= 500 + (36 + 199) * n_people[i];
                     }
-                for (int i = 0; i < sum.Length; i++)
-                    if (sum[i] == 0)
-                        s += (500 + (36 + 398) * n_people[i]);
+                    if (!sm)
+                        s += 500 + (36 + 398) * n_people[i];
+                }           
 
                 return s;
             };
@@ -173,84 +180,75 @@ namespace Покоординатная_минимизация
             //if (wall(arr))
             //    return 1e20;
 
-            byte[] sum = new byte[5000];
             int[] sums = new int[5000];
 
             for (int i = 0; i < arr.Length; i++)
+            {
+                bool sm=false;
+
                 if (arr[i] == choice_0[i])
                 {
-                    sum[i]++;
+                    sm=true;
                 }
-            for (int i = 0; i < arr.Length; i++)
                 if (arr[i] == choice_1[i])
                 {
-                    sum[i]++;
+                    sm = true;
                     sums[i] += 50;
                 }
-            for (int i = 0; i < arr.Length; i++)
                 if (arr[i] == choice_2[i])
                 {
-                    sum[i]++;
+                    sm = true;
                     sums[i] += 50 + 9 * n_people[i];
                 }
-            for (int i = 0; i < arr.Length; i++)
                 if (arr[i] == choice_3[i])
                 {
-                    sum[i]++;
+                    sm = true;
                     sums[i] += 100 + 9 * n_people[i];
                 }
-            for (int i = 0; i < arr.Length; i++)
                 if (arr[i] == choice_4[i])
                 {
-                    sum[i]++;
+                    sm = true;
                     sums[i] += 200 + 9 * n_people[i];
                 }
-            for (int i = 0; i < arr.Length; i++)
                 if (arr[i] == choice_5[i])
                 {
-                    sum[i]++;
+                    sm = true;
                     sums[i] += 200 + 18 * n_people[i];
                 }
-            for (int i = 0; i < arr.Length; i++)
                 if (arr[i] == choice_6[i])
                 {
-                    sum[i]++;
+                    sm = true;
                     sums[i] += 300 + 18 * n_people[i];
                 }
-            for (int i = 0; i < arr.Length; i++)
                 if (arr[i] == choice_7[i])
                 {
-                    sum[i]++;
+                    sm = true;
                     sums[i] += 300 + 36 * n_people[i];
                 }
-            for (int i = 0; i < arr.Length; i++)
                 if (arr[i] == choice_8[i])
                 {
-                    sum[i]++;
+                    sm = true;
                     sums[i] += 400 + 36 * n_people[i];
                 }
-            for (int i = 0; i < arr.Length; i++)
                 if (arr[i] == choice_9[i])
                 {
-                    sum[i]++;
+                    sm = true;
                     sums[i] += 500 + (36 + 199) * n_people[i];
                 }
-            for (int i = 0; i < sum.Length; i++)
-                if (sum[i] == 0)
-                    sums[i] += (500 + (36 + 398) * n_people[i]);
+                if (!sm)
+                    sums[i] += 500 + (36 + 398) * n_people[i];
 
-
-            (int, int)[] Fs = new (int, int)[5000];
-            for (int i = 0; i < sums.Length; i++)
                 Fs[i] = (i, sums[i]);
-
+            }
 
             order = Fs.Where(t=>t.Item2>0).OrderByDescending(t => t.Item2).Select(t => t.Item1).ToArray();
 
             return sums.Sum();
         }
-        static void SuperMinimizingPreferenceCosts()
+        static void SuperMinimizingPreferenceCosts(int maxdeep=-1)
         {
+            int md = (maxdeep < 1) ? 5000 : maxdeep;
+
             int[] order=new int[1];
             bool existresult;
             double bst;
@@ -258,12 +256,14 @@ namespace Покоординатная_минимизация
             double[] results = new double[100];
             int iter;
 
-
             do
             {
                 existresult = false;
                 best = PreferenceCosts(res, ref order);
                 iter = 0;
+
+                order = order.Take(Math.Min(order.Length, md)).ToArray();
+
                 foreach(int nb in order)
                 {
                     iter++;
@@ -405,6 +405,71 @@ namespace Покоординатная_минимизация
             return existprogress;
         }
 
+        static bool MakeCoordMin2(Func<byte[], double> fun)
+        {
+            best = fun(res);
+
+            bool existprogress = false;
+
+            const int howmany= 100 * 100;
+
+            byte[][] mat = GetNresCopy(howmany);
+
+            var numbers = GetRandom(); //GetRange();
+            Random r = new Random();
+
+            double[] results = new double[howmany];
+            int ind2;
+            (byte, byte) vals;
+
+            foreach (var nb in numbers)
+            {
+                    ind2 = r.Next(0, 4999);
+                    ind2 = (ind2 == nb) ? nb / 2 : ind2;
+
+                for (int i = 0; i < howmany; i++)
+                {
+                    vals = combinations2[i];
+
+                    mat[i][nb] = vals.Item1;
+                    mat[i][ind2] = vals.Item2;
+                }
+                    
+                results = mat.AsParallel().Select(arr => fun(arr)).ToArray();
+                double bst = results.Min();
+                int n = 0;
+                for (int i = 0; i < results.Length; i++)
+                    if (results[i] == bst)
+                    {
+                        n = i + 1;
+                        break;
+                    }
+
+                byte s1 = mat[n][nb], s2 = mat[n][ind2];
+                for (int i = 0; i < howmany; i++)
+                {
+                       mat[i][nb] = s1;
+                       mat[i][ind2] = s2;
+                }
+                    
+
+                if (best > bst)
+                {
+                    best = bst;
+                    existprogress = true;
+                    res = mat[0];
+                    Console.WriteLine($"best score = {Math.Round(best, 3)}; iter = {nb}");
+                }
+                else
+                {
+                    Console.WriteLine($"FAILURE on {nb}-{ind2}");
+                }
+
+            }
+
+            return existprogress;
+        }
+
         /// <summary>
         /// Минимицация по случайной выборке
         /// </summary>
@@ -497,7 +562,7 @@ namespace Покоординатная_минимизация
         }
 
 
-        static readonly int countbegins = 1000;
+        const int countbegins = 1000;
         static byte[][] begins = new byte[countbegins][];
         static void ReadBegins()
         {
@@ -601,25 +666,41 @@ namespace Покоординатная_минимизация
                // res = begins[y];
 
                 Console.WriteLine($"----------------ITERATION {y+1}. Begin score = {best}");
+
+                //best = accounting_penalty(res);
+                //Console.WriteLine("Пробуем минимизировать вторую функцию");
+                //MakeCoordMin(accounting_penalty);
+                //Console.WriteLine("Записывается в файл");
+                //WriteData(best, "acc");
+
                 //MakeResult4("all");
 
                 //best = preference_costs2(res);
                 //MakeResult2(preference_costs2, "prf");
 
-                 SuperMinimizingPreferenceCosts();
+                //best = score(res);
+                //MakeCoordMin2(score);
+                //WriteData(best, "lev2");
 
+               // double beg = score(res);
+
+                SuperMinimizingPreferenceCosts(100);
+
+                best = score(res);        
+                MakeResult2(score);
                 best = score(res);
-                MakeResult2(score); 
 
                 // BatchMethod(score, 2, 400);
 
                 //Batch2(score, 10, 10);
 
-                //best = accounting_penalty(res);
+                //if (beg <= best)
+                //{
+                //    Console.WriteLine("Пробуем минимизировать вторую функцию");
                 //MakeCoordMin(accounting_penalty);
                 //Console.WriteLine("Записывается в файл");
                 //WriteData(best, "acc");
-
+                //}
 
                 // MakeResult3(score);
 
