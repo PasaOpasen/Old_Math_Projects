@@ -372,7 +372,7 @@ namespace Покоординатная_минимизация
 
             byte[][] mat = GetNresCopy();
 
-            var numbers = GetRange(); //GetRandom();
+            var numbers = GetRandom(); //GetRange();
             double[] results = new double[100];
             foreach(var nb in numbers)
             {
@@ -513,6 +513,76 @@ namespace Покоординатная_минимизация
             }
         }
 
+        static void BatchMethod(Func<byte[],double> fun,int size=20,int count = 400)
+        {
+            best = fun(res);
+            byte[][] mat = GetNresCopy();
+
+            var numbers = Enumerable.Range(0,count);
+            double[] results = new double[100];
+
+            var rand = new Random();
+
+            foreach (var nb in numbers)
+            {
+                for (byte i = 0; i < 100; i++)
+                    for(byte s=0;s<size;s++)
+                    mat[i][rand.Next(0,4999)] = (byte)rand.Next(1,100);
+                results = mat.AsParallel().Select(arr => fun(arr)).ToArray();
+                double bst = results.Min();
+                if (bst >= 1e20)
+                    continue;
+                int n = 0;
+                for (int i = 0; i < results.Length; i++)
+                    if (results[i] == bst)
+                    {
+                        n = i + 1;
+                        break;
+                    }
+
+                byte bn = (byte)n;
+                for (byte i = 0; i < 100; i++)
+                    for(int s=0;s<5000;s++)
+                    mat[i][s] = mat[n][s];
+
+                if (best > bst)
+                {
+                    best = bst;
+                    res = mat[0];
+                    Console.WriteLine($"best score = {Math.Round(best, 3)}; iter = {nb}");
+                }
+
+            }
+        }
+
+        static void Batch2(Func<byte[], double> fun, int size = 20, int count = 40)
+        {
+            byte[] res2 = new byte[5000];
+            for (int i = 0; i < res.Length; i++)
+                res2[i] = res[i];
+            var r = new Random();
+
+            for(int tmp = 0; tmp < count; tmp++)
+            {
+                for (byte s = 0; s < size; s++)
+                    res[r.Next(0, 4999)] = (byte)r.Next(1, 100);
+                MakeResult2(fun, "batch");
+                if(fun(res)<fun(res2))
+                {
+                    for (int i = 0; i < res.Length; i++)
+                        res2[i] = res[i];
+                }
+                else
+                {
+                    for (int i = 0; i < res.Length; i++)
+                        res[i] = res2[i];
+                }
+                Console.WriteLine($"BATCH {tmp + 1} complited");
+            }
+
+
+        }
+
         static void Main(string[] args)
         {
             ReadData();
@@ -532,13 +602,18 @@ namespace Покоординатная_минимизация
 
                 Console.WriteLine($"----------------ITERATION {y+1}. Begin score = {best}");
                 //MakeResult4("all");
-                best = preference_costs2(res);
-                MakeResult2(preference_costs2, "prf");
 
-               // SuperMinimizingPreferenceCosts();
+                //best = preference_costs2(res);
+                //MakeResult2(preference_costs2, "prf");
+
+                 SuperMinimizingPreferenceCosts();
 
                 best = score(res);
                 MakeResult2(score); 
+
+                // BatchMethod(score, 2, 400);
+
+                //Batch2(score, 10, 10);
 
                 //best = accounting_penalty(res);
                 //MakeCoordMin(accounting_penalty);

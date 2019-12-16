@@ -171,9 +171,10 @@ opt_pred <-function(cur_pred,ntimes = 1){
 }
 
 
-
-fpath = 'submission.csv'
-gab = read.csv(fpath)
+paths=list.files("samples")
+for(pth in paths){
+  fpath = pth
+gab = read.csv(paste0(getwd(),"/samples/",fpath))
 #gab$assigned_day=sample(1:100,5000,replace = T) %>% matrix(ncol=1)
 rownames(gab) <- submission$family_id
 
@@ -181,9 +182,43 @@ opt_gab <- opt_pred(gab,100)
 opt_score <- opt_gab[[2]]
 print(opt_score)
 
-write.csv(opt_gab[[1]],file = "submission.csv",quote = F,row.names = F)
+write.csv(opt_gab[[1]],file =paste("submission",round(opt_score),".csv"),quote = F,row.names = F)
+}
 
+##################################################
+    fpath = "res.csv"
+    gab = read.csv(fpath)
+    rownames(gab) <- submission$family_id
+    best.result=gab$assigned_day
 
+test=function(batch=100,count=100){
+  for(pth in seq(count)){
+
+    gab$assigned_day[sample(1:5000,batch)]=sample(1:100,batch,replace = T)
+    while(score(gab$assigned_day)>=1e20){
+      gab$assigned_day=best.result
+      gab$assigned_day[sample(1:5000,batch)]=sample(1:100,batch,replace = T)
+      cat("------minifail \n")
+    }
+    
+    opt_gab <- opt_pred(gab,100)
+    opt_score <- opt_gab[[2]]
+    print(opt_score)
+    
+    write.csv(opt_gab[[1]],file =paste("submission",round(opt_score),".csv"),quote = F,row.names = F)
+    
+    if(score(best.result)>score(gab$assigned_day)){
+      best.result=gab$assigned_day
+      cat("----------LUCK \n")
+    }else{
+      gab$assigned_day=best.result
+      cat("----------FAILURE \n")
+    }
+  }
+  0
+}
+
+test(50,10)
 
 
 
