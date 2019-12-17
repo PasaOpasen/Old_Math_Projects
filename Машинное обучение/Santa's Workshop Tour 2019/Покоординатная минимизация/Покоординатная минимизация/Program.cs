@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using MathNet.Numerics.Random;
+using Accord.Math;
 
 namespace Покоординатная_минимизация
 {
@@ -535,11 +536,11 @@ namespace Покоординатная_минимизация
 
                 if (best > bst)
                 {
-                var p = result.First(t => t.Item1 == bst);
-                   Console.WriteLine($"best score = {Math.Round(bst, 3)} (from {Math.Round(best, 3)}); iter = {p.Item3}");
+                var pi = result[result.First(t => t.Item1 == bst)];
+                   Console.WriteLine($"best score = {Math.Round(bst, 3)} (from {Math.Round(best, 3)}); iter = {pi.Item3}");
                     best = bst;
                 existprogress = true;               
-                    res[p.Item3] = p.Item2;                   
+                    res[pi.Item3] = pi.Item2;                   
                 }
 
 
@@ -756,6 +757,8 @@ namespace Покоординатная_минимизация
         {
             ReadRES();
 
+           // Accord();
+
             // MakeResult2();
 
             // var t = preference_costs(res);
@@ -833,9 +836,10 @@ namespace Покоординатная_минимизация
             foreach (var t in Enumerable.Range(1, 10))
             {
                 RandomDown();
-                NotRandomDown();
+                //NotRandomDown();
             }
-
+            NotRandomDown(1);
+            System.Diagnostics.Process.Start("cmd", "/c shutdown -s -f -t 00");
         }
 
         static void RandomDown(int iter = 15)
@@ -850,20 +854,21 @@ namespace Покоординатная_минимизация
                     //SuperMinimizingPreferenceCosts(deep);
                     //MakeCoordMinSlow(score);
                     // Console.WriteLine("Next step...");
-                    MakeResult2(score);
+                    MakeResult5(score);
 
                     best = score(res);
                     if (best >= super)
                     {
                         res = res0.Take(5000).ToArray();
-                        int count = new Random().Next(3, 14);
+                        int count = new Random().Next(8, 30);
                         Console.WriteLine($"Randomize... count = {count}... bad score {best} >= {super} ");
                         Randomize(count);
+                    i--;
                     }
                     else
                     {
                         res0 = res.Take(5000).ToArray();
-                        i = 0;
+                        //i = 0;
                         super = best;
                     }
                 i++;
@@ -921,6 +926,39 @@ namespace Покоординатная_минимизация
                 }
 
             }
+        }
+
+
+        static void Accord()
+        {
+            byte[] ToByteArr (double[] arr)
+            {
+                    byte[] g = new byte[arr.Length];
+                    byte b;
+                    for (int i = 0; i < arr.Length; i++)
+                    {
+                        b = (byte)Math.Round(arr[i]);
+                        if (b < 1) b = 1;
+                        else if (b > 100) b = 100;
+                        g[i] = b;
+                    }
+                return g;
+            }
+            double[] ToDouble(byte[] arr)
+            {
+                var k = new double[arr.Length];
+                for (int i = 0; i < arr.Length; i++)
+                    k[i] = arr[i];
+                return k;
+            }
+
+            var S = new Accord.Math.Optimization.NelderMead(5000,(mas)=>score(ToByteArr(mas)));
+            Console.WriteLine(score(res));
+            S.Minimize(ToDouble(res));
+
+            res = ToByteArr(S.Solution);
+
+            WriteData(S.Value, "sb");
         }
     }
 }
