@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Покоординатна�
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Форма", "Форма\Форма.csproj", "{31232B3F-1683-4F85-876D-1BBA38EFB4D7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Классы (библиотека)", "..\..\..\..\Code\Классы\Классы (библиотека).csproj", "{CD3EEFDE-74ED-48DA-8E82-1E6ABAB1A140}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{31232B3F-1683-4F85-876D-1BBA38EFB4D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31232B3F-1683-4F85-876D-1BBA38EFB4D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31232B3F-1683-4F85-876D-1BBA38EFB4D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD3EEFDE-74ED-48DA-8E82-1E6ABAB1A140}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD3EEFDE-74ED-48DA-8E82-1E6ABAB1A140}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD3EEFDE-74ED-48DA-8E82-1E6ABAB1A140}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD3EEFDE-74ED-48DA-8E82-1E6ABAB1A140}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
