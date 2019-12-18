@@ -833,16 +833,20 @@ namespace Покоординатная_минимизация
             }
 
 
+            string[] s;
+            using (StreamReader re = new StreamReader("границы.txt"))
+                s = re.ReadLine().Split(' ');
+            int down_t = Convert.ToInt32(s[0]), up_t = Convert.ToInt32(s[1]);
             foreach (var t in Enumerable.Range(1, 10))
             {
-                RandomDown();
+                RandomDown(down_t, up_t);
                 //NotRandomDown();
             }
             NotRandomDown(1);
             System.Diagnostics.Process.Start("cmd", "/c shutdown -s -f -t 00");
         }
 
-        static void RandomDown(int iter = 15)
+        static void RandomDown(int iter = 15,int down_t=20,int up_t=60)
         {
                 double super = score(res);
                 var res0 = res.Take(5000).ToArray();
@@ -860,7 +864,7 @@ namespace Покоординатная_минимизация
                     if (best >= super)
                     {
                         res = res0.Take(5000).ToArray();
-                        int count = new Random().Next(8, 30);
+                        int count = randomgen.Next(down_t, up_t);
                         Console.WriteLine($"Randomize... count = {count}... bad score {best} >= {super} ");
                         Randomize(count);
                     i--;
