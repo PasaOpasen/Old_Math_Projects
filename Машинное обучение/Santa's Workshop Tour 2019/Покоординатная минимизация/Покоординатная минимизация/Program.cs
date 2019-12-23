@@ -118,13 +118,13 @@ namespace Покоординатная_минимизация
             }
 
             int n;
-            for(int i = 0; i < lastN.Length; i++)
+            for (int i = 0; i < lastN.Length; i++)
             {
                 n = i + 125;
                 lastN[i] = (n - 125.0) / 400.0 * Math.Sqrt(n);
             }
 
-            memoize = new Memoize<(short, short), double>(((short, short) ns) => (ns.Item1 - 125.0) / 400.0 * Math.Pow(ns.Item1, 0.5 + 0.02 * Math.Abs(ns.Item1 - ns.Item2)),176*176);
+            memoize = new Memoize<(short, short), double>(((short, short) ns) => (ns.Item1 - 125.0) / 400.0 * Math.Pow(ns.Item1, 0.5 + 0.02 * Math.Abs(ns.Item1 - ns.Item2)), 176 * 176);
             Ntonumber = (a, b) => memoize.Value((a, b));
             for (short i = 125; i <= 300; i++)
                 for (short j = 125; j <= 300; j++)
@@ -448,7 +448,7 @@ namespace Покоординатная_минимизация
 
         static Func<byte[], double> scoreMemoized = (byte[] arr) =>
         {
-            int S = 0,arrm1;
+            int S = 0, arrm1;
             short[] count = new short[100];
             for (int i = 0; i < arr.Length; i++)
             {
@@ -456,7 +456,7 @@ namespace Покоординатная_минимизация
                 count[arrm1] += n_people[i];
                 S += prCosts[i][arrm1];
             }
-                
+
             short tmp;
             for (int i = 0; i < count.Length; i++)
             {
@@ -465,13 +465,13 @@ namespace Покоординатная_минимизация
                     return 1e20;
             }
 
-            double sum =lastN[count[99]-1];
+            double sum = lastN[count[99] - 1];
             for (int i = 98; i >= 0; i--)
             {
                 sum += Ntonumber(count[i], count[i + 1]);
             }
 
-            return sum +S;
+            return sum + S;
 
         };
         static Func<byte[], double> scoreMemoized2 = (byte[] arr) =>
@@ -793,8 +793,33 @@ namespace Покоординатная_минимизация
             {
                 Console.WriteLine("Записывается в файл");
                 WriteData(best, acc);
+                MakeResult2(scoreMemoized2);
             }
-            return;
+        }
+        static void MakeResult7(string acc = "")
+        {                     
+            for (int i = 0; i < 4999; i++)
+            {
+               // if (i % 2 == 0)
+                    Console.WriteLine($"i = {i}");
+                for (int j = i + 1; j < 5000; j++)
+                {
+                    if(j%500==0)
+                        Console.WriteLine($"j = {j}");
+
+                    if (MinByTwo(i, j))
+                    {
+                        best = scoreMemoized2(res);
+                        Console.WriteLine($"Записывается в файл (улучшено до {best})");
+                        WriteData(best, acc);
+                        i = -1;
+                        MakeResult2(scoreMemoized2, "");
+                        break;
+                    }
+                }
+
+
+            }
         }
 
         static void Randomize(int count = 15)
@@ -822,7 +847,7 @@ namespace Покоординатная_минимизация
         }
         static void Randomize2(int count = 15)
         {
-            int number1,number2;
+            int number1, number2;
             byte tmp;
             for (int i = 0; i < count; i++)
             {
@@ -843,8 +868,8 @@ namespace Покоординатная_минимизация
             double bst = scoreMemoized2(res);
             for (int i = 0; i < 4999; i++)
             {
-                if(i%25==0)
-                Console.WriteLine($"i = {i}");
+                if (i % 25 == 0)
+                    Console.WriteLine($"i = {i}");
                 for (int j = i + 1; j < 5000; j++)
                 {
                     tmp = res[i];
@@ -855,16 +880,64 @@ namespace Покоординатная_минимизация
                     {
                         best = scoreMemoized2(res);
                         Console.WriteLine($"new best = {best}");
-return true;
+                        return true;
                     }
-                        
-                    tmp = res[i];
-                    res[i] = res[j];
-                    res[j] = tmp;
+
+                    //tmp = res[j];
+                    res[j] = res[i];
+                    res[i] = tmp;
 
                 }
-            }          
+            }
             return false;
+        }
+
+        static bool MinByTwo(int ind1, int ind2)
+        {
+            bool existprogress = false;
+            double bst = scoreMemoized2(res), bsttmp;
+            byte[][] mat = GetNresCopy();
+            double[] results = new double[100];
+            byte s1 =res[ind1] , s2 = res[ind2];
+
+            for (int k = 0; k < 100; k++)
+            {
+                mat[k][ind2] = (byte)(k + 1);
+            }
+
+            for (byte i = 1; i <= 100; i++)
+            {
+               // if (i % 5 == 0) Console.WriteLine($"i_inner = {i}");
+
+                for (int k = 0; k < 100; k++)
+                {
+                    mat[k][ind1] = i;
+                }
+
+                results = mat.AsParallel().Select(arr => scoreMemoized2(arr)).ToArray();
+                bsttmp = results.Min();
+                int n = Array.IndexOf(results, bsttmp) + 1;
+
+                if (bst > bsttmp)
+                {
+                    bst = bsttmp;
+                    existprogress = true;
+                    s1 = i;
+                    s2 = (byte)n;
+                    Console.WriteLine($"best score = {Math.Round(bst, 3)}; (i,j)=({ind1},{ind2})  s1 = {s1}, s2 = {s2}");
+                }
+
+            }
+
+            if (existprogress)
+            {
+                res[ind1] = s1;
+                res[ind2] = s2;
+            }
+           // else
+              //  Console.WriteLine($"bad score = {bst} >= {scoreMemoized2(res)}");
+
+            return existprogress;
         }
 
         const int countbegins = 1000;
@@ -1030,20 +1103,27 @@ return true;
                     //MakeResult2(score);
                 }
 
+            for(int u = 0; u < 10; u++)
+            {
             MakeResult6("");
 
-            string[] s=Expendator.GetWordFromFile("границы.txt").Split(' ');
+            //MakeResult2(scoreMemoized2);
+
+            string[] s = Expendator.GetWordFromFile("границы.txt").Split(' ');
             int down_t = Convert.ToInt32(s[0]), up_t = Convert.ToInt32(s[1]);
 
             Console.WriteLine($"down = {down_t}");
             Console.WriteLine($"up = {up_t}");
 
-            foreach (var t in Enumerable.Range(1, 10))
-            {
-                RandomDown(15, down_t, up_t);
-                //NotRandomDown();
-            }
+
+            RandomDown(15, down_t, up_t);
+            //NotRandomDown();
+
             NotRandomDown(1);
+
+            MakeResult7("");
+            }
+
             System.Diagnostics.Process.Start("cmd", "/c shutdown -s -f -t 00");
         }
 
@@ -1068,7 +1148,7 @@ return true;
                     count = randomgen.Next(down_t, up_t);
                     Console.WriteLine($"Randomize... count = {count}... bad score {best} >= {super} ");
                     Randomize(count);
-                    i--;
+                    //i--;
                 }
                 else
                 {
