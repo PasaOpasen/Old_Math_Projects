@@ -797,14 +797,14 @@ namespace Покоординатная_минимизация
             }
         }
         static void MakeResult7(string acc = "")
-        {                     
+        {
             for (int i = 0; i < 4999; i++)
             {
-               // if (i % 2 == 0)
-                    Console.WriteLine($"i = {i}");
+                // if (i % 2 == 0)
+                Console.WriteLine($"i = {i}");
                 for (int j = i + 1; j < 5000; j++)
                 {
-                    if(j%500==0)
+                    if (j % 500 == 0)
                         Console.WriteLine($"j = {j}");
 
                     if (MinByTwo(i, j))
@@ -898,7 +898,7 @@ namespace Покоординатная_минимизация
             double bst = scoreMemoized2(res), bsttmp;
             byte[][] mat = GetNresCopy();
             double[] results = new double[100];
-            byte s1 =res[ind1] , s2 = res[ind2];
+            byte s1 = res[ind1], s2 = res[ind2];
 
             for (int k = 0; k < 100; k++)
             {
@@ -907,7 +907,7 @@ namespace Покоординатная_минимизация
 
             for (byte i = 1; i <= 100; i++)
             {
-               // if (i % 5 == 0) Console.WriteLine($"i_inner = {i}");
+                // if (i % 5 == 0) Console.WriteLine($"i_inner = {i}");
 
                 for (int k = 0; k < 100; k++)
                 {
@@ -934,8 +934,8 @@ namespace Покоординатная_минимизация
                 res[ind1] = s1;
                 res[ind2] = s2;
             }
-           // else
-              //  Console.WriteLine($"bad score = {bst} >= {scoreMemoized2(res)}");
+            // else
+            //  Console.WriteLine($"bad score = {bst} >= {scoreMemoized2(res)}");
 
             return existprogress;
         }
@@ -1103,25 +1103,27 @@ namespace Покоординатная_минимизация
                     //MakeResult2(score);
                 }
 
-            for(int u = 0; u < 10; u++)
-            {
-            MakeResult6("");
-
-            //MakeResult2(scoreMemoized2);
-
-            string[] s = Expendator.GetWordFromFile("границы.txt").Split(' ');
-            int down_t = Convert.ToInt32(s[0]), up_t = Convert.ToInt32(s[1]);
-
-            Console.WriteLine($"down = {down_t}");
-            Console.WriteLine($"up = {up_t}");
-
-
-            RandomDown(15, down_t, up_t);
-            //NotRandomDown();
-
-            NotRandomDown(1);
-
             MakeResult7("");
+
+            for (int u = 0; u < 10; u++)
+            {
+                MakeResult6("");
+
+                //MakeResult2(scoreMemoized2);
+
+                string[] s = Expendator.GetWordFromFile("границы.txt").Split(' ');
+                int down_t = Convert.ToInt32(s[0]), up_t = Convert.ToInt32(s[1]);
+
+                Console.WriteLine($"down = {down_t}");
+                Console.WriteLine($"up = {up_t}");
+
+
+                RandomDown(10, down_t, up_t);
+                //NotRandomDown();
+
+                NotRandomDown(1);
+
+                MakeResult7("");
             }
 
             System.Diagnostics.Process.Start("cmd", "/c shutdown -s -f -t 00");
