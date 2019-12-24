@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("Покоординатная минимизация")]
+[assembly: AssemblyTitle("optimize")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Покоординатная минимизация")]
+[assembly: AssemblyProduct("optimize")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Следующий GUID служит для идентификации библиотеки типов, если этот проект будет видимым для COM
-[assembly: Guid("068345a2-f346-4ea2-917c-64bef6d5ac65")]
+[assembly: Guid("b718e092-7100-4540-91b9-eddf8303fc32")]
 
 // Сведения о версии сборки состоят из следующих четырех значений:
 //

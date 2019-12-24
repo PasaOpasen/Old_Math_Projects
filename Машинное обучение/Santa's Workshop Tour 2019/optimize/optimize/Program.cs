@@ -5,17 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using MathNet.Numerics.Random;
-using Accord.Math;
-using Alea.Parallel;
+//using Accord.Math;
+//using Alea.Parallel;
 using МатКлассы;
 
 namespace Покоординатная_минимизация
 {
     static class Program
     {
-        static CryptoRandomSource randomgen = new CryptoRandomSource();
+        static readonly CryptoRandomSource randomgen = new CryptoRandomSource();
 
-        static int[] family_id = Enumerable.Range(0, 5000).ToArray();
+        static readonly int[] family_id = Enumerable.Range(0, 5000).ToArray();
+
         static readonly byte[]
              choice_0 = new byte[5000],
              choice_1 = new byte[5000],
@@ -61,7 +62,7 @@ namespace Покоординатная_минимизация
             combinations2 = new (byte, byte)[10000];
             for (int n1 = 0; n1 < 100; n1++)
                 for (int n2 = 0; n2 < 100; n2++)
-                    combinations2[n1 * 100 + n2] = ((byte)(n1 + 1), (byte)(n2 + 1));
+                    combinations2[(n1 * 100) + n2] = ((byte)(n1 + 1), (byte)(n2 + 1));
 
             for (int k = 0; k < 5000; k++)
             {
@@ -114,7 +115,6 @@ namespace Покоординатная_минимизация
                     else
                         prCosts[k][i] = ifnochoice[k];
                 }
-
             }
 
             int n;
@@ -167,95 +167,95 @@ namespace Покоординатная_минимизация
         }
 
         static Func<byte[], bool> wall = (byte[] arr) =>
-          {
-              //******************
-              short[] count = new short[100];
-              for (int i = 0; i < arr.Length; i++)
-                  count[arr[i] - 1] += n_people[i];
+        {
+            //******************
+            short[] count = new short[100];
+            for (int i = 0; i < arr.Length; i++)
+                count[arr[i] - 1] += n_people[i];
 
-              for (int i = 0; i < count.Length; i++)
-                  if (count[i] < 125 || count[i] > 300)
-                      return true;
-              //**************
-              return false;
-          };
+            for (int i = 0; i < count.Length; i++)
+                if (count[i] < 125 || count[i] > 300)
+                    return true;
+            //**************
+            return false;
+        };
 
         static Func<byte[], double> preference_costs = (byte[] arr) =>
+        {
+            int s = 0;
+            byte arri;
+            for (int i = 0; i < arr.Length; i++)
             {
-                int s = 0;
-                byte arri;
-                for (int i = 0; i < arr.Length; i++)
+                arri = arr[i];
+
+                if (arri == choice_0[i])
                 {
-                    arri = arr[i];
-
-                    if (arri == choice_0[i])
-                    {
-                    }
-                    else if (arri == choice_1[i])
-                    {
-                        s += 50;
-                    }
-                    else if (arri == choice_2[i])
-                    {
-                        s += ifchoice2[i];
-                    }
-                    else if (arri == choice_3[i])
-                    {
-                        s += ifchoice3[i];
-                    }
-                    else if (arri == choice_4[i])
-                    {
-                        s += ifchoice4[i];
-                    }
-                    else if (arri == choice_5[i])
-                    {
-                        s += ifchoice5[i];
-                    }
-                    else if (arri == choice_6[i])
-                    {
-                        s += ifchoice6[i];
-                    }
-                    else if (arri == choice_7[i])
-                    {
-                        s += ifchoice7[i];
-                    }
-                    else if (arri == choice_8[i])
-                    {
-                        s += ifchoice8[i];
-                    }
-                    else if (arri == choice_9[i])
-                    {
-                        s += ifchoice9[i];
-                    }
-                    else
-                        s += ifnochoice[i];
                 }
+                else if (arri == choice_1[i])
+                {
+                    s += 50;
+                }
+                else if (arri == choice_2[i])
+                {
+                    s += ifchoice2[i];
+                }
+                else if (arri == choice_3[i])
+                {
+                    s += ifchoice3[i];
+                }
+                else if (arri == choice_4[i])
+                {
+                    s += ifchoice4[i];
+                }
+                else if (arri == choice_5[i])
+                {
+                    s += ifchoice5[i];
+                }
+                else if (arri == choice_6[i])
+                {
+                    s += ifchoice6[i];
+                }
+                else if (arri == choice_7[i])
+                {
+                    s += ifchoice7[i];
+                }
+                else if (arri == choice_8[i])
+                {
+                    s += ifchoice8[i];
+                }
+                else if (arri == choice_9[i])
+                {
+                    s += ifchoice9[i];
+                }
+                else
+                    s += ifnochoice[i];
+            }
 
-                return s;
-            };
+            return s;
+        };
         static Func<byte[], double> accounting_penalty = (byte[] arr) =>
-           {
-               short[] count = new short[100];
-               for (int i = 0; i < arr.Length; i++)
-                   count[arr[i] - 1] += n_people[i];
+        {
+            short[] count = new short[100];
+            for (int i = 0; i < arr.Length; i++)
+                count[arr[i] - 1] += n_people[i];
 
-               short tmp;
-               for (int i = 0; i < count.Length; i++)
-               {
-                   tmp = count[i];
-                   if (tmp < 125 || tmp > 300)
-                       return 1e20;
-               }
+            short tmp;
+            for (int i = 0; i < count.Length; i++)
+            {
+                tmp = count[i];
+                if (tmp < 125 || tmp > 300)
+                    return 1e20;
+            }
 
-               double sum = 0;
-               for (int i = 98; i >= 0; i--)
-               {
-                   tmp = count[i];
-                   sum += (tmp - 125.0) / 400.0 * Math.Pow(tmp, 0.5 + 0.02 * Math.Abs(tmp - count[i + 1]));
-               }
+            double sum = 0;
+            for (int i = 98; i >= 0; i--)
+            {
+                tmp = count[i];
+                sum += (tmp - 125.0) / 400.0 * Math.Pow(tmp, 0.5 + 0.02 * Math.Abs(tmp - count[i + 1]));
+            }
 
-               return sum + (count[99] - 125.0) / 400.0 * Math.Sqrt(count[99]);
-           };
+            return sum + (count[99] - 125.0) / 400.0 * Math.Sqrt(count[99]);
+        };
         static Func<byte[], double> preference_costs2 = (byte[] arr) =>
         {
             if (wall(arr))
@@ -287,16 +287,15 @@ namespace Покоординатная_минимизация
             return sum;
         };
         static Func<byte[], int> preference_costsMemoized = (byte[] arr) =>
-          {
-              int S = 0;
-              for (int i = 0; i < arr.Length; i++)
-              {
-                  S += prCosts[i][arr[i] - 1];
-              }
+        {
+            int S = 0;
+            for (int i = 0; i < arr.Length; i++)
+            {
+                S += prCosts[i][arr[i] - 1];
+            }
 
-              return S;
-          };
-
+            return S;
+        };
 
         /// <summary>
         /// Функция, делающая то же самое, что и preference_costs2, но возвращающая ещё массив индексов, упорядоченных по убыванию вклада элементов входного массива
@@ -678,7 +677,7 @@ namespace Покоординатная_минимизация
 
             if (best > bst)
             {
-                var pi = result[result.First(t => t.Item1 == bst)];
+                var pi = result.First(t => t.Item1 == bst);
                 Console.WriteLine($"best score = {Math.Round(bst, 3)} (from {Math.Round(best, 3)}); iter = {pi.Item3}");
                 best = bst;
                 existprogress = true;
@@ -687,6 +686,29 @@ namespace Покоординатная_минимизация
 
 
             return existprogress;
+        }
+
+        /// <summary>
+        /// Показывает, сколько дней из 100 выходят за условие
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <returns></returns>
+        static int IndexOfArray(byte[] arr)
+        {
+            int S = 0;
+            short tmp;
+            short[] count = new short[100];
+            for (int i = 0; i < arr.Length; i++)
+            {
+                count[arr[i] - 1] += n_people[i];
+            }
+            for (int i = 0; i < count.Length; i++)
+            {
+                tmp = count[i];
+                if (tmp < 125 || tmp > 300)
+                    S++;
+            }
+            return S;
         }
 
         /// <summary>
@@ -798,7 +820,10 @@ namespace Покоординатная_минимизация
         }
         static void MakeResult7(string acc = "")
         {
-            for (int i = 0; i < 4999; i++)
+            byte[][] mat = GetNresCopy();
+            double[] results = new double[100];
+
+            for (int i = 46; i < 4999; i++)
             {
                 // if (i % 2 == 0)
                 Console.WriteLine($"i = {i}");
@@ -807,18 +832,18 @@ namespace Покоординатная_минимизация
                     if (j % 500 == 0)
                         Console.WriteLine($"j = {j}");
 
-                    if (MinByTwo(i, j))
+                    if (MinByTwo(i, j, ref mat, ref results))
                     {
                         best = scoreMemoized2(res);
                         Console.WriteLine($"Записывается в файл (улучшено до {best})");
                         WriteData(best, acc);
-                        i = -1;
-                        MakeResult2(scoreMemoized2, "");
+                        // i = -1;
+                        i--;
+                        MakeResult5(scoreMemoized2, "");
+                        //MakeResult2(scoreMemoized2, "");
                         break;
                     }
                 }
-
-
             }
         }
 
@@ -892,13 +917,14 @@ namespace Покоординатная_минимизация
             return false;
         }
 
-        static bool MinByTwo(int ind1, int ind2)
+        static bool MinByTwo(int ind1, int ind2, ref byte[][] mat, ref double[] results)
         {
             bool existprogress = false;
             double bst = scoreMemoized2(res), bsttmp;
-            byte[][] mat = GetNresCopy();
-            double[] results = new double[100];
-            byte s1 = res[ind1], s2 = res[ind2];
+            //byte[][] mat = GetNresCopy();
+            //double[] results = new double[100];
+            byte k1 = res[ind1], k2 = res[ind2], s1 = k1, s2 = k2;
+            int n;
 
             for (int k = 0; k < 100; k++)
             {
@@ -913,10 +939,12 @@ namespace Покоординатная_минимизация
                 {
                     mat[k][ind1] = i;
                 }
+                if (IndexOfArray(mat[0]) >= 3)
+                    continue;
 
                 results = mat.AsParallel().Select(arr => scoreMemoized2(arr)).ToArray();
                 bsttmp = results.Min();
-                int n = Array.IndexOf(results, bsttmp) + 1;
+                n = Array.IndexOf(results, bsttmp) + 1;
 
                 if (bst > bsttmp)
                 {
@@ -926,14 +954,25 @@ namespace Покоординатная_минимизация
                     s2 = (byte)n;
                     Console.WriteLine($"best score = {Math.Round(bst, 3)}; (i,j)=({ind1},{ind2})  s1 = {s1}, s2 = {s2}");
                 }
-
             }
+
 
             if (existprogress)
             {
                 res[ind1] = s1;
                 res[ind2] = s2;
+                for (int k = 0; k < 100; k++)
+                {
+                    mat[k][ind1] = s1;
+                    mat[k][ind2] = s2;
+                }
             }
+            else
+                for (int k = 0; k < 100; k++)
+                {
+                    mat[k][ind1] = k1;
+                    mat[k][ind2] = k2;
+                }
             // else
             //  Console.WriteLine($"bad score = {bst} >= {scoreMemoized2(res)}");
 
@@ -1189,7 +1228,7 @@ namespace Покоординатная_минимизация
 
                 int deep = deeps[0];
                 int i = 0;
-                while (true)
+                while (i < deeps.Length - 1)
                 {
                     SuperMinimizingPreferenceCosts(deep);
                     //MakeCoordMinSlow(score);
@@ -1208,44 +1247,75 @@ namespace Покоординатная_минимизация
                         deep = deeps[0];
                         super = best;
                     }
-                    if (i == deeps.Length - 1)
-                        break;
                 }
 
             }
         }
 
-
-        static void Accord()
+        static   byte[] ToByteArr(double[] arr)
         {
-            byte[] ToByteArr(double[] arr)
+            byte[] g = new byte[arr.Length];
+            double b;
+            for (int i = 0; i < arr.Length; i++)
             {
-                byte[] g = new byte[arr.Length];
-                byte b;
-                for (int i = 0; i < arr.Length; i++)
-                {
-                    b = (byte)Math.Round(arr[i]);
-                    if (b < 1) b = 1;
-                    else if (b > 100) b = 100;
-                    g[i] = b;
-                }
-                return g;
+                b = arr[i];
+                if (b < 1) b = 1;
+                else if (b > 100) b = 100;
+                g[i] = (byte)Math.Round(b);
             }
-            double[] ToDouble(byte[] arr)
-            {
-                var k = new double[arr.Length];
-                for (int i = 0; i < arr.Length; i++)
-                    k[i] = arr[i];
-                return k;
-            }
-
-            var S = new Accord.Math.Optimization.NelderMead(5000, (mas) => score(ToByteArr(mas)));
-            Console.WriteLine(score(res));
-            S.Minimize(ToDouble(res));
-
-            res = ToByteArr(S.Solution);
-
-            WriteData(S.Value, "sb");
+            return g;
         }
+        static double[] ToDouble(byte[] arr)
+        {
+            var k = new double[arr.Length];
+            for (int i = 0; i < arr.Length; i++)
+                k[i] = arr[i];
+            return k;
+        }
+
+        static void Bee()
+        {
+           
+            var t = BeeHiveAlgorithm.GetGlobalMin(
+                (Vectors v) => scoreMemoized2(ToByteArr(v.DoubleMas)),
+                n: 5000,
+               min: 1, max: 100, eps: 1e-10, countpoints: 300, maxcountstep: 200,center: new Vectors(ToDouble(res)), maxiter: 500);
+
+            best = t.Item2;
+            res = ToByteArr(t.Item1.DoubleMas);
+        }
+
+        //static void Accord()
+        //{
+        //    byte[] ToByteArr(double[] arr)
+        //    {
+        //        byte[] g = new byte[arr.Length];
+        //        byte b;
+        //        for (int i = 0; i < arr.Length; i++)
+        //        {
+        //            b = (byte)Math.Round(arr[i]);
+        //            if (b < 1) b = 1;
+        //            else if (b > 100) b = 100;
+        //            g[i] = b;
+        //        }
+        //        return g;
+        //    }
+        //    double[] ToDouble(byte[] arr)
+        //    {
+        //        var k = new double[arr.Length];
+        //        for (int i = 0; i < arr.Length; i++)
+        //            k[i] = arr[i];
+        //        return k;
+        //    }
+
+        //    var S = new Accord.Math.Optimization.NelderMead(5000, (mas) => score(ToByteArr(mas)));
+        //    Console.WriteLine(score(res));
+        //    S.Minimize(ToDouble(res));
+
+        //    res = ToByteArr(S.Solution);
+
+        //    WriteData(S.Value, "sb");
+        //}
     }
 }
+
