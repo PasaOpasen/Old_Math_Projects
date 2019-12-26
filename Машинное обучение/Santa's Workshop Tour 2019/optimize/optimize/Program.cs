@@ -49,7 +49,7 @@ namespace Покоординатная_минимизация
         static double[] lastN = new double[176];
         static int[][] prCosts = new int[5000][];
         static Memoize<(short, short), double> memoize;
-        static Func<short, short, double> Ntonumber;
+        static double[][] Ntonumber=new double[176][];
 
         /// <summary>
         /// Всевозможные комбинации пар от 1 до 100
@@ -124,11 +124,13 @@ namespace Покоординатная_минимизация
                 lastN[i] = (n - 125.0) / 400.0 * Math.Sqrt(n);
             }
 
-            memoize = new Memoize<(short, short), double>(((short, short) ns) => (ns.Item1 - 125.0) / 400.0 * Math.Pow(ns.Item1, 0.5 + 0.02 * Math.Abs(ns.Item1 - ns.Item2)), 176 * 176);
-            Ntonumber = (a, b) => memoize.Value((a, b));
             for (short i = 125; i <= 300; i++)
+            {
+                Ntonumber[i - 125] = new double[176];
                 for (short j = 125; j <= 300; j++)
-                    Ntonumber(i, j);
+                    Ntonumber[i - 125][j-125]= (i - 125.0) / 400.0 * Math.Pow(i, 0.5 + 0.02 * Math.Abs(i - j));
+            }
+
 
         }
 
@@ -281,7 +283,7 @@ namespace Покоординатная_минимизация
             double sum = lastN[count[99] - 125];
             for (int i = 98; i >= 0; i--)
             {
-                sum += Ntonumber(count[i], count[i + 1]);
+                sum += Ntonumber[count[i]-125][ count[i + 1]-125];
             }
 
             return sum;
@@ -310,7 +312,7 @@ namespace Покоординатная_минимизация
             double sum = lastN[count[99] - 125];
             for (int i = 98; i >= 0; i--)
             {
-                sum += Ntonumber(count[i], count[i + 1]);
+                sum +=  Ntonumber[count[i] - 125][count[i + 1] - 125];
             }
 
             return sum;
@@ -486,7 +488,7 @@ namespace Покоординатная_минимизация
             double sum = lastN[count[99] - 1];
             for (int i = 98; i >= 0; i--)
             {
-                sum += Ntonumber(count[i], count[i + 1]);
+                sum += Ntonumber[count[i]-125][ count[i + 1]-125];
             }
 
             return sum + S;
@@ -872,7 +874,7 @@ namespace Покоординатная_минимизация
             int[] pres = new int[100];
             short[][] accs = new short[100][];
 
-            for (int i = 120; i < 4999; i++)
+            for (int i = 920; i < 4999; i++)
             {
                 // if (i % 2 == 0)
                 Console.WriteLine($"i = {i}");
@@ -1146,7 +1148,7 @@ namespace Покоординатная_минимизация
                 {
                     bst = bsttmp;
                     existprogress = true;
-                    s1 = i;
+                    s1 = (byte)(i+1);
                     s2 = (byte)n;
                     Console.WriteLine($"best score = {Math.Round(bst, 3)}; (i,j)=({ind1},{ind2})  s1 = {s1}, s2 = {s2}");
                 }
