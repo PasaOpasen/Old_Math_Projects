@@ -13,7 +13,7 @@ namespace Покоординатная_минимизация
 {
     static class Program
     {
-        static readonly CryptoRandomSource randomgen = new CryptoRandomSource();
+        static readonly SystemRandomSource randomgen = new SystemRandomSource();
 
         static readonly int[] family_id = Enumerable.Range(0, 5000).ToArray();
 
@@ -908,9 +908,9 @@ namespace Покоординатная_минимизация
             }
         }
 
-        static void MakeResult9(string acc = "",int dim=10,int count=2000)
+        static void MakeResult9(string acc = "",int dim=10,int count=2000,int iter=10_000)
         {
-            for(int i=0;i<100;i++)
+            for(int i=0;i<iter;i++)
             if (MinByRandomize2(dim,count))
             {
                 Console.WriteLine("Записывается в файл");
@@ -995,7 +995,10 @@ namespace Покоординатная_минимизация
             double  bsttmp;
             best = scoreMemoized2(res);
 
-            byte[] S = new byte[dim];
+            double[] results = new double[count];
+            byte[][] samples = new byte[count][];
+
+
             int[] indexes = new int[dim];
             for (int i = 0; i < dim; i++)
                 indexes[i] = randomgen.Next(0, 4999);
@@ -1008,8 +1011,7 @@ namespace Покоординатная_минимизация
                 acr[res[indexes[i]] - 1] -= n_people[indexes[i]];
             }
 
-            double[] results = new double[count];
-            byte[][] samples = new byte[count][];
+
             Parallel.For(0, count, (int i) => 
             //for(int i = 0; i < count; i++)
             {
@@ -1025,7 +1027,7 @@ namespace Покоординатная_минимизация
                     acr2[tmp - 1] += n_people[indexes[j]];
                 }
 
-                if (pr2 > best || acr2.Any(s => s < 125 || s > 300))
+                if (pr2 >= best || acr2.Any(s => s < 125 || s > 300))
                     results[i] = 1e20;
                 else
                     results[i] = accounting_penalty2(acr2) + pr2;
@@ -1431,7 +1433,7 @@ namespace Покоординатная_минимизация
                 }
 
             //Bee();
-            MakeResult9("",10,5000);
+            MakeResult9("",4,10_000_000);
             //MakeResult8("");
 
             for (int u = 0; u < 10; u++)
