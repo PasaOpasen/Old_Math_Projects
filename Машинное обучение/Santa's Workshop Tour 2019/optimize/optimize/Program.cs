@@ -907,7 +907,13 @@ namespace Покоординатная_минимизация
                 }
             }
         }
-
+        /// <summary>
+        /// Минимизация по случайной замене некоторых компонент
+        /// </summary>
+        /// <param name="acc"></param>
+        /// <param name="dim"></param>
+        /// <param name="count"></param>
+        /// <param name="iter"></param>
         static void MakeResult9(string acc = "",int dim=10,int count=2000,int iter=10_000)
         {
             for(int i=0;i<iter;i++)
@@ -918,6 +924,41 @@ namespace Покоординатная_минимизация
                 MakeResult2(scoreMemoized2);
             }
         }
+
+        static void MakeResult10(string acc = "",int istep=1,int jstep=1,int pstep=1)
+        {
+            byte[][] samples = new byte[100_00_00][];
+            for (int i = 0; i < 1000000; i++)
+                samples[i] = new byte[3];
+            int k = 0;
+            for (byte i = 1; i <= 100; i++)
+                for (byte j = 1; j <= 100; j++)
+                    for (byte h = 1; h <= 100; h++)
+                        samples[k++] = new byte[] { i, j, h };
+
+            for (int i = 0; i < 4998; i+=istep)
+            {
+                Console.WriteLine($"i = {i}");
+                for (int j = i + 1; j < 4999; j+=jstep)
+                {
+                    Console.WriteLine($"j = {j}");
+                    for (int p=j+1;p<5000;p+=pstep)
+                    if (MinByThree(i, j, p,samples))
+                    {
+                        best = scoreMemoized2(res);
+                        Console.WriteLine($"Записывается в файл (улучшено до {best})");
+                        WriteData(best, acc);
+                        // i = -1;
+                        p--;
+                        MakeResult5(scoreMemoized2, "");
+                        //MakeResult2(scoreMemoized2, "");
+                        break;
+                    }
+                }
+            }
+        }
+
+
 
         static void Randomize(int count = 15)
         {
@@ -992,17 +1033,19 @@ namespace Покоординатная_минимизация
         static bool MinByRandomize2(int dim =10, int count=2000)
         {
             bool existprogress = false;
-            double  bsttmp;
-            best = scoreMemoized2(res);
+            double  bsttmp,copybest=scoreMemoized2(res);
+            best =copybest ;
 
             double[] results = new double[count];
             byte[][] samples = new byte[count][];
-
+            var copy = GetNresCopy(1)[0];
 
             int[] indexes = new int[dim];
             for (int i = 0; i < dim; i++)
                 indexes[i] = randomgen.Next(0, 4999);
-            
+            indexes = indexes.Distinct().ToArray();
+            dim = indexes.Length;
+
             int pr = preference_costsMemoized(res);
             var acr = GetMap();
             for(int i = 0; i < dim; i++)
@@ -1037,22 +1080,25 @@ namespace Покоординатная_минимизация
 
                bsttmp = results.Min();
                int n = Array.IndexOf(results, bsttmp);
-
-                if (best > bsttmp)
-                {
-                    best = bsttmp;
-                    existprogress = true;
                 for (int i = 0; i < dim; i++)
                 {
                     res[indexes[i]] = samples[n][i];
                 }
+            MakeResult5(scoreMemoized2, "");
+
+                if (best <copybest)
+                {
+                    existprogress = true;
 
                 Console.WriteLine($"Success. best score = {Math.Round(best, 3)}");
                 }
-                else
-                Console.WriteLine($"Fail. Best score {Math.Round(bsttmp, 3)} >= {Math.Round(best, 3)}");
-
-
+            else
+            {
+                res = copy;          
+                Console.WriteLine($"Fail. Best score {Math.Round(best, 3)} >= {Math.Round(copybest, 3)}");
+                best = copybest;
+            }
+               
             return existprogress;
         }
 
@@ -1118,6 +1164,67 @@ namespace Покоординатная_минимизация
             return existprogress;
         }
 
+        static bool MinByThree(int i1,int i2,int i3,byte[][] samples)
+        {
+            const int count = 100_00_00,dim=3;
+
+            bool existprogress = false;
+            double bsttmp, copybest = scoreMemoized2(res);
+            best = copybest;
+
+            double[] results = new double[count];
+            var copy = GetNresCopy(1)[0];
+
+            int[] indexes = new int[] { i1,i2,i3};
+
+            int pr = preference_costsMemoized(res);
+            var acr = GetMap();
+            for (int i = 0; i < dim; i++)
+            {
+                pr -= prCosts[indexes[i]][res[indexes[i]] - 1];
+                acr[res[indexes[i]] - 1] -= n_people[indexes[i]];
+            }
+
+
+            Parallel.For(0, count, (int i) =>
+            //for(int i = 0; i < count; i++)
+            {
+                byte tmp;
+                byte[] sample = samples[i];
+                int pr2 = pr,ind;
+                var acr2 = acr.Dup();
+                for (int j = 0; j < sample.Length; j++)
+                {
+                    ind = indexes[j];
+                    tmp = (byte)randomgen.Next(1, 100);
+                    sample[j] = tmp;
+                    pr2 += prCosts[ind][tmp - 1];
+                    acr2[tmp - 1] += n_people[ind];
+                }
+
+                if (pr2 >= best || acr2.Any(s => s < 125 || s > 300))
+                    results[i] = 1e20;
+                else
+                    results[i] = accounting_penalty2(acr2) + pr2;
+            }
+            );
+
+            bsttmp = results.Min();
+            int n = Array.IndexOf(results, bsttmp);
+
+
+            if (bsttmp < best)
+            {
+                existprogress = true;
+            for (int i = 0; i < dim; i++)
+            {
+                res[indexes[i]] = samples[n][i];
+            }
+                Console.WriteLine($"Success. best score = {Math.Round(bsttmp, 3)} < {Math.Round(best, 3)}");
+            }
+
+            return existprogress;
+        }
 
         static byte[] GetResWithout(int i1,int i2)
         {
@@ -1433,8 +1540,9 @@ namespace Покоординатная_минимизация
                 }
 
             //Bee();
-            MakeResult9("",4,10_000_000);
+            //MakeResult9("",4,10_000_000);
             //MakeResult8("");
+            MakeResult10("",2,3,4);
 
             for (int u = 0; u < 10; u++)
             {
