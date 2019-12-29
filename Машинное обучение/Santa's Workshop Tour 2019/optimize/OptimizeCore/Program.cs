@@ -9,7 +9,7 @@ using MathNet.Numerics.Random;
 //using Alea.Parallel;
 using МатКлассы;
 
-namespace Покоординатная_минимизация
+namespace OptimizeCore
 {
     static class Program
     {
@@ -45,7 +45,7 @@ namespace Покоординатная_минимизация
 
         static double best;
         static (int, int)[] Fs = new (int, int)[5000];
-         static readonly (byte, byte, byte)[] samples3 = new (byte, byte, byte)[1000000];
+        static readonly (byte, byte, byte)[] samples3 = new (byte, byte, byte)[1000000];
         static readonly (byte, byte)[] samples2 = new (byte, byte)[10000];
 
         static double[] lastN = new double[176];
@@ -132,7 +132,7 @@ namespace Покоординатная_минимизация
                     Ntonumber[i - 125][j - 125] = (i - 125.0) / 400.0 * Math.Pow(i, 0.5 + 0.02 * Math.Abs(i - j));
             }
 
-            int u = 0,v=0;
+            int u = 0, v = 0;
             for (byte i = 1; i <= 100; i++)
                 for (byte j = 1; j <= 100; j++)
                 {
@@ -608,7 +608,7 @@ namespace Покоординатная_минимизация
                 {
                     best = sm.res;
                     existprogress = true;
-                    res[nb]=sm.val;
+                    res[nb] = sm.val;
                     Console.WriteLine($"best score = {Math.Round(best, 3)}; iter = {nb}");
                 }
 
@@ -736,13 +736,13 @@ namespace Покоординатная_минимизация
         /// </summary>
         /// <param name="sample_res"></param>
         /// <returns></returns>
-        static (double,byte[]) MakeCoordMinSlow(byte[] sample_res)
+        static (double, byte[]) MakeCoordMinSlow(byte[] sample_res)
         {
             double locbest = scoreMemoized2(sample_res);
-            bool existprogress;        
+            bool existprogress;
             var numbers = family_id;
             var result = new (double, byte, int)[5000];
-            int index,pr;
+            int index, pr;
             double bst;
             short[] acr;
 
@@ -753,7 +753,7 @@ namespace Покоординатная_минимизация
             acr = GetMap(sample_res);
             foreach (var nb in numbers)
             {
-                var sm = MinByOne(nb,sample_res,pr,acr);
+                var sm = MinByOne(nb, sample_res, pr, acr);
                 result[index++] = (sm.res, sm.val, nb);
             }
 
@@ -996,8 +996,8 @@ namespace Покоординатная_минимизация
                     Console.WriteLine($"j = {j}");
                     for (int p = j + 1; p < 5000; p += pstep)
                     {
-                        if(p%11==0)
-                        Console.WriteLine($"k = {p}");
+                        if (p % 11 == 0)
+                            Console.WriteLine($"k = {p}");
                         if (MinByThree(i, j, p, samples3))
                         {
                             best = scoreMemoized2(res);
@@ -1018,9 +1018,9 @@ namespace Покоординатная_минимизация
         static void MakeResult11(string acc = "", int iter = 100000)
         {
             int i, j, k;
-            for(int index=0;index<iter;index++)
+            for (int index = 0; index < iter; index++)
             {
-                if (index % 100==0)
+                if (index % 100 == 0)
                     Console.WriteLine(index);
 
                 beg:
@@ -1040,41 +1040,41 @@ namespace Покоординатная_минимизация
                     //MakeResult2(scoreMemoized2, "");
                     break;
                 }
-            }                        
+            }
         }
 
         static void MakeResult12(string acc = "", int istep = 1, int jstep = 1)
         {
-                    
-           for (int i = 0; i < 4998; i += istep)
+
+            for (int i = 0; i < 4998; i += istep)
             {
                 Console.WriteLine($"i = {i}");
                 for (int j = i + 1; j < 4999; j += jstep)
                 {
                     Console.WriteLine($"j = {j}");
-                    var vals = new (double, (int, int, int), (byte, byte, byte))[4999-j];
-                    Parallel.For(j + 1, 5000, (int p) => vals[p-j-1]=MinByThreeForParallel(i,j,p,samples3));
+                    var vals = new (double, (int, int, int), (byte, byte, byte))[4999 - j];
+                    Parallel.For(j + 1, 5000, (int p) => vals[p - j - 1] = MinByThreeForParallel(i, j, p, samples3));
 
                     var bt = vals.Min(v => v.Item1);
                     var rs = vals.First(v => v.Item1 == bt);
 
-                        if (bt<best)
-                        {
+                    if (bt < best)
+                    {
                         var ind = rs.Item2;
                         var s = rs.Item3;
                         res[ind.Item1] = s.Item1;
                         res[ind.Item2] = s.Item2;
                         res[ind.Item3] = s.Item3;
 
-                             best = scoreMemoized2(res);
-                            Console.WriteLine($"Записывается в файл (улучшено до {best})");
-                            WriteData(best, acc);
-                            j = -1;
-                            MakeResult5(scoreMemoized2, "");
-                            //MakeResult2(scoreMemoized2, "");
-                            //break;
-                        }
-                    
+                        best = scoreMemoized2(res);
+                        Console.WriteLine($"Записывается в файл (улучшено до {best})");
+                        WriteData(best, acc);
+                        j = -1;
+                        MakeResult5(scoreMemoized2, "");
+                        //MakeResult2(scoreMemoized2, "");
+                        //break;
+                    }
+
 
                 }
             }
@@ -1086,27 +1086,27 @@ namespace Покоординатная_минимизация
             {
                 Console.WriteLine($"i = {i}");
                 var vals = new (double, (int, int), (byte, byte))[4999 - i];
-                    
-                    Parallel.For(i + 1, 5000, (int j) => vals[j -i - 1] = MinByTwoForParallel(i, j));
 
-                    var bt = vals.Min(v => v.Item1);
-                    var rs = vals.First(v => v.Item1 == bt);
+                Parallel.For(i + 1, 5000, (int j) => vals[j - i - 1] = MinByTwoForParallel(i, j));
 
-                    if (bt < best)
-                    {
-                        var ind = rs.Item2;
-                        var s = rs.Item3;
-                        res[ind.Item1] = s.Item1;
-                        res[ind.Item2] = s.Item2;
+                var bt = vals.Min(v => v.Item1);
+                var rs = vals.First(v => v.Item1 == bt);
 
-                        best = scoreMemoized2(res);
-                        Console.WriteLine($"Записывается в файл (улучшено до {best})");
-                        WriteData(best, acc);
-                        i = -1;
-                        MakeResult5(scoreMemoized2, "");
-                        //MakeResult2(scoreMemoized2, "");
-                        //break;
-                    }   
+                if (bt < best)
+                {
+                    var ind = rs.Item2;
+                    var s = rs.Item3;
+                    res[ind.Item1] = s.Item1;
+                    res[ind.Item2] = s.Item2;
+
+                    best = scoreMemoized2(res);
+                    Console.WriteLine($"Записывается в файл (улучшено до {best})");
+                    WriteData(best, acc);
+                    i = -1;
+                    MakeResult5(scoreMemoized2, "");
+                    //MakeResult2(scoreMemoized2, "");
+                    //break;
+                }
             }
         }
 
@@ -1252,7 +1252,7 @@ namespace Покоординатная_минимизация
             return existprogress;
         }
 
-        static (double res,byte val) MinByOne(int ind)
+        static (double res, byte val) MinByOne(int ind)
         {
             double resultbest = 1e20, result = 1e20;
             int index = 0;
@@ -1282,10 +1282,10 @@ namespace Покоординатная_минимизация
                 }
             }
 
-            return (res: resultbest, val:(byte)index);
+            return (res: resultbest, val: (byte)index);
         }
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static (double res, byte val) MinByOne(int ind,byte[] sample_res,int pr,short[] acr)
+        static (double res, byte val) MinByOne(int ind, byte[] sample_res, int pr, short[] acr)
         {
             double result_best = 1e20, result;
             int index = 1;
@@ -1378,7 +1378,7 @@ namespace Покоординатная_минимизация
             return existprogress;
         }
 
-        static bool MinByThree(int i1, int i2, int i3, (byte,byte,byte)[] samples)
+        static bool MinByThree(int i1, int i2, int i3, (byte, byte, byte)[] samples)
         {
             const int count = 100_00_00, dim = 3;
 
@@ -1392,13 +1392,13 @@ namespace Покоординатная_минимизация
             int pr = preference_costsMemoized(res);
             var acr = GetMap();
 
-                pr -= prCosts[i1][res[i1] - 1];
-                acr[res[i1] - 1] -= n_people[i1];
-                pr -= prCosts[i2][res[i2] - 1];
-                acr[res[i2] - 1] -= n_people[i2];
-                pr -= prCosts[i3][res[i3] - 1];
-                acr[res[i3] - 1] -= n_people[i3];
-            
+            pr -= prCosts[i1][res[i1] - 1];
+            acr[res[i1] - 1] -= n_people[i1];
+            pr -= prCosts[i2][res[i2] - 1];
+            acr[res[i2] - 1] -= n_people[i2];
+            pr -= prCosts[i3][res[i3] - 1];
+            acr[res[i3] - 1] -= n_people[i3];
+
 
 
             Parallel.For(0, count, (int i) =>
@@ -1433,7 +1433,7 @@ namespace Покоординатная_минимизация
             if (bsttmp < best)
             {
                 existprogress = true;
- 
+
                 res[i1] = samples[n].Item1;
                 res[i2] = samples[n].Item2;
                 res[i3] = samples[n].Item3;
@@ -1485,11 +1485,11 @@ namespace Покоординатная_минимизация
 
             return (res: resultbest, (x: i1, y: i2), samples2[index]);
         }
-        static (double res,(int x,int y,int z),(byte s1, byte s2, byte s3)) MinByThreeForParallel(int i1, int i2, int i3, (byte, byte, byte)[] samples)
+        static (double res, (int x, int y, int z), (byte s1, byte s2, byte s3)) MinByThreeForParallel(int i1, int i2, int i3, (byte, byte, byte)[] samples)
         {
             const int count = 100_00_00;
 
-            double resultbest = 1e20,result=1e20;
+            double resultbest = 1e20, result = 1e20;
             int index = 0;
 
             int pr = preference_costsMemoized(res);
@@ -1502,7 +1502,7 @@ namespace Покоординатная_минимизация
             pr -= prCosts[i3][res[i3] - 1];
             acr[res[i3] - 1] -= n_people[i3];
 
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 var sample = samples[i];
                 int pr2 = pr;
@@ -1519,14 +1519,14 @@ namespace Покоординатная_минимизация
 
                 if (!(pr2 >= best || acr2.Any(s => s < 125 || s > 300)))
                 {
-                     result = accounting_penalty2(acr2) + pr2;
+                    result = accounting_penalty2(acr2) + pr2;
                     if (result < resultbest)
                     {
                         index = i;
                         resultbest = result;
                     }
-                }                   
-            }        
+                }
+            }
 
             return (res: resultbest, (x: i1, y: i2, z: i3), samples[index]);
         }
@@ -1787,7 +1787,6 @@ namespace Покоординатная_минимизация
 
             //ReadBegins();
 
-
             for (int i = 1; i <= 200; i++)
             {
                 Console.WriteLine($"Осталось итераций: {200 - i}");
@@ -1795,8 +1794,7 @@ namespace Покоординатная_минимизация
                 RandomDown2(12, 600);
 
                 if (i % 35 == 0)
-                    //MakeResult8();
-                    MinByRandomize();
+                    MakeResult8();
             }
 
 
@@ -1876,10 +1874,10 @@ namespace Покоординатная_минимизация
             //MakeResult13("");
 
             string[] s = Expendator.GetWordFromFile("границы.txt").Split(' ');
-                int down_t = Convert.ToInt32(s[0]), up_t = Convert.ToInt32(s[1]);
+            int down_t = Convert.ToInt32(s[0]), up_t = Convert.ToInt32(s[1]);
 
-                Console.WriteLine($"down = {down_t}");
-                Console.WriteLine($"up = {up_t}");
+            Console.WriteLine($"down = {down_t}");
+            Console.WriteLine($"up = {up_t}");
 
             for (int u = 0; u < 10; u++)
             {
@@ -1936,20 +1934,17 @@ namespace Покоординатная_минимизация
         /// </summary>
         /// <param name="dim"></param>
         /// <param name="iter"></param>
-        static void RandomDown2(int dim = 10,int iter=10000)
+        static void RandomDown2(int dim = 10, int iter = 10000)
         {
             var mas = new int[dim];
             var obs = GetNresCopy(iter);
-            //var inds = GetNotZeroChoises();
-            //var icount = inds.Length;
-            //Console.WriteLine($"Not zero families count is {icount} ({Expendator.GetProcent(icount, 5000)}%)");
-            int index,j;
 
+            int index, j;
 
-            for(int i=0;i<iter;i++)
+            for (int i = 0; i < iter; i++)
             {
-                ss:
-                for(j = 0; j < dim; j++)
+            ss:
+                for (j = 0; j < dim; j++)
                 {
                     mas[j] = randomgen.Next(0, 4999);
                 }
@@ -1960,7 +1955,7 @@ namespace Покоординатная_минимизация
                 {
                     index = mas[j];
                     obs[i][index] = choice_0[index];
-                }                    
+                }
             }
 
 
@@ -2097,4 +2092,3 @@ namespace Покоординатная_минимизация
         //}
     }
 }
-
