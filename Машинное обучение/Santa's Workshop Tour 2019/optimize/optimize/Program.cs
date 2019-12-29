@@ -1110,6 +1110,42 @@ namespace Покоординатная_минимизация
             }
         }
 
+        static void MakeResult14(string acc = "")
+        {
+            List<int> ch0 = new List<int>(4000), ch1 = new List<int>(1050);
+            for (int i = 0; i < res.Length; i++)
+                if (res[i] == choice_0[i])
+                    ch0.Add(i);
+                else ch1.Add(i);
+
+
+            var vals = new (double, (int, int), (byte, byte))[ch0.Count];
+            foreach(var i in ch1)
+            {
+                Console.WriteLine($"i = {i}");
+               
+                Parallel.For(0,ch0.Count, (int j) => vals[j] = MinByTwoForParallel(i, j));
+
+                var bt = vals.Min(v => v.Item1);
+                var rs = vals.First(v => v.Item1 == bt);
+
+                if (bt < best)
+                {
+                    var ind = rs.Item2;
+                    var s = rs.Item3;
+                    res[ind.Item1] = s.Item1;
+                    res[ind.Item2] = s.Item2;
+
+                    best = scoreMemoized2(res);
+                    Console.WriteLine($"Записывается в файл (улучшено до {best})");
+                    WriteData(best, acc);
+                    MakeResult5(scoreMemoized2, "");
+                    //MakeResult2(scoreMemoized2, "");
+                    //break;
+                }
+            }
+        }
+
         static void Randomize(int count = 15)
         {
             int number;
@@ -1787,12 +1823,13 @@ namespace Покоординатная_минимизация
 
             //ReadBegins();
 
+            //MakeResult14("");
 
             for (int i = 1; i <= 200; i++)
             {
                 Console.WriteLine($"Осталось итераций: {200 - i}");
 
-                RandomDown2(10, 600);
+                RandomDown2(12, 600);
 
                 if (i % 25 == 0)
                     MakeResult11("",500);
