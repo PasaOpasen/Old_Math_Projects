@@ -1792,11 +1792,10 @@ namespace Покоординатная_минимизация
             {
                 Console.WriteLine($"Осталось итераций: {200 - i}");
 
-                RandomDown2(12, 600);
+                RandomDown2(10, 600);
 
-                if (i % 35 == 0)
-                    //MakeResult8();
-                    MinByRandomize();
+                if (i % 25 == 0)
+                    MakeResult11("",500);
             }
 
 
@@ -1940,32 +1939,33 @@ namespace Покоординатная_минимизация
         {
             var mas = new int[dim];
             var obs = GetNresCopy(iter);
-            //var inds = GetNotZeroChoises();
-            //var icount = inds.Length;
-            //Console.WriteLine($"Not zero families count is {icount} ({Expendator.GetProcent(icount, 5000)}%)");
             int index,j;
 
+            var inds = GetNotZeroChoises();
+            var icount = inds.Length;
+            Console.WriteLine($"Not zero families count is {icount} ({Expendator.GetProcent(icount, 5000)}%)");
+            
 
             for(int i=0;i<iter;i++)
             {
                 ss:
                 for(j = 0; j < dim; j++)
                 {
-                    mas[j] = randomgen.Next(0, 4999);
+                    mas[j] = randomgen.Next(0, 4999/*icount*/);
                 }
-                if (mas.Distinct().Count() != dim)
+                if (mas.Distinct().Count() != dim || !mas.Any(tt=>inds.Contains(tt)))
                     goto ss;
 
                 for (j = 0; j < dim; j++)
                 {
-                    index = mas[j];
+                    index = mas[j];//inds[mas[j]];
                     obs[i][index] = choice_0[index];
                 }                    
             }
 
 
             (double, byte[])[] links = new (double, byte[])[iter];
-            "Start".Show();
+            //"Start".Show();
             Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow(obs[i]));
             //for (int i = 0; i < iter; i++) links[i] = MakeCoordMinSlow(obs[i]);
 
