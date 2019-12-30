@@ -8,6 +8,7 @@ using MathNet.Numerics.Random;
 //using Accord.Math;
 //using Alea.Parallel;
 using МатКлассы;
+using System.Diagnostics;
 
 namespace Покоординатная_минимизация
 {
@@ -45,7 +46,7 @@ namespace Покоординатная_минимизация
 
         static double best;
         static (int, int)[] Fs = new (int, int)[5000];
-         static readonly (byte, byte, byte)[] samples3 = new (byte, byte, byte)[1000000];
+        static readonly (byte, byte, byte)[] samples3 = new (byte, byte, byte)[1000000];
         static readonly (byte, byte)[] samples2 = new (byte, byte)[10000];
 
         static double[] lastN = new double[176];
@@ -132,7 +133,7 @@ namespace Покоординатная_минимизация
                     Ntonumber[i - 125][j - 125] = (i - 125.0) / 400.0 * Math.Pow(i, 0.5 + 0.02 * Math.Abs(i - j));
             }
 
-            int u = 0,v=0;
+            int u = 0, v = 0;
             for (byte i = 1; i <= 100; i++)
                 for (byte j = 1; j <= 100; j++)
                 {
@@ -141,6 +142,34 @@ namespace Покоординатная_минимизация
                         samples3[u++] = (i, j, h);
                 }
 
+        }
+
+
+        static byte RandVal(int index,int top=10)
+        {
+            var p = new byte[] { choice_0[index], choice_1[index], choice_2[index], choice_3[index], choice_4[index], choice_5[index], choice_6[index], choice_7[index], choice_8[index], choice_9[index] };
+            return p[randomgen.Next(0, top-1)];
+        }
+
+        static byte[] Top(int index,int count)
+        {
+            var p = new byte[] { choice_0[index], choice_1[index], choice_2[index], choice_3[index], choice_4[index], choice_5[index], choice_6[index], choice_7[index], choice_8[index], choice_9[index] };
+            return p.Take(count).ToArray();
+        }
+
+        static byte[] Randomize(byte[] arr, int count)
+        {
+            int k1, k2;
+            byte tmp;
+            for (int i = 0; i < count; i++)
+            {
+                k1 = randomgen.Next(0, 4999);
+                k2 = randomgen.Next(0, 4999);
+                tmp = arr[k1];
+                arr[k1] = arr[k2];
+                arr[k2] = tmp;
+            }
+            return arr;
         }
 
         static void ReadData()
@@ -608,13 +637,45 @@ namespace Покоординатная_минимизация
                 {
                     best = sm.res;
                     existprogress = true;
-                    res[nb]=sm.val;
+                    res[nb] = sm.val;
                     Console.WriteLine($"best score = {Math.Round(best, 3)}; iter = {nb}");
                 }
 
             }
 
             return existprogress;
+        }
+
+        static void MakeCoordMinPr(byte[] res2, int count = 5000)
+        {          
+            bool existprogress=false;
+            double bst;
+
+            int[] numbers; //GetRange();
+            int pr;
+            short[] acr;
+
+            iti: 
+            acr = GetMap(res2);
+            pr = preference_costsMemoized(res2);
+            bst = pr;// + accounting_penalty3(acr);
+            numbers = GetRandom().Take(count).ToArray();
+
+            foreach (var nb in numbers)
+            {
+                var sm = MinByOnePr(nb,res2,pr,acr);
+
+                if (bst > sm.res)
+                {
+                    bst = sm.res;
+                    existprogress = true;
+                    res2[nb] = sm.val;
+                    //Console.WriteLine($"best score = {Math.Round(best, 3)}; iter = {nb}");
+                }
+
+            }
+            if (!existprogress)
+                goto iti;
         }
 
         static bool MakeCoordMin2(Func<byte[], double> fun)
@@ -736,13 +797,13 @@ namespace Покоординатная_минимизация
         /// </summary>
         /// <param name="sample_res"></param>
         /// <returns></returns>
-        static (double,byte[]) MakeCoordMinSlow(byte[] sample_res)
+        static (double, byte[]) MakeCoordMinSlow(byte[] sample_res)
         {
             double locbest = scoreMemoized2(sample_res);
-            bool existprogress;        
+            bool existprogress;
             var numbers = family_id;
             var result = new (double, byte, int)[5000];
-            int index,pr;
+            int index, pr;
             double bst;
             short[] acr;
 
@@ -753,7 +814,7 @@ namespace Покоординатная_минимизация
             acr = GetMap(sample_res);
             foreach (var nb in numbers)
             {
-                var sm = MinByOne(nb,sample_res,pr,acr);
+                var sm = MinByOne(nb, sample_res, pr, acr);
                 result[index++] = (sm.res, sm.val, nb);
             }
 
@@ -762,13 +823,13 @@ namespace Покоординатная_минимизация
             if (locbest > bst)
             {
                 var pi = result.First(t => t.Item1 == bst);
-                //Console.WriteLine($"best score = {Math.Round(bst, 3)} (from {Math.Round(best, 3)}); iter = {pi.Item3}");
-                locbest = bst;
+                //Console.WriteLine($"best score = {Math.Round(bst, 3)} (from {Math.Round(best, 3)}); iter = {pi.Item3}");           
                 existprogress = true;
+                locbest = bst;
                 sample_res[pi.Item3] = pi.Item2;
             }
 
-            if (existprogress)
+            if (existprogress && locbest != best)
                 goto begin1;
             else
                 return (locbest, sample_res);
@@ -867,7 +928,6 @@ namespace Покоординатная_минимизация
                 Console.WriteLine("Записывается в файл");
                 WriteData(best, acc);
             }
-            return;
         }
         static void MakeResult3(Func<byte[], double> fun, string acc = "")
         {
@@ -980,9 +1040,9 @@ namespace Покоординатная_минимизация
             for (int i = 0; i < iter; i++)
                 if (MinByRandomize2(dim, count))
                 {
-                    Console.WriteLine("Записывается в файл");
-                    WriteData(best, acc);
-                    MakeResult2(scoreMemoized2);
+                    //Console.WriteLine("Записывается в файл");
+                    //WriteData(best, acc);
+                    MakeResult5(scoreMemoized2);
                 }
         }
 
@@ -996,8 +1056,8 @@ namespace Покоординатная_минимизация
                     Console.WriteLine($"j = {j}");
                     for (int p = j + 1; p < 5000; p += pstep)
                     {
-                        if(p%11==0)
-                        Console.WriteLine($"k = {p}");
+                        if (p % 11 == 0)
+                            Console.WriteLine($"k = {p}");
                         if (MinByThree(i, j, p, samples3))
                         {
                             best = scoreMemoized2(res);
@@ -1018,9 +1078,9 @@ namespace Покоординатная_минимизация
         static void MakeResult11(string acc = "", int iter = 100000)
         {
             int i, j, k;
-            for(int index=0;index<iter;index++)
+            for (int index = 0; index < iter; index++)
             {
-                if (index % 100==0)
+                if (index % 100 == 0)
                     Console.WriteLine(index);
 
                 beg:
@@ -1040,41 +1100,41 @@ namespace Покоординатная_минимизация
                     //MakeResult2(scoreMemoized2, "");
                     break;
                 }
-            }                        
+            }
         }
 
         static void MakeResult12(string acc = "", int istep = 1, int jstep = 1)
         {
-                    
-           for (int i = 0; i < 4998; i += istep)
+
+            for (int i = 0; i < 4998; i += istep)
             {
                 Console.WriteLine($"i = {i}");
                 for (int j = i + 1; j < 4999; j += jstep)
                 {
                     Console.WriteLine($"j = {j}");
-                    var vals = new (double, (int, int, int), (byte, byte, byte))[4999-j];
-                    Parallel.For(j + 1, 5000, (int p) => vals[p-j-1]=MinByThreeForParallel(i,j,p,samples3));
+                    var vals = new (double, (int, int, int), (byte, byte, byte))[4999 - j];
+                    Parallel.For(j + 1, 5000, (int p) => vals[p - j - 1] = MinByThreeForParallel(i, j, p, samples3));
 
                     var bt = vals.Min(v => v.Item1);
                     var rs = vals.First(v => v.Item1 == bt);
 
-                        if (bt<best)
-                        {
+                    if (bt < best)
+                    {
                         var ind = rs.Item2;
                         var s = rs.Item3;
                         res[ind.Item1] = s.Item1;
                         res[ind.Item2] = s.Item2;
                         res[ind.Item3] = s.Item3;
 
-                             best = scoreMemoized2(res);
-                            Console.WriteLine($"Записывается в файл (улучшено до {best})");
-                            WriteData(best, acc);
-                            j = -1;
-                            MakeResult5(scoreMemoized2, "");
-                            //MakeResult2(scoreMemoized2, "");
-                            //break;
-                        }
-                    
+                        best = scoreMemoized2(res);
+                        Console.WriteLine($"Записывается в файл (улучшено до {best})");
+                        WriteData(best, acc);
+                        j = -1;
+                        MakeResult5(scoreMemoized2, "");
+                        //MakeResult2(scoreMemoized2, "");
+                        //break;
+                    }
+
 
                 }
             }
@@ -1086,27 +1146,27 @@ namespace Покоординатная_минимизация
             {
                 Console.WriteLine($"i = {i}");
                 var vals = new (double, (int, int), (byte, byte))[4999 - i];
-                    
-                    Parallel.For(i + 1, 5000, (int j) => vals[j -i - 1] = MinByTwoForParallel(i, j));
 
-                    var bt = vals.Min(v => v.Item1);
-                    var rs = vals.First(v => v.Item1 == bt);
+                Parallel.For(i + 1, 5000, (int j) => vals[j - i - 1] = MinByTwoForParallel(i, j));
 
-                    if (bt < best)
-                    {
-                        var ind = rs.Item2;
-                        var s = rs.Item3;
-                        res[ind.Item1] = s.Item1;
-                        res[ind.Item2] = s.Item2;
+                var bt = vals.Min(v => v.Item1);
+                var rs = vals.First(v => v.Item1 == bt);
 
-                        best = scoreMemoized2(res);
-                        Console.WriteLine($"Записывается в файл (улучшено до {best})");
-                        WriteData(best, acc);
-                        i = -1;
-                        MakeResult5(scoreMemoized2, "");
-                        //MakeResult2(scoreMemoized2, "");
-                        //break;
-                    }   
+                if (bt < best)
+                {
+                    var ind = rs.Item2;
+                    var s = rs.Item3;
+                    res[ind.Item1] = s.Item1;
+                    res[ind.Item2] = s.Item2;
+
+                    best = scoreMemoized2(res);
+                    Console.WriteLine($"Записывается в файл (улучшено до {best})");
+                    WriteData(best, acc);
+                    i = -1;
+                    MakeResult5(scoreMemoized2, "");
+                    //MakeResult2(scoreMemoized2, "");
+                    //break;
+                }
             }
         }
 
@@ -1120,11 +1180,11 @@ namespace Покоординатная_минимизация
 
 
             var vals = new (double, (int, int), (byte, byte))[ch0.Count];
-            foreach(var i in ch1)
+            foreach (var i in ch1)
             {
                 Console.WriteLine($"i = {i}");
-               
-                Parallel.For(0,ch0.Count, (int j) => vals[j] = MinByTwoForParallel(i, j));
+
+                Parallel.For(0, ch0.Count, (int j) => vals[j] = MinByTwoForParallel(i, j));
 
                 var bt = vals.Min(v => v.Item1);
                 var rs = vals.First(v => v.Item1 == bt);
@@ -1250,7 +1310,7 @@ namespace Покоординатная_минимизация
                 var acr2 = acr.Dup();
                 for (int j = 0; j < sample.Length; j++)
                 {
-                    tmp = (byte)randomgen.Next(1, 100);
+                    tmp = RandVal(indexes[j]);//(byte)randomgen.Next(1, 100);
                     sample[j] = tmp;
                     pr2 += prCosts[indexes[j]][tmp - 1];
                     acr2[tmp - 1] += n_people[indexes[j]];
@@ -1288,7 +1348,7 @@ namespace Покоординатная_минимизация
             return existprogress;
         }
 
-        static (double res,byte val) MinByOne(int ind)
+        static (double res, byte val) MinByOne(int ind)
         {
             double resultbest = 1e20, result = 1e20;
             int index = 0;
@@ -1318,10 +1378,10 @@ namespace Покоординатная_минимизация
                 }
             }
 
-            return (res: resultbest, val:(byte)index);
+            return (res: resultbest, val: (byte)index);
         }
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static (double res, byte val) MinByOne(int ind,byte[] sample_res,int pr,short[] acr)
+        static (double res, byte val) MinByOne(int ind, byte[] sample_res, int pr, short[] acr)
         {
             double result_best = 1e20, result;
             int index = 1;
@@ -1337,6 +1397,37 @@ namespace Покоординатная_минимизация
                 if (pr < best && !acr.Any(s => s < 125 || s > 300))
                 {
                     result = accounting_penalty2(acr) + pr;
+                    if (result < result_best)
+                    {
+                        index = i;
+                        result_best = result;
+                    }
+                }
+
+                pr -= prCosts[ind][i - 1];
+                acr[i - 1] -= n_people[ind];
+            }
+            acr[sample_res[ind] - 1] += n_people[ind];
+
+            return (res: result_best, val: (byte)index);
+        }
+
+        static (double res, byte val) MinByOnePr(int ind, byte[] sample_res, int pr, short[] acr)
+        {
+            double result_best = 1e20, result;
+            int index = 1;
+
+            pr -= prCosts[ind][sample_res[ind] - 1];
+            acr[sample_res[ind] - 1] -= n_people[ind];
+
+            for (int i = 1; i <= 100; i++)
+            {
+                pr += prCosts[ind][i - 1];
+                acr[i - 1] += n_people[ind];
+
+                if (pr < best && !acr.Any(s => s < 125 || s > 300))
+                {
+                    result =  pr;
                     if (result < result_best)
                     {
                         index = i;
@@ -1414,7 +1505,7 @@ namespace Покоординатная_минимизация
             return existprogress;
         }
 
-        static bool MinByThree(int i1, int i2, int i3, (byte,byte,byte)[] samples)
+        static bool MinByThree(int i1, int i2, int i3, (byte, byte, byte)[] samples)
         {
             const int count = 100_00_00, dim = 3;
 
@@ -1428,13 +1519,13 @@ namespace Покоординатная_минимизация
             int pr = preference_costsMemoized(res);
             var acr = GetMap();
 
-                pr -= prCosts[i1][res[i1] - 1];
-                acr[res[i1] - 1] -= n_people[i1];
-                pr -= prCosts[i2][res[i2] - 1];
-                acr[res[i2] - 1] -= n_people[i2];
-                pr -= prCosts[i3][res[i3] - 1];
-                acr[res[i3] - 1] -= n_people[i3];
-            
+            pr -= prCosts[i1][res[i1] - 1];
+            acr[res[i1] - 1] -= n_people[i1];
+            pr -= prCosts[i2][res[i2] - 1];
+            acr[res[i2] - 1] -= n_people[i2];
+            pr -= prCosts[i3][res[i3] - 1];
+            acr[res[i3] - 1] -= n_people[i3];
+
 
 
             Parallel.For(0, count, (int i) =>
@@ -1469,7 +1560,7 @@ namespace Покоординатная_минимизация
             if (bsttmp < best)
             {
                 existprogress = true;
- 
+
                 res[i1] = samples[n].Item1;
                 res[i2] = samples[n].Item2;
                 res[i3] = samples[n].Item3;
@@ -1521,11 +1612,11 @@ namespace Покоординатная_минимизация
 
             return (res: resultbest, (x: i1, y: i2), samples2[index]);
         }
-        static (double res,(int x,int y,int z),(byte s1, byte s2, byte s3)) MinByThreeForParallel(int i1, int i2, int i3, (byte, byte, byte)[] samples)
+        static (double res, (int x, int y, int z), (byte s1, byte s2, byte s3)) MinByThreeForParallel(int i1, int i2, int i3, (byte, byte, byte)[] samples)
         {
             const int count = 100_00_00;
 
-            double resultbest = 1e20,result=1e20;
+            double resultbest = 1e20, result = 1e20;
             int index = 0;
 
             int pr = preference_costsMemoized(res);
@@ -1538,7 +1629,7 @@ namespace Покоординатная_минимизация
             pr -= prCosts[i3][res[i3] - 1];
             acr[res[i3] - 1] -= n_people[i3];
 
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 var sample = samples[i];
                 int pr2 = pr;
@@ -1555,14 +1646,14 @@ namespace Покоординатная_минимизация
 
                 if (!(pr2 >= best || acr2.Any(s => s < 125 || s > 300)))
                 {
-                     result = accounting_penalty2(acr2) + pr2;
+                    result = accounting_penalty2(acr2) + pr2;
                     if (result < resultbest)
                     {
                         index = i;
                         resultbest = result;
                     }
-                }                   
-            }        
+                }
+            }
 
             return (res: resultbest, (x: i1, y: i2, z: i3), samples[index]);
         }
@@ -1810,31 +1901,65 @@ namespace Покоординатная_минимизация
 
         }
 
+        static int down_t, up_t;
+        static void ReadUpDown()
+        {
+            string[] s = Expendator.GetWordFromFile("границы.txt").Split(' ');
+            down_t = Convert.ToInt32(s[0]); up_t = Convert.ToInt32(s[1]);
+
+            Console.WriteLine($"down = {down_t}");
+            Console.WriteLine($"up = {up_t}");
+        }
         static void Main(string[] args)
         {
             ReadRES();
+            ReadUpDown();
 
+
+            //Swap();
+            //Swap3();
+            //Swap_2();
+            //Swap_3();
+            // Swap_4();
+            //Swap_5();
+           // Swap_6();
             // Accord();
-
-            // MakeResult2();
+            //for (byte b = 0; b < 100;b++)
+            //Swap_6(b);
+            // MakeResult8();
 
             // var t = preference_costs(res);
             // var s = accounting_penalty(res);
 
             //ReadBegins();
 
+            //for (int i = 0; i < res.Length; i++)
+            //    if(res[i]>1&&res[i]<100)
+            //    res[i] = (byte)(res[i]+randomgen.Next(-1, 1));
+            //MakeResult5(scoreMemoized2);
+
             //MakeResult14("");
+            //MakeResult9("", 30, 3_000_000, 10000);
 
-            for (int i = 1; i <= 200; i++)
+            int ct = 1000, min = down_t, max = up_t;
+            for (int i = 1; i <= 300; i++)
             {
-                Console.WriteLine($"Осталось итераций: {200 - i}");
+                Console.WriteLine($"Осталось итераций: {300 - i}");
+                double b = best;
+                //RandomDown2(max, ct, min: min);
+                //RandomDown3(max, ct);
+                RandomDown4(max, 7, ct);
+                if (b == best)
+                {
+                    //ct += 50;
+                    //min++;
+                    max += 1;
+                }
 
-                RandomDown2(12, 600);
 
-                if (i % 25 == 0)
-                    MakeResult11("",500);
+                //if (i % 25 == 0)
+                //MakeResult11("", 500);
             }
-
 
             //ReadRES();
             if (false)
@@ -1904,18 +2029,14 @@ namespace Покоординатная_минимизация
                 }
 
             //Bee();
-            // MakeResult9("",10,1_000_000,1000);
+
             //MakeResult8("");
             //MakeResult10("", 5, 3, 2);
             // MakeResult11("",100000);
             //MakeResult12("",3,5);
             //MakeResult13("");
 
-            string[] s = Expendator.GetWordFromFile("границы.txt").Split(' ');
-                int down_t = Convert.ToInt32(s[0]), up_t = Convert.ToInt32(s[1]);
 
-                Console.WriteLine($"down = {down_t}");
-                Console.WriteLine($"up = {up_t}");
 
             for (int u = 0; u < 10; u++)
             {
@@ -1923,10 +2044,10 @@ namespace Покоординатная_минимизация
 
                 //MakeResult2(scoreMemoized2);
 
-                RandomDown(550, down_t, up_t);
+                //RandomDown(550, down_t, up_t);
                 //NotRandomDown();
 
-                NotRandomDown(10);
+                NotRandomDown(3);
 
                 MakeResult7("");
             }
@@ -1972,34 +2093,40 @@ namespace Покоординатная_минимизация
         /// </summary>
         /// <param name="dim"></param>
         /// <param name="iter"></param>
-        static void RandomDown2(int dim = 10,int iter=10000)
+        static void RandomDown2(int dim = 10, int iter = 10000, int min = 5)
         {
             var mas = new int[dim];
             var obs = GetNresCopy(iter);
-            int index,j;
+            int index, j;
 
             var inds = GetNotZeroChoises();
             var icount = inds.Length;
             Console.WriteLine($"Not zero families count is {icount} ({Expendator.GetProcent(icount, 5000)}%)");
-            
 
-            for(int i=0;i<iter;i++)
+            for (int i = 0; i < iter; i++)
             {
-                ss:
-                for(j = 0; j < dim; j++)
+            ss:
+                for (j = 0; j < dim; j++)
                 {
                     mas[j] = randomgen.Next(0, 4999/*icount*/);
                 }
-                if (mas.Distinct().Count() != dim || !mas.Any(tt=>inds.Contains(tt)))
+                if (mas.Distinct().Count() != dim /*|| mas.Count(tt => inds.Contains(tt)) < min*/)
                     goto ss;
 
                 for (j = 0; j < dim; j++)
                 {
                     index = mas[j];//inds[mas[j]];
-                    obs[i][index] = choice_0[index];
-                }                    
+                    //if (obs[i][index] == choice_0[index])
+                    //{
+                    //    if(index%2==0)
+                    //        obs[i][index] = choice_1[index];
+                    //    else
+                    //        obs[i][index] = choice_2[index];
+                    //}                        
+                    //else
+                    obs[i][index] = choice_0[index]; //RandVal(index) ;// choice_0[index];//LevelDown(index, obs[i][index]);//choice_0[index];//choice_0[index];//
+                }
             }
-
 
             (double, byte[])[] links = new (double, byte[])[iter];
             //"Start".Show();
@@ -2008,13 +2135,258 @@ namespace Покоординатная_минимизация
 
             var bs = links.Min(p => p.Item1);
             var t = links.First(p => p.Item1 == bs);
+            if (best > bs)
+            {
             res = t.Item2;
             best = bs;
 
             Console.WriteLine($"Записывается в файл {bs}");
             WriteData(bs, "");
+            }
         }
 
+        static void RandomDown3(int deep = 10, int iter = 10000)
+        {
+            var obs = GetNresCopy(iter);
+
+            var inds = GetNotZeroChoises();
+            var icount = inds.Length;
+            Console.WriteLine($"Not zero families count is {icount} ({Expendator.GetProcent(icount, 5000)}%)");
+
+            Parallel.For(0, iter, (int i) => MakeCoordMinPr(obs[i],deep));
+
+           //var v= obs.Select(p => scoreMemoized2(p)).ToArray();
+
+            (double, byte[])[] links = new (double, byte[])[iter];
+            //"Start".Show();
+            Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow(obs[i]));
+            //for (int i = 0; i < iter; i++) links[i] = MakeCoordMinSlow(obs[i]);
+
+            best = scoreMemoized2(res);
+            var bs = links.Min(p => p.Item1);
+            var t = links.First(p => p.Item1 == bs);
+            if (best > bs)
+            {
+                res = t.Item2;
+                best = bs;
+
+                Console.WriteLine($"Записывается в файл {bs}");
+                WriteData(bs, "");
+            }
+        }
+
+        static void RandomDown4(int dim = 10,int top=5, int iter = 10000)
+        {
+            var mas = new int[dim];
+            var obs = GetNresCopy(iter);
+            int index, j;
+
+            var inds = GetNotZeroChoises();
+            var icount = inds.Length;
+            Console.WriteLine($"Not zero families count is {icount} ({Expendator.GetProcent(icount, 5000)}%)");
+
+            for (int i = 0; i < iter; i++)
+            {
+            ss:
+                for (j = 0; j < dim; j++)
+                {
+                    mas[j] = randomgen.Next(0, 4999/*icount*/);
+                }
+                if (mas.Distinct().Count() != dim /*|| mas.Count(tt => inds.Contains(tt)) < min*/)
+                    goto ss;
+
+                for (j = 0; j < dim; j++)
+                {
+                    index = mas[j];//inds[mas[j]];
+                    //if (obs[i][index] == choice_0[index])
+                    //{
+                    //    if(index%2==0)
+                    //        obs[i][index] = choice_1[index];
+                    //    else
+                    //        obs[i][index] = choice_2[index];
+                    //}                        
+                    //else
+                    obs[i][index] = RandVal(index,top);//choice_0[index]; //RandVal(index) ;// choice_0[index];//LevelDown(index, obs[i][index]);//choice_0[index];//choice_0[index];//
+                }
+            }
+
+            (double, byte[])[] links = new (double, byte[])[iter];
+            //"Start".Show();
+            Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow(obs[i]));
+            //for (int i = 0; i < iter; i++) links[i] = MakeCoordMinSlow(obs[i]);
+
+            var bs = links.Min(p => p.Item1);
+            var t = links.First(p => p.Item1 == bs);
+            if (best > bs)
+            {
+                res = t.Item2;
+                best = bs;
+
+                Console.WriteLine($"Записывается в файл {bs}");
+                WriteData(bs, "");
+            }
+        }
+
+
+        static void TopDown5(int top=5)
+        {
+            int pr = preference_costsMemoized(res);
+            short[] acr = GetMap();
+            double first = scoreMemoized2(res),min;
+            (int, int, int, int, int) inds=(0,0,0,0,0);
+            (byte, byte, byte, byte, byte) rs=(0,0,0,0,0);
+            byte[] a1, a2, a3, a4, a5;
+            bool progress = false;
+
+
+            for (int i = 0; i < 4996; i++)
+            {
+                pr -= prCosts[i][res[i] - 1];
+                acr[res[i] - 1] -= n_people[i];
+                a1 = Top(i, top);
+                i.Show();
+                for (int j = i+1; j < 4997; j++)
+                {
+                    pr -= prCosts[j][res[j] - 1];
+                    acr[res[j] - 1] -= n_people[j];
+                    a2 = Top(j, top);
+
+                    for (int k = j + 1; k < 4998; k++)
+                    {
+                        pr -= prCosts[k][res[k] - 1];
+                        acr[res[k] - 1] -= n_people[k];
+                        a3 = Top(k, top);
+
+                        for (int p = k + 1; p < 4999; p++)
+                        {
+                            pr -= prCosts[p][res[p] - 1];
+                            acr[res[p] - 1] -= n_people[p];
+                            a4 = Top(p, top);
+
+                            for (int t = k + 1; t < 5000; t++)
+                            {
+                                pr -= prCosts[t][res[t] - 1];
+                                acr[res[t] - 1] -= n_people[t];
+                                a5 = Top(t, top);
+
+                               (double, (byte, byte, byte, byte, byte))[] tops = new (double, (byte, byte, byte, byte, byte))[top];
+
+                                Parallel.For(0,top, ii => 
+                                {
+                                    int pr2 = pr+prCosts[i][a1[ii]];
+                                    var acr2 = acr.Dup();
+                                    double f = first,tmp=1e20;
+                                    acr2[a1[ii]] += n_people[a1[ii]];
+
+                                    foreach(var i2 in a2)
+                                    {
+                                        pr2 += prCosts[j][i2-1];
+                                        acr2[i2 - 1] += n_people[j];
+                                        foreach (var i3 in a3)
+                                        {
+                                            pr2 += prCosts[k][i3 - 1];
+                                            acr2[i3 - 1] += n_people[k];
+                                            foreach (var i4 in a4)
+                                            {
+                                                pr2 += prCosts[p][i4 - 1];
+                                                acr2[i4- 1] += n_people[p];
+                                                foreach (var i5 in a5)
+                                                {
+                                                    pr2 += prCosts[t][i5 - 1];
+                                                    acr2[i5 - 1] += n_people[t];
+
+                                                    if(pr2<f && acr2.All(s => s >= 125 && s <= 300))
+                                                    {
+                                                        tmp = pr2 + accounting_penalty3(acr2);
+                                                        if (tmp < f)
+                                                        {
+                                                            f = tmp;
+                                                            tops[ii] = (f,(a1[ii], i2, i3, i4, i5));
+                                                        }
+                                                    }
+
+                                                    pr2 += prCosts[t][i5 - 1];
+                                                    acr2[i5 - 1] -= n_people[t];
+                                                }
+                                                pr2 -= prCosts[p][i4 - 1];
+                                                acr2[i4 - 1] -= n_people[p];
+                                            }
+                                            pr2 -= prCosts[k][i3 - 1];
+                                            acr2[i3 - 1] -= n_people[k];
+                                        }
+                                        pr2 -= prCosts[j][i2 - 1];
+                                        acr2[i2 - 1] -= n_people[j];
+                                    }
+
+
+                                });
+
+                                min = tops.Where(s => s.Item1 > 0).Min(s => s.Item1);
+                                if (min < first)
+                                {
+                                    first = min;
+                                    inds = (i, j, k, p, t);
+                                    rs = tops.First(s => s.Item1 == min).Item2;
+                                    progress = true;
+                                    Console.WriteLine($"New best val is {first}");
+
+                                    res[inds.Item1] = rs.Item1;
+                                }
+
+                                pr += prCosts[t][res[t] - 1];
+                                acr[res[t] - 1] += n_people[t];
+                            }
+                            pr += prCosts[k][res[k] - 1];
+                            acr[res[k] - 1] += n_people[k];
+                        }
+                        pr += prCosts[k][res[k] - 1];
+                        acr[res[k] - 1] += n_people[k];
+                    }
+                    pr += prCosts[i][res[i] - 1];
+                    acr[res[i] - 1] += n_people[i];
+                }
+
+                pr += prCosts[i][res[i] - 1];
+                acr[res[i] - 1] += n_people[i];
+            }
+
+            if (progress)
+            {
+            res[inds.Item1] = rs.Item1;
+            res[inds.Item2] = rs.Item2;
+            res[inds.Item3] = rs.Item3;
+            res[inds.Item4] = rs.Item4;
+            res[inds.Item5] = rs.Item5;
+            }
+        }
+
+
+        static byte LevelDown(int index, byte val)
+        {
+            byte ch0 = choice_0[index], ch1 = choice_1[index], ch2 = choice_2[index], ch3 = choice_3[index], ch4 = choice_4[index], ch5 = choice_5[index], ch6 = choice_6[index], ch7 = choice_7[index], ch8 = choice_8[index], ch9 = choice_9[index];
+            if (val == ch0)
+                return ch0;
+            if (val == ch1)
+                return ch0;
+            if (val == ch2)
+                return ch1;
+            if (val == ch3)
+                return ch2;
+            if (val == ch4)
+                return ch3;
+            if (val == ch5)
+                return ch4;
+            if (val == ch6)
+                return ch5;
+            if (val == ch7)
+                return ch6;
+            if (val == ch8)
+                return ch7;
+            if (val == ch9)
+                return ch8;
+            return ch9;
+
+        }
 
         static void NotRandomDown(int iter = 3)
         {
@@ -2100,6 +2472,721 @@ namespace Покоординатная_минимизация
             res = ToByteArr(t.Item1.DoubleMas);
         }
 
+
+
+        static int[][] PerDays()
+        {
+            var b = new int[100][];
+            List<int>[] list = new List<int>[100];
+            for (int i = 0; i < 100; i++)
+                list[i] = new List<int>(60);
+
+            for (int i = 0; i < 5000; i++)
+                list[res[i] - 1].Add(i);
+
+            for (int i = 0; i < 100; i++)
+                b[i] = list[i].ToArray();
+
+            return b;
+        }
+        static int[] WhichPeopIs(int[] inds, byte people)
+        {
+            List<int> t = new List<int>(inds.Length / 2);
+            for (int i = 0; i < inds.Length; i++)
+                if (n_people[inds[i]] == people)
+                    t.Add(inds[i]);
+            return t.ToArray();
+        }
+        static int[] Mprice(int[] inds, byte from, byte to)
+        {
+            if (inds.Length == 0)
+                return inds;
+
+            List<int> t = new List<int>(inds.Length / 2);
+            for (int i = 0; i < inds.Length; i++)
+                if (prCosts[inds[i]][from] >= prCosts[inds[i]][to])
+                    t.Add(inds[i]);
+            return t.ToArray();
+        }
+        static void Swap()
+        {
+            var per = PerDays();
+            int[] d1, d2, p1, p2, r1, r2;
+            best = scoreMemoized2(res);
+            double bst;
+            int min;
+
+            for (byte day1 = 0; day1 < 99; day1++)
+            {
+                d1 = per[day1];
+                for (byte day2 = (byte)(day1 + 1); day2 < 100; day2++)
+                {
+                    d2 = per[day2];
+
+
+                    //r1 = Mprice(d1, day1, day2);
+                    //r2 = Mprice(d2, day2, day1);
+                    //if (r1.Length + r2.Length != 0)
+                    //    Debug.WriteLine($"{r1.Length} {r2.Length}");
+                    //if (r2.Length > 0 && r1.Length >= r2.Length)
+                    //{
+                    //    for (int i = 0; i < r1.Length; i++)
+                    //        res[r1[i]] = (byte)(day2+1);
+                    //    for (int i = 0; i < r2.Length; i++)
+                    //        res[r2[i]] = (byte)(day1+1);
+                    //}
+
+                    for (byte cd = 8; cd >= 2; cd--)
+                    {
+                        p1 = WhichPeopIs(d1, cd);
+                        p2 = WhichPeopIs(d2, cd);
+                        r1 = Mprice(p1, day1, day2);
+                        r2 = Mprice(p2, day2, day1);
+                        if (r1.Length + r2.Length != 0)
+                            Debug.WriteLine($"{r1.Length} {r2.Length}");
+                        if (r2.Length > 0 && r1.Length >= r2.Length)
+                        {
+                            min = Math.Min(r1.Length, r2.Length);
+
+                            for (int i = 0; i < min; i++)
+                                res[r1[i]] = (byte)(day2 + 1);
+                            for (int i = 0; i < min; i++)
+                                res[r2[i]] = (byte)(day1 + 1);
+                        }
+                    }
+
+                    bst = scoreMemoized2(res);
+                    if (bst < best)
+                    {
+                        best = bst;
+                        Console.WriteLine($"New score: {bst}");
+                        WriteData(best);
+                    }
+                }
+            }
+
+        }
+
+        static void Swap3()
+        {
+            var per = PerDays();
+            int[] d1, d2, d3, p1, p2, p3, r1, r2, r3;
+            best = scoreMemoized2(res);
+            double bst;
+            int min;
+
+            for (byte day1 = 0; day1 < 98; day1++)
+            {
+                d1 = per[day1];
+                for (byte day2 = (byte)(day1 + 1); day2 < 99; day2++)
+                {
+                    d2 = per[day2];
+                    for (byte day3 = (byte)(day2 + 1); day3 < 100; day3++)
+                    {
+                        d3 = per[day3];
+                        for (byte cd = 8; cd >= 2; cd--)
+                        {
+                            p1 = WhichPeopIs(d1, cd);
+                            p2 = WhichPeopIs(d2, cd);
+                            p3 = WhichPeopIs(d3, cd);
+                            r1 = Mprice(p1, day1, day2);
+                            r2 = Mprice(p2, day2, day3);
+                            r3 = Mprice(p3, day3, day1);
+                            if (r1.Length + r2.Length + r3.Length != 0)
+                                Debug.WriteLine($"{r1.Length} {r2.Length} {r3.Length}");
+                            if (r2.Length > 0 && r1.Length >= r2.Length && r3.Length > r2.Length)
+                            {
+                                min = Expendator.Min(r1.Length, r2.Length, r3.Length);
+
+                                for (int i = 0; i < min; i++)
+                                    res[r1[i]] = (byte)(day2 + 1);
+                                for (int i = 0; i < min; i++)
+                                    res[r2[i]] = (byte)(day3 + 1);
+                                for (int i = 0; i < min; i++)
+                                    res[r3[i]] = (byte)(day1 + 1);
+                            }
+                        }
+                    }
+
+
+                    bst = scoreMemoized2(res);
+                    if (bst < best)
+                    {
+                        best = bst;
+                        Console.WriteLine($"New score: {bst}");
+                        WriteData(best);
+                    }
+                }
+            }
+
+        }
+
+        static void Swap_2()
+        {
+            var per = PerDays();
+            int[] d1, d2, r1, r2;
+            best = scoreMemoized2(res);
+            double bst;
+
+            for (byte day1 = 0; day1 < 99; day1++)
+            {
+                d1 = per[day1];
+                for (byte day2 = (byte)(day1 + 1); day2 < 100; day2++)
+                {
+
+                    r1 = Mprice(d1, day1, day2);
+                    if (r1.Length == 0)
+                        continue;
+
+                    d2 = per[day2];
+                    r2 = Mprice(d2, day2, day1);
+
+                    if (r2.Length != 0)
+                    {
+                        Debug.WriteLine($"{r1.Length} {r2.Length}");
+
+                        var cho = Gut(new int[][] { r1, r2 });
+                        r1 = cho[0];
+                        r2 = cho[1];
+
+                        if (NotEmpty(cho))
+                        {
+                            for (int i = 0; i < r1.Length; i++)
+                                res[r1[i]] = (byte)(day2 + 1);
+                            for (int i = 0; i < r2.Length; i++)
+                                res[r2[i]] = (byte)(day1 + 1);
+                            bst = scoreMemoized2(res);
+                            if (bst < best)
+                            {
+                                best = bst;
+                                Console.WriteLine($"New score: {bst}");
+                                WriteData(best);
+                            }
+                            return;
+                        }
+                    }
+
+
+
+                }
+            }
+
+        }
+        static void Swap_3()
+        {
+            var per = PerDays();
+            int[] d1, d2, d3, r1, r2, r3;
+            best = scoreMemoized2(res);
+            double bst;
+
+            for (byte day1 = 0; day1 < 100; day1++)
+            {
+                d1 = per[day1];
+                for (byte day2 = 0; day2 < 100; day2++)
+                {
+                    if (day2 == day1)
+                        continue;
+
+                    d2 = per[day2];
+                    for (byte day3 = 0; day3 < 100; day3++)
+                    {
+                        if (day3 == day2 || day3 == day1)
+                            continue;
+
+                        d3 = per[day3];
+
+                        r1 = Mprice(d1, day1, day2);
+                        r2 = Mprice(d2, day2, day3);
+                        r3 = Mprice(d3, day3, day1);
+                        if (r1.Length != 0 && r2.Length != 0 && r3.Length != 0)
+                        {
+                            Debug.WriteLine($"{r1.Length} {r2.Length} {r3.Length}");
+
+                            var cho = Gut(new int[][] { r1, r2, r3 });
+                            r1 = cho[0];
+                            r2 = cho[1];
+                            r3 = cho[2];
+
+                            if (r1.Length != 0 && r2.Length != 0 && r3.Length != 0)
+                            {
+                                for (int i = 0; i < r1.Length; i++)
+                                    res[r1[i]] = (byte)(day2 + 1);
+                                for (int i = 0; i < r2.Length; i++)
+                                    res[r2[i]] = (byte)(day3 + 1);
+                                for (int i = 0; i < r3.Length; i++)
+                                    res[r3[i]] = (byte)(day1 + 1);
+                            }
+                        }
+
+                    }
+
+
+                    bst = scoreMemoized2(res);
+                    if (bst < best)
+                    {
+                        best = bst;
+                        Console.WriteLine($"New score: {bst}");
+                        WriteData(best);
+                    }
+                }
+            }
+
+        }
+        static void Swap_4()
+        {
+            var per = PerDays();
+            int[] d1, d2, d3, d4, r1, r2, r3, r4, p1, p2, p3, p4;
+            best = scoreMemoized2(res);
+            double bst;
+
+            for (byte day1 = 0; day1 < 100; day1++)
+            {
+                d1 = per[day1];
+                for (byte day2 = 0; day2 < 100; day2++)
+                {
+                    if (day1 == day2)
+                        continue;
+                    d2 = per[day2];
+                    r1 = Mprice(d1, day1, day2);
+                    if (r1.Length == 0)
+                        continue;
+
+                    for (byte day3 = 0; day3 < 100; day3++)
+                    {
+                        if (day3 == day2 || day3 == day1)
+                            continue;
+                        d3 = per[day3];
+                        r2 = Mprice(d2, day2, day3);
+                        if (r2.Length == 0)
+                            continue;
+
+                        for (byte day4 = 0; day4 < 100; day4++)
+                        {
+                            if (day4 == day2 || day4 == day1 || day4 == day3)
+                                continue;
+
+                            d4 = per[day4];
+
+                            r3 = Mprice(d3, day3, day4);
+
+                            if (r3.Length == 0)
+                                continue;
+
+                            r4 = Mprice(d4, day4, day1);
+
+                            // Debug.WriteLine($"{r1.Length} {r2.Length} {r3.Length} {r4.Length}");
+
+                            if (r4.Length != 0)
+                            {
+                                Debug.WriteLine($"{r1.Length} {r2.Length} {r3.Length} {r4.Length}");
+
+                                var cho = Gut(new int[][] { r1, r2, r3, r4 });
+
+                                if (NotEmpty(cho))
+                                {
+                                    p1 = cho[0];//new Vectors(p1).Show();
+                                    p2 = cho[1]; //new Vectors(p2).Show();
+                                    p3 = cho[2]; //new Vectors(p3).Show();
+                                    p4 = cho[3]; //new Vectors(p4).Show();
+
+                                    //var pr = preference_costsMemoized(res);pr.Show();
+                                    // var ac = accounting_penaltyMemoized(res);ac.Show();
+
+                                    for (int i = 0; i < p1.Length; i++)
+                                        res[p1[i]] = (byte)(day2 + 1);
+                                    for (int i = 0; i < p2.Length; i++)
+                                        res[p2[i]] = (byte)(day3 + 1);
+                                    for (int i = 0; i < p3.Length; i++)
+                                        res[p3[i]] = (byte)(day4 + 1);
+                                    for (int i = 0; i < p4.Length; i++)
+                                        res[p4[i]] = (byte)(day1 + 1);
+
+                                    //preference_costsMemoized(res).Show();
+                                    //accounting_penaltyMemoized(res).Show();
+
+                                    bst = scoreMemoized2(res);
+                                    Console.WriteLine($"New score: {bst}");
+                                    WriteData(bst);
+
+                                }
+                            }
+
+                        }
+
+                    }
+
+                }
+            }
+
+        }
+        static void Swap_5()
+        {
+            var per = PerDays();
+            int[] d1, d2, d3, d4, d5, r1, r2, r3, r4, r5, p1, p2, p3, p4, p5;
+            best = scoreMemoized2(res);
+            double bst;
+
+            for (byte day1 = 0; day1 < 100; day1++)
+            {
+                //begs:
+                d1 = per[day1];
+                for (byte day2 = 0; day2 < 100; day2++)
+                {
+                    if (day1 == day2)
+                        continue;
+                    d2 = per[day2];
+                    r1 = Mprice(d1, day1, day2);
+                    if (r1.Length == 0)
+                        continue;
+
+                    for (byte day3 = 0; day3 < 100; day3++)
+                    {
+                        if (day3 == day2 || day3 == day1)
+                            continue;
+                        d3 = per[day3];
+                        r2 = Mprice(d2, day2, day3);
+                        if (r2.Length == 0)
+                            continue;
+
+                        for (byte day4 = 0; day4 < 100; day4++)
+                        {
+                            if (day4 == day2 || day4 == day1 || day4 == day3)
+                                continue;
+
+                            d4 = per[day4];
+
+                            r3 = Mprice(d3, day3, day4);
+
+                            if (r3.Length == 0)
+                                continue;
+
+                            for (byte day5 = 0; day5 < 100; day5++)
+                            {
+                                if (day5 == day2 || day5 == day1 || day5 == day3 || day5 == day4)
+                                    continue;
+
+                                r4 = Mprice(d4, day4, day5);
+                                if (r4.Length == 0)
+                                    continue;
+                                d5 = per[day5];
+                                r5 = Mprice(d5, day5, day1);
+
+                                if (r5.Length != 0)
+                                {
+                                    Debug.WriteLine($"{r1.Length} {r2.Length} {r3.Length} {r4.Length} {r5.Length}");
+
+                                    var cho = Gut(new int[][] { r1, r2, r3, r4, r5 });
+
+                                    if (NotEmpty(cho))
+                                    {
+                                        p1 = cho[0];
+                                        p2 = cho[1];
+                                        p3 = cho[2];
+                                        p4 = cho[3];
+                                        p5 = cho[4];
+
+                                        //var pr = preference_costsMemoized(res);pr.Show();
+                                        // var ac = accounting_penaltyMemoized(res);ac.Show();
+
+                                        for (int i = 0; i < p1.Length; i++)
+                                            res[p1[i]] = (byte)(day2 + 1);
+                                        for (int i = 0; i < p2.Length; i++)
+                                            res[p2[i]] = (byte)(day3 + 1);
+                                        for (int i = 0; i < p3.Length; i++)
+                                            res[p3[i]] = (byte)(day4 + 1);
+                                        for (int i = 0; i < p4.Length; i++)
+                                            res[p4[i]] = (byte)(day5 + 1);
+                                        for (int i = 0; i < p5.Length; i++)
+                                            res[p5[i]] = (byte)(day1 + 1);
+
+                                        //preference_costsMemoized(res).Show();
+                                        //accounting_penaltyMemoized(res).Show();
+
+                                        bst = scoreMemoized2(res);
+                                        Console.WriteLine($"New score: {bst}");
+                                        WriteData(bst);
+
+                                    }
+                                }
+                                //else
+                                //{
+                                //    day1++;
+                                //    goto begs;
+                                //}
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        static void Swap_6()
+        {
+            var per = PerDays();
+            int[] d1, d2, d3, d4, d5, d6, r1, r2, r3, r4, r5, r6, p1, p2, p3, p4, p5, p6;
+            best = scoreMemoized2(res);
+            double bst;
+
+            for (byte day1 = 0; day1 < 100; day1++)
+            {
+                d1 = per[day1];
+                for (byte day2 = 0; day2 < 100; day2++)
+                {
+                    if (day1 == day2)
+                        continue;
+                    d2 = per[day2];
+                    r1 = Mprice(d1, day1, day2);
+                    if (r1.Length == 0)
+                        continue;
+
+                    for (byte day3 = 0; day3 < 100; day3++)
+                    {
+                        if (day3 == day2 || day3 == day1)
+                            continue;
+                        d3 = per[day3];
+                        r2 = Mprice(d2, day2, day3);
+                        if (r2.Length == 0)
+                            continue;
+
+                        for (byte day4 = 0; day4 < 100; day4++)
+                        {
+                            if (day4 == day2 || day4 == day1 || day4 == day3)
+                                continue;
+
+                            d4 = per[day4];
+
+                            r3 = Mprice(d3, day3, day4);
+
+                            if (r3.Length == 0)
+                                continue;
+
+                            for (byte day5 = 0; day5 < 100; day5++)
+                            {
+                                if (day5 == day2 || day5 == day1 || day5 == day3 || day5 == day4)
+                                    continue;
+
+                                r4 = Mprice(d4, day4, day5);
+                                if (r4.Length == 0)
+                                    continue;
+
+                                for (byte day6 = 0; day6 < 100; day6++)
+                                {
+                                    if (day6 == day2 || day6 == day1 || day6 == day3 || day6 == day4 || day6 == day5)
+                                        continue;
+
+                                    d5 = per[day5];
+                                    r5 = Mprice(d5, day5, day6);
+                                    if (r5.Length == 0)
+                                        continue;
+
+                                    d6 = per[day6];
+                                    r6 = Mprice(d6, day6, day1);
+
+                                    if (r6.Length != 0)
+                                    {
+                                        Debug.WriteLine($"{r1.Length} {r2.Length} {r3.Length} {r4.Length} {r5.Length}");
+
+                                        var cho = Gut(new int[][] { r1, r2, r3, r4, r5, r6 });
+
+                                        if (NotEmpty(cho))
+                                        {
+                                            p1 = cho[0];
+                                            p2 = cho[1];
+                                            p3 = cho[2];
+                                            p4 = cho[3];
+                                            p5 = cho[4];
+                                            p6 = cho[5];
+
+                                            //var pr = preference_costsMemoized(res);pr.Show();
+                                            // var ac = accounting_penaltyMemoized(res);ac.Show();
+
+                                            for (int i = 0; i < p1.Length; i++)
+                                                res[p1[i]] = (byte)(day2 + 1);
+                                            for (int i = 0; i < p2.Length; i++)
+                                                res[p2[i]] = (byte)(day3 + 1);
+                                            for (int i = 0; i < p3.Length; i++)
+                                                res[p3[i]] = (byte)(day4 + 1);
+                                            for (int i = 0; i < p4.Length; i++)
+                                                res[p4[i]] = (byte)(day5 + 1);
+                                            for (int i = 0; i < p5.Length; i++)
+                                                res[p5[i]] = (byte)(day6 + 1);
+                                            for (int i = 0; i < p6.Length; i++)
+                                                res[p6[i]] = (byte)(day1 + 1);
+
+                                            //preference_costsMemoized(res).Show();
+                                            //accounting_penaltyMemoized(res).Show();
+
+                                            bst = scoreMemoized2(res);
+                                            Console.WriteLine($"New score: {bst}");
+                                            WriteData(bst);
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        static void Swap_6(byte target)
+        {
+            var per = PerDays();
+            int[] d1, d2, d3, d4, d5, d6, r1, r2, r3, r4, r5, r6, p1, p2, p3, p4, p5, p6;
+            best = scoreMemoized2(res);
+            double bst;
+
+            for (byte day1 = 0; day1 < 100; day1++)
+            {
+                d1 = per[day1];
+                for (byte day2 = 0; day2 < 100; day2++)
+                {
+                    if (day1 == day2)
+                        continue;
+                    d2 = per[day2];
+                    r1 = Mprice(d1, day1, day2);
+                    if (r1.Length == 0)
+                        continue;
+
+                    for (byte day3 = 0; day3 < 100; day3++)
+                    {
+                        if (day3 == day2 || day3 == day1)
+                            continue;
+                        d3 = per[day3];
+                        r2 = Mprice(d2, day2, day3);
+                        if (r2.Length == 0)
+                            continue;
+
+                        for (byte day4 = 0; day4 < 100; day4++)
+                        {
+                            if (day4 == day2 || day4 == day1 || day4 == day3)
+                                continue;
+
+                            d4 = per[day4];
+
+                            r3 = Mprice(d3, day3, day4);
+
+                            if (r3.Length == 0)
+                                continue;
+
+                            for (byte day5 = 0; day5 < 100; day5++)
+                            {
+                                if (day5 == day2 || day5 == day1 || day5 == day3 || day5 == day4)
+                                    continue;
+
+                                r4 = Mprice(d4, day4, day5);
+                                if (r4.Length == 0)
+                                    continue;
+
+                                for (byte day6 = 0; day6 < 100; day6++)
+                                {
+                                    if (day6 == day2 || day6 == day1 || day6 == day3 || day6 == day4 || day6 == day5)
+                                        continue;
+
+                                    d5 = per[day5];
+                                    r5 = Mprice(d5, day5, day6);
+                                    if (r5.Length == 0)
+                                        continue;
+
+                                    d6 = per[day6];
+                                    r6 = Mprice(d6, day6, target);
+
+                                    if (r6.Length != 0)
+                                    {
+                                        Debug.WriteLine($"{r1.Length} {r2.Length} {r3.Length} {r4.Length} {r5.Length}");
+
+                                        var cho = Gut(new int[][] { r1, r2, r3, r4, r5, r6 });
+
+                                        if (NotEmpty(cho))
+                                        {
+                                            p1 = cho[0];
+                                            p2 = cho[1];
+                                            p3 = cho[2];
+                                            p4 = cho[3];
+                                            p5 = cho[4];
+                                            p6 = cho[5];
+
+                                            //var pr = preference_costsMemoized(res);pr.Show();
+                                            // var ac = accounting_penaltyMemoized(res);ac.Show();
+
+                                            for (int i = 0; i < p1.Length; i++)
+                                                res[p1[i]] = (byte)(day2 + 1);
+                                            for (int i = 0; i < p2.Length; i++)
+                                                res[p2[i]] = (byte)(day3 + 1);
+                                            for (int i = 0; i < p3.Length; i++)
+                                                res[p3[i]] = (byte)(day4 + 1);
+                                            for (int i = 0; i < p4.Length; i++)
+                                                res[p4[i]] = (byte)(day5 + 1);
+                                            for (int i = 0; i < p5.Length; i++)
+                                                res[p5[i]] = (byte)(day6 + 1);
+                                            for (int i = 0; i < p6.Length; i++)
+                                                res[p6[i]] = (byte)(target + 1);
+
+                                            //preference_costsMemoized(res).Show();
+                                            //accounting_penaltyMemoized(res).Show();
+
+                                            bst = scoreMemoized2(res);
+                                            bst.Show();
+                                            if (bst < best)
+                                            {
+                                            Console.WriteLine($"New score: {bst}");
+                                            WriteData(bst);
+                                            }
+
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        static int[][] Gut(int[][] it)
+        {
+            int[][] t = new int[it.GetLength(0)][];
+            int[][] rs = new int[it.GetLength(0)][];
+            for (int i = 0; i < t.GetLength(0); i++)
+            {
+                t[i] = new int[it[i].Length];
+                for (int j = 0; j < t[i].Length; j++)
+                    t[i][j] = n_people[it[i][j]];
+            }
+
+            int min = t.Select(s => s.Sum()).Min();
+            for (int count = min; count >= 2; count--)
+            {
+                bool gut = true;
+                for (int i = 0; i < t.GetLength(0); i++)
+                {
+                    rs[i] = Expendator.IndexesWhichGetSum(t[i], count);
+                    if (rs[i].Length == 0)
+                    {
+                        gut = false;
+                        break;
+                    }
+                }
+                if (gut)
+                {
+                    for (int i = 0; i < t.GetLength(0); i++)
+                        for (int j = 0; j < rs[i].Length; j++)
+                            rs[i][j] = it[i][rs[i][j]];
+                    return rs;
+                }
+            }
+            return new int[it.GetLength(0)][];
+
+        }
+        static bool NotEmpty(int[][] arr)
+        {
+            for (int i = 0; i < arr.GetLength(0); i++)
+                if (arr[i] == null || arr[i].Length == 0)
+                    return false;
+
+            return true;
+        }
 
         //static void Accord()
         //{

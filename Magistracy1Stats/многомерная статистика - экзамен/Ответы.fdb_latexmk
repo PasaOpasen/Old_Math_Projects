@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1577638997 "c:/Users/крендель/Desktop/MagicCode/Magistracy1Stats/многомерная статистика - экзамен/Ответы.tex" "c:/Users/крендель/Desktop/MagicCode/Magistracy1Stats/многомерная статистика - экзамен/Ответы.pdf" "Ответы" 1577639002
+["pdflatex"] 1577738659 "c:/Users/крендель/Desktop/MagicCode/Magistracy1Stats/многомерная статистика - экзамен/Ответы.tex" "c:/Users/крендель/Desktop/MagicCode/Magistracy1Stats/многомерная статистика - экзамен/Ответы.pdf" "Ответы" 1577738666
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/jknappen/ec/ecrm1200.tfm" 993062126 3152 4850ff0163852b7fab34bd55e1197f28 ""
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1233951848 1004 54797486969f23fa377b128694d548df ""
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1233951848 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -57,6 +57,7 @@
   "C:/Program Files/MiKTeX 2.9/tex/latex/base/fontenc.sty" 1544471112 4573 e9e01f5b11821a77b916dad378cb86b8 ""
   "C:/Program Files/MiKTeX 2.9/tex/latex/base/ifthen.sty" 1544471110 5161 c004ea5a189d4bdcf42e86754ad75a58 ""
   "C:/Program Files/MiKTeX 2.9/tex/latex/base/inputenc.sty" 1544471112 5052 b64c57f4a38aae0d2745f8298fa50814 ""
+  "C:/Program Files/MiKTeX 2.9/tex/latex/base/omscmr.fd" 1544471108 2472 aa08940f0a4dc6c24ae9f943b04ae0b9 ""
   "C:/Program Files/MiKTeX 2.9/tex/latex/base/size12.clo" 1544471102 8305 6a682ae291edd56e2d7accbf95eca451 ""
   "C:/Program Files/MiKTeX 2.9/tex/latex/base/t1enc.def" 1544471104 10689 ce0f2353f9a1f42b29f591f3fe8e040a ""
   "C:/Program Files/MiKTeX 2.9/tex/latex/base/t2aenc.dfu" 1544471106 9473 6c9edcb80967c36b3562eabc2953c928 ""
@@ -92,8 +93,9 @@
   "C:/Program Files/MiKTeX 2.9/tex/latex/tools/indentfirst.sty" 1544472628 1615 dba466e323af4fcd4a6acb87444d96c3 ""
   "C:/Program Files/MiKTeX 2.9/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Program Files/MiKTeX 2.9/tex/latex/xcolor/xcolor.sty" 1463135581 57049 34128738f682d033422ca125f82e5d62 ""
-  "c:/Users/крендель/Desktop/MagicCode/Magistracy1Stats/многомерная статистика - экзамен/Ответы.aux" 1577639002 11661 3164fb5f1da683e684a0068cde9e9c0e ""
-  "c:/Users/крендель/Desktop/MagicCode/Magistracy1Stats/многомерная статистика - экзамен/Ответы.tex" 1577638995 8996 05fbb799a80cd785d7c0e72ecbd4ce85 ""
+  "c:/Users/крендель/Desktop/MagicCode/Magistracy1Stats/многомерная статистика - экзамен/Ответы.aux" 1577738665 12331 6b5bcf72342a21d16639e907741cf069 ""
+  "c:/Users/крендель/Desktop/MagicCode/Magistracy1Stats/многомерная статистика - экзамен/Ответы.tex" 1577738658 13553 56f50723e369f71044db2413d6503324 ""
+  "rotate.png" 1577738047 58430 274f5198728db65a63e8e1575a7b4fd1 ""
   (generated)
   "c:/Users/крендель/Desktop/MagicCode/Magistracy1Stats/многомерная статистика - экзамен/Ответы.pdf"
   "c:/Users/крендель/Desktop/MagicCode/Magistracy1Stats/многомерная статистика - экзамен/Ответы.log"
