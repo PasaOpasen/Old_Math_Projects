@@ -147,6 +147,9 @@ namespace Покоординатная_минимизация
 
         static byte RandVal(int index,int top=10)
         {
+            if (top == 1)
+                return choice_0[index];
+
             var p = new byte[] { choice_0[index], choice_1[index], choice_2[index], choice_3[index], choice_4[index], choice_5[index], choice_6[index], choice_7[index], choice_8[index], choice_9[index] };
             return p[randomgen.Next(0, top-1)];
         }
@@ -1928,6 +1931,15 @@ namespace Покоординатная_минимизация
             //Swap_6(b);
             // MakeResult8();
 
+            for(int count = 5;count<=45;count+=5)
+                for (int top = 10; top >= 1; top--)            
+                {
+                    $"count = {count} top = {top}".Show();
+                    for(int q=0;q<4;q++)
+                        RandomDown4(count, top, 1000);
+                }
+
+
             // var t = preference_costs(res);
             // var s = accounting_penalty(res);
 
@@ -1948,12 +1960,12 @@ namespace Покоординатная_минимизация
                 double b = best;
                 //RandomDown2(max, ct, min: min);
                 //RandomDown3(max, ct);
-                RandomDown4(max, 7, ct);
+                RandomDown4(max, 4, ct);
                 if (b == best)
                 {
                     //ct += 50;
                     //min++;
-                    max += 1;
+                    max += 4;
                 }
 
 
