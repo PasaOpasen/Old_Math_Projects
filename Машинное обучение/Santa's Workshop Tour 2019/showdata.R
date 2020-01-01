@@ -1,0 +1,27 @@
+bes=read_csv("res.csv")
+
+res= bes$assigned_day
+
+choise=-res
+choise[res==choises[1]]=0
+choise[res==choises[2]]=1
+choise[res==choises[3]]=2
+choise[res==choises[4]]=3
+choise[res==choises[5]]=4
+choise[res==choises[6]]=5
+choise[res==choises[7]]=6
+choise[res==choises[8]]=7
+choise[res==choises[9]]=8
+choise[res==choises[10]]=9
+choise[choise<0]=-1
+
+df=data.frame(fam=bes$family_id,ch=factor(choise,levels = c("0","1","2","3","4","5","6","7","8","9","no"))) %>% tbl_df()
+
+counts=df %>% group_by(ch) %>% summarise(ct=n())
+
+ggplot(counts,aes(x=ch,y=ct))+
+  geom_col()
+
+counts
+
+qplot(x=factor(res))
