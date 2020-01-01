@@ -1925,19 +1925,20 @@ namespace Покоординатная_минимизация
             //Swap_3();
             // Swap_4();
             //Swap_5();
-           // Swap_6();
+            // Swap_6();
             // Accord();
             //for (byte b = 0; b < 100;b++)
             //Swap_6(b);
             // MakeResult8();
 
-            for(int count = 5;count<=45;count+=5)
-                for (int top = 10; top >= 1; top--)            
-                {
-                    $"count = {count} top = {top}".Show();
-                    for(int q=0;q<4;q++)
-                        RandomDown4(count, top, 1000);
-                }
+            //for (int top = 6; top >= 1; top--)
+            //    for (int count = 10;count<=45;count+=5)
+                          
+            //    {
+            //        $"count = {count} top = {top}".Show();
+            //        for(int q=0;q<4;q++)
+            //            RandomDown4(count, top, 1000);
+            //    }
 
 
             // var t = preference_costs(res);
@@ -1960,13 +1961,14 @@ namespace Покоординатная_минимизация
                 double b = best;
                 //RandomDown2(max, ct, min: min);
                 //RandomDown3(max, ct);
-                RandomDown4(max, 4, ct);
+                RandomDown4(max, min, ct);
                 if (b == best)
                 {
                     //ct += 50;
                     //min++;
-                    max += 4;
+                    max += 2;
                 }
+                else b = best;
 
 
                 //if (i % 25 == 0)
@@ -2193,9 +2195,10 @@ namespace Покоординатная_минимизация
             var obs = GetNresCopy(iter);
             int index, j;
 
-            var inds = GetNotZeroChoises();
-            var icount = inds.Length;
-            Console.WriteLine($"Not zero families count is {icount} ({Expendator.GetProcent(icount, 5000)}%)");
+            ShowStructure();
+            //var inds = GetNotZeroChoises();
+            //var icount = inds.Length;
+            //Console.WriteLine($"Not zero families count is {icount} ({Expendator.GetProcent(icount, 5000)}%)");
 
             for (int i = 0; i < iter; i++)
             {
@@ -2207,23 +2210,18 @@ namespace Покоординатная_минимизация
                 if (mas.Distinct().Count() != dim /*|| mas.Count(tt => inds.Contains(tt)) < min*/)
                     goto ss;
 
+            pp:
                 for (j = 0; j < dim; j++)
                 {
-                    index = mas[j];//inds[mas[j]];
-                    //if (obs[i][index] == choice_0[index])
-                    //{
-                    //    if(index%2==0)
-                    //        obs[i][index] = choice_1[index];
-                    //    else
-                    //        obs[i][index] = choice_2[index];
-                    //}                        
-                    //else
+                    index = mas[j];
                     obs[i][index] = RandVal(index,top);//choice_0[index]; //RandVal(index) ;// choice_0[index];//LevelDown(index, obs[i][index]);//choice_0[index];//choice_0[index];//
                 }
+                if (GetMap(obs[i]).Count(p => p < 125 || p > 300)>1)
+                    goto pp;
             }
 
             (double, byte[])[] links = new (double, byte[])[iter];
-            //"Start".Show();
+            "Start".Show();
             Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow(obs[i]));
             //for (int i = 0; i < iter; i++) links[i] = MakeCoordMinSlow(obs[i]);
 
@@ -2237,8 +2235,44 @@ namespace Покоординатная_минимизация
                 Console.WriteLine($"Записывается в файл {bs}");
                 WriteData(bs, "");
             }
+            else
+            {
+                Console.WriteLine($"to best: {links.Count(p=>p.Item1==best)} ; to 1e20: {links.Count(p => p.Item1 == 1e20)}");
+            }
         }
-
+        static void ShowStructure()
+        {
+            int c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, no;
+            c0 = c1 = c2 = c3 = c4 = c5 = c6 = c7 = c8 = c9 = no = 0;
+            byte t;
+            for(int i = 0; i < res.Length; i++)
+            {
+                t = res[i];
+                if (t == choice_0[i])
+                    c0++;
+                else if (t == choice_1[i])
+                    c1++;
+                else if (t == choice_2[i])
+                    c2++;
+                else if (t == choice_3[i])
+                    c3++;
+                else if (t == choice_4[i])
+                    c4++;
+                else if (t == choice_5[i])
+                    c5++;
+                else if (t == choice_6[i])
+                    c6++;
+                else if (t == choice_7[i])
+                    c7++;
+                else if (t == choice_8[i])
+                    c8++;
+                else if (t == choice_9[i])
+                    c9++;
+                else no++;
+           
+            }
+            Console.WriteLine($"0: {c0}  1: {c1}  2: {c2}  3: {c3}  4: {c4}  5: {c5}  6: {c6}  7: {c7}  8: {c8}  9: {c9}  other: {no}");
+        }
 
         static void TopDown5(int top=5)
         {
