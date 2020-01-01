@@ -832,6 +832,9 @@ namespace Покоординатная_минимизация
                 sample_res[pi.Item3] = pi.Item2;
             }
 
+            if(locbest==1e20)
+                return (locbest, sample_res);
+
             if (existprogress && locbest != best)
                 goto begin1;
             else
@@ -1931,14 +1934,13 @@ namespace Покоординатная_минимизация
             //Swap_6(b);
             // MakeResult8();
 
-            //for (int top = 6; top >= 1; top--)
-            //    for (int count = 10;count<=45;count+=5)
-                          
-            //    {
-            //        $"count = {count} top = {top}".Show();
-            //        for(int q=0;q<4;q++)
-            //            RandomDown4(count, top, 1000);
-            //    }
+for (int count = 5; count <= 45; count += 5)
+            for (int top = 4; top >= 1; top--)                
+                {
+                    $"count = {count} top = {top}".Show();"".Show();
+                    for (int q = 0; q < 2; q++)
+                        RandomDown4(count, top, 1000);
+                }
 
 
             // var t = preference_costs(res);
@@ -1966,10 +1968,11 @@ namespace Покоординатная_минимизация
                 {
                     //ct += 50;
                     //min++;
-                    max += 2;
+                    //max += 2;
                 }
                 else b = best;
 
+                "".Show();
 
                 //if (i % 25 == 0)
                 //MakeResult11("", 500);
@@ -2192,6 +2195,7 @@ namespace Покоординатная_минимизация
         static void RandomDown4(int dim = 10,int top=5, int iter = 10000)
         {
             var mas = new int[dim];
+            var copy = new byte[dim];
             var obs = GetNresCopy(iter);
             int index, j;
 
@@ -2202,6 +2206,8 @@ namespace Покоординатная_минимизация
 
             for (int i = 0; i < iter; i++)
             {
+                ref var ob = ref obs[i];
+
             ss:
                 for (j = 0; j < dim; j++)
                 {
@@ -2210,18 +2216,24 @@ namespace Покоординатная_минимизация
                 if (mas.Distinct().Count() != dim /*|| mas.Count(tt => inds.Contains(tt)) < min*/)
                     goto ss;
 
-            pp:
                 for (j = 0; j < dim; j++)
                 {
                     index = mas[j];
-                    obs[i][index] = RandVal(index,top);//choice_0[index]; //RandVal(index) ;// choice_0[index];//LevelDown(index, obs[i][index]);//choice_0[index];//choice_0[index];//
+                    copy[j] = ob[index];
+                    ob[index] = RandVal(index,top);//choice_0[index]; //RandVal(index) ;// choice_0[index];//LevelDown(index, obs[i][index]);//choice_0[index];//choice_0[index];//
                 }
-                if (GetMap(obs[i]).Count(p => p < 125 || p > 300)>1)
-                    goto pp;
+                if (GetMap(ob).Any(p => p < 125 || p > 300))
+                {
+                    for (j = 0; j < dim; j++)                    
+                        ob[mas[j]]=copy[j];
+                    
+                        goto ss;
+                }
+                    
             }
 
             (double, byte[])[] links = new (double, byte[])[iter];
-            "Start".Show();
+            "--->Start".Show();
             Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow(obs[i]));
             //for (int i = 0; i < iter; i++) links[i] = MakeCoordMinSlow(obs[i]);
 
@@ -2237,7 +2249,8 @@ namespace Покоординатная_минимизация
             }
             else
             {
-                Console.WriteLine($"to best: {links.Count(p=>p.Item1==best)} ; to 1e20: {links.Count(p => p.Item1 == 1e20)}");
+                Console.WriteLine($"-------> to best: {links.Count(p=>p.Item1==best)} ; to 1e20: {links.Count(p => p.Item1 == 1e20)}");
+                "".Show();
             }
         }
         static void ShowStructure()
