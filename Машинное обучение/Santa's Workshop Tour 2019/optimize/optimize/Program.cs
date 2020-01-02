@@ -1967,7 +1967,7 @@ namespace Покоординатная_минимизация
             //Swap_6(b);
             // MakeResult8();
 
-            for (int count = 15; count <= 45; count += 5)
+            for (int count = 20; count <= 45; count += 5)
                 for (int top = 5; top >= 2; top--)
                 {
                     $"_________________________________count = {count} top = {top}".Show(); "".Show();
@@ -2331,13 +2331,13 @@ namespace Покоординатная_минимизация
             double first = scoreMemoized2(res), min;
             (int, int) inds = (0, 0);
             (byte, byte) rs = (0, 0);
-            byte[] a1, a2, a3;
+            byte[] a1, a2;
             bool progress;
-            byte ni, nj, nk;
+            byte ni, nj;
 
         algol:
             progress = false;
-            for (int i = 0; i < 4996; i++)
+            for (int i = 0; i < 4999; i++)
             {
                 ni = n_people[i];
                 pr -= prCosts[i][res[i] - 1];
@@ -2345,7 +2345,7 @@ namespace Покоординатная_минимизация
                 a1 = Top(i, top);
                 i.Show();
 
-                for (int j = i + 1; j < 4997; j++)
+                for (int j = i + 1; j < 5000; j++)
                 {
                     nj = n_people[j];
                     pr -= prCosts[j][res[j] - 1];
@@ -2441,7 +2441,7 @@ namespace Покоординатная_минимизация
 
         algol:
             progress = false;
-            for (int i = 0; i < 4996; i++)
+            for (int i = 0; i < 4998; i++)
             {
                 ni = n_people[i];
                 pr -= prCosts[i][res[i] - 1];
@@ -2449,7 +2449,7 @@ namespace Покоординатная_минимизация
                 a1 = Top(i, top);
                 i.Show();
 
-                for (int j = i + 1; j < 4997; j++)
+                for (int j = i + 1; j < 4999; j++)
                 {
                     nj = n_people[j];
                     pr -= prCosts[j][res[j] - 1];
@@ -2457,7 +2457,7 @@ namespace Покоординатная_минимизация
                     a2 = Top(j, top);
                     Console.WriteLine($"j = {j}");
 
-                    for (int k = j + 1; k < 4998; k++)
+                    for (int k = j + 1; k < 5000; k++)
                     {
                         nk = n_people[k];
                         pr -= prCosts[k][res[k] - 1];
@@ -2471,7 +2471,7 @@ namespace Покоординатная_минимизация
                             int pr2 = pr + prCosts[i][a1[ii] - 1];
                             var acr2 = acr.Dup();
                             double f = first, tmp = 1e20;
-                            acr2[a1[ii] - 1] += n_people[a1[ii]];
+                            acr2[a1[ii] - 1] += ni;
 
 
                             foreach (var i2 in a2)
@@ -2614,7 +2614,7 @@ namespace Покоординатная_минимизация
                                      int pr2 = pr + prCosts[i][a1[ii] - 1];
                                      var acr2 = acr.Dup();
                                      double f = first, tmp = 1e20;
-                                     acr2[a1[ii] - 1] += n_people[a1[ii]];
+                                     acr2[a1[ii] - 1] += ni;
 
 
                                      foreach (var i2 in a2)
