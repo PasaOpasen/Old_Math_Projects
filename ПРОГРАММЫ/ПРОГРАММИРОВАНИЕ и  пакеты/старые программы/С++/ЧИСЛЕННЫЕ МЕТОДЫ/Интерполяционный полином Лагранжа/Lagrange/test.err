@@ -1,0 +1,6 @@
+test.cpp(2): Error! E059: col(10) unable to open 'Lagrange.cpp'
+test.cpp(10): Error! E006: col(12) syntax error; probable cause: missing ';'
+test.cpp(12): Error! E148: col(36) access to private member 'Net::n' is not allowed
+net.cpp(6): Note! N392: col(12) definition: 'unsigned Net::n'
+test.cpp(13): Error! E029: col(9) symbol 'CreatePhi' has not been declared
+test.cpp(15): Warning! W013: col(8) unreachable code

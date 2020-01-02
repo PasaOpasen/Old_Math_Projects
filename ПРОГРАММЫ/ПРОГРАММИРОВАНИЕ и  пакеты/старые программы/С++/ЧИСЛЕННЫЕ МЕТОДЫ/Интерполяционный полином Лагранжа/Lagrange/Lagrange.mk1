@@ -1,0 +1,41 @@
+!define BLANK ""
+Z:\Lagrange\Lagrange.obj : Z:\Lagrange\Lagrange.cpp .AUTODEPEND
+ @Z:
+ cd Z:\Lagrange
+ *wpp386 Lagrange.cpp -i="C:\WATCOM/h;C:\WATCOM/h/nt" -w4 -e25 -zq -od -d2 -&
+6r -bt=nt -fo=.obj -mf -xs -xr
+
+Z:\Lagrange\net.obj : Z:\Lagrange\net.cpp .AUTODEPEND
+ @Z:
+ cd Z:\Lagrange
+ *wpp386 net.cpp -i="C:\WATCOM/h;C:\WATCOM/h/nt" -w4 -e25 -zq -od -d2 -6r -b&
+t=nt -fo=.obj -mf -xs -xr
+
+Z:\Lagrange\polynom.obj : Z:\Lagrange\polynom.cpp .AUTODEPEND
+ @Z:
+ cd Z:\Lagrange
+ *wpp386 polynom.cpp -i="C:\WATCOM/h;C:\WATCOM/h/nt" -w4 -e25 -zq -od -d2 -6&
+r -bt=nt -fo=.obj -mf -xs -xr
+
+Z:\Lagrange\test.obj : Z:\Lagrange\test.cpp .AUTODEPEND
+ @Z:
+ cd Z:\Lagrange
+ *wpp386 test.cpp -i="C:\WATCOM/h;C:\WATCOM/h/nt" -w4 -e25 -zq -od -d2 -6r -&
+bt=nt -fo=.obj -mf -xs -xr
+
+Z:\Lagrange\Lagrange.exe : Z:\Lagrange\Lagrange.obj Z:\Lagrange\net.obj Z:\L&
+agrange\polynom.obj Z:\Lagrange\test.obj .AUTODEPEND
+ @Z:
+ cd Z:\Lagrange
+ @%write Lagrange.lk1 FIL Lagrange.obj,net.obj,polynom.obj,test.obj
+ @%append Lagrange.lk1 
+!ifneq BLANK ""
+ *wlib -q -n -b Lagrange.imp 
+ @%append Lagrange.lk1 LIBR Lagrange.imp
+!endif
+!ifneq BLANK ""
+ @%append Lagrange.lk1 
+!endif
+ *wlink name Lagrange d all sys nt op m op maxe=25 op q op symf @Lagrange.lk&
+1
+
