@@ -57,6 +57,9 @@ namespace Покоординатная_минимизация
         /// Всевозможные комбинации пар от 1 до 100
         /// </summary>
         static (byte, byte)[] combinations2;
+
+        static byte[][] Tops = new byte[5000][];
+
         static Program()
         {
             ReadData();
@@ -117,6 +120,8 @@ namespace Покоординатная_минимизация
                     else
                         prCosts[k][i] = ifnochoice[k];
                 }
+
+                Tops[k] = new byte[] {choice_0[k], choice_1[k], choice_2[k], choice_3[k], choice_4[k], choice_5[k], choice_6[k], choice_7[k], choice_8[k], choice_9[k]};
             }
 
             int n;
@@ -154,11 +159,11 @@ namespace Покоординатная_минимизация
             return p[randomgen.Next(0, top - 1)];
         }
 
-        static byte[] Top(int index, int count)
-        {
-            var p = new byte[] { choice_0[index], choice_1[index], choice_2[index], choice_3[index], choice_4[index], choice_5[index], choice_6[index], choice_7[index], choice_8[index], choice_9[index] };
-            return p.Take(count).ToArray();
-        }
+        static byte[] Top(int index, int count) => Tops[index].Take(count).ToArray();
+        //{
+        //    var p = new byte[] { choice_0[index], choice_1[index], choice_2[index], choice_3[index], choice_4[index], choice_5[index], choice_6[index], choice_7[index], choice_8[index], choice_9[index] };
+        //    return p.Take(count).ToArray();
+        //}
 
         static byte[] Randomize(byte[] arr, int count)
         {
@@ -1418,21 +1423,22 @@ namespace Покоординатная_минимизация
             return (res: result_best, val: (byte)index);
         }
 
-        static (double res, byte val) MinByOneChoise(int ind, byte[] sample_res, int pr, short[] acr,int top=6)
+        static (double res, byte val) MinByOneChoise(int ind, byte[] sample_res, int pr, short[] acr,int top=8)
         {
             double result_best = 1e20, result;
             int index = 1;
+            byte np = n_people[ind],nd=(byte)(sample_res[ind] - 1);
 
-            pr -= prCosts[ind][sample_res[ind] - 1];
-            acr[sample_res[ind] - 1] -= n_people[ind];
+            pr -= prCosts[ind][nd];
+            acr[nd] -= np;
 
             foreach(int i in Top(ind,top))
             //for (int i = 1; i <= 100; i++)
             {
                 pr += prCosts[ind][i - 1];
-                acr[i - 1] += n_people[ind];
+                acr[i - 1] += np;
 
-                if (pr < best && !acr.Any(s => s < 125 || s > 300))
+                if (pr < best && acr[nd]>=125 && acr[i - 1]>=125&& acr[i - 1]<=300/*acr.All(s => s >= 125&& s <= 300)*/)
                 {
                     result = accounting_penalty2(acr) + pr;
                     if (result < result_best)
@@ -1443,9 +1449,9 @@ namespace Покоординатная_минимизация
                 }
 
                 pr -= prCosts[ind][i - 1];
-                acr[i - 1] -= n_people[ind];
+                acr[i - 1] -=np;
             }
-            acr[sample_res[ind] - 1] += n_people[ind];
+            acr[nd] += np;
 
             return (res: result_best, val: (byte)index);
         }
@@ -1966,13 +1972,24 @@ namespace Покоординатная_минимизация
             //for (byte b = 0; b < 100;b++)
             //Swap_6(b);
             // MakeResult8();
+            //NotRandomDown(3);
 
-            for (int count = 20; count <= 45; count += 5)
+            for (int count = 24; count <= 40; count += 2)
                 for (int top = 5; top >= 2; top--)
                 {
-                    $"_________________________________count = {count} top = {top}".Show(); "".Show();
-                    for (int q = 0; q < 8; q++)
-                        RandomDown4(count, top, 250);
+                    $"_______________________________count = {count} top = {top}".Show(); "".Show();
+                    double b = best;
+                    int q = 0;
+                    while (q < 8)
+                    {
+                        RandomDown4(count, top, 1000);
+                        if (b == best)
+                        {
+                            q++;
+                        }
+                        else b = best;
+                    }
+                       
                 }
 
 
@@ -1992,7 +2009,7 @@ namespace Покоординатная_минимизация
             int ct = 1000, min = down_t, max = up_t;
             for (int i = 1; i <= 300; i++)
             {
-                Console.WriteLine($"Осталось итераций: {300 - i}");
+                //Console.WriteLine($"Осталось итераций: {300 - i}");
                 double b = best;
                 //RandomDown2(max, ct, min: min);
                 //RandomDown3(max, ct);

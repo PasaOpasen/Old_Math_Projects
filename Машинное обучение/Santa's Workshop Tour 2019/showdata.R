@@ -25,3 +25,17 @@ ggplot(counts,aes(x=ch,y=ct))+
 counts
 
 qplot(x=factor(res))
+
+
+ds=data.frame(p=peop,dc=factor(res)) %>% group_by(dc) %>% summarise(val=sum(p))
+
+ggplot(ds,aes(x=dc,y=val))+
+  geom_col()+
+  labs(title=paste("acc =",accounting.penalty(res)," pre =",preference.cost(res)))+
+  theme_bw()
+
+
+
+
+
+
