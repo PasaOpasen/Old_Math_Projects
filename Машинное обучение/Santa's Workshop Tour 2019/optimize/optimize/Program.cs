@@ -817,7 +817,7 @@ namespace Покоординатная_минимизация
             acr = GetMap(sample_res);
             foreach (var nb in numbers)
             {
-                var sm = MinByOne(nb, sample_res, pr, acr);
+                var sm = MinByOneChoise(nb, sample_res, pr, acr);//--------------------------------------------------------------------------
                 result[index++] = (sm.res, sm.val, nb);
             }
 
@@ -1418,6 +1418,38 @@ namespace Покоординатная_минимизация
             return (res: result_best, val: (byte)index);
         }
 
+        static (double res, byte val) MinByOneChoise(int ind, byte[] sample_res, int pr, short[] acr,int top=6)
+        {
+            double result_best = 1e20, result;
+            int index = 1;
+
+            pr -= prCosts[ind][sample_res[ind] - 1];
+            acr[sample_res[ind] - 1] -= n_people[ind];
+
+            foreach(int i in Top(ind,top))
+            //for (int i = 1; i <= 100; i++)
+            {
+                pr += prCosts[ind][i - 1];
+                acr[i - 1] += n_people[ind];
+
+                if (pr < best && !acr.Any(s => s < 125 || s > 300))
+                {
+                    result = accounting_penalty2(acr) + pr;
+                    if (result < result_best)
+                    {
+                        index = i;
+                        result_best = result;
+                    }
+                }
+
+                pr -= prCosts[ind][i - 1];
+                acr[i - 1] -= n_people[ind];
+            }
+            acr[sample_res[ind] - 1] += n_people[ind];
+
+            return (res: result_best, val: (byte)index);
+        }
+
         static (double res, byte val) MinByOnePr(int ind, byte[] sample_res, int pr, short[] acr)
         {
             double result_best = 1e20, result;
@@ -1921,7 +1953,8 @@ namespace Покоординатная_минимизация
             ReadRES();
             ReadUpDown();
 
-
+            //TopDown2(5);
+            //TopDown3(5);
             //Swap();
             //Swap3();
             //Swap_2();
@@ -1935,11 +1968,11 @@ namespace Покоординатная_минимизация
             // MakeResult8();
 
             for (int count = 15; count <= 45; count += 5)
-                for (int top = 5; top >= 1; top--)
+                for (int top = 5; top >= 2; top--)
                 {
-                    $"count = {count} top = {top}".Show(); "".Show();
-                    for (int q = 0; q < 4; q++)
-                        RandomDown4(count, top, 500);
+                    $"_________________________________count = {count} top = {top}".Show(); "".Show();
+                    for (int q = 0; q < 8; q++)
+                        RandomDown4(count, top, 250);
                 }
 
 
@@ -2291,6 +2324,237 @@ namespace Покоординатная_минимизация
                 Console.WriteLine($"0: {c0}  1: {c1}  2: {c2}  3: {c3}  4: {c4}  5: {c5}  6: {c6}  7: {c7}  8: {c8}  9: {c9}  other: {no}");
         }
 
+        static void TopDown2(int top = 5)
+        {
+            int pr = preference_costsMemoized(res);
+            short[] acr = GetMap();
+            double first = scoreMemoized2(res), min;
+            (int, int) inds = (0, 0);
+            (byte, byte) rs = (0, 0);
+            byte[] a1, a2, a3;
+            bool progress;
+            byte ni, nj, nk;
+
+        algol:
+            progress = false;
+            for (int i = 0; i < 4996; i++)
+            {
+                ni = n_people[i];
+                pr -= prCosts[i][res[i] - 1];
+                acr[res[i] - 1] -= ni;
+                a1 = Top(i, top);
+                i.Show();
+
+                for (int j = i + 1; j < 4997; j++)
+                {
+                    nj = n_people[j];
+                    pr -= prCosts[j][res[j] - 1];
+                    acr[res[j] - 1] -= nj;
+                    a2 = Top(j, top);
+
+
+                        (double, (byte, byte))[] tops = new (double, (byte, byte))[top];
+
+                        Parallel.For(0, top, ii =>
+                        {
+                            int pr2 = pr + prCosts[i][a1[ii]-1];
+                            var acr2 = acr.Dup();
+                            double f = first, tmp = 1e20;
+                            acr2[a1[ii]-1] += ni;
+
+                            foreach (var i2 in a2)
+                            {
+                                pr2 += prCosts[j][i2 - 1];
+                                acr2[i2 - 1] += nj;
+
+                                    if (pr2 < f && acr2.All(s => s >= 125 && s <= 300))
+                                    {
+                                        tmp = pr2 + accounting_penalty3(acr2);
+                                        if (tmp < f)
+                                        {
+                                            f = tmp;
+                                            tops[ii] = (f, (a1[ii], i2));
+                                        }
+                                    }
+
+                                pr2 -= prCosts[j][i2 - 1];
+                                acr2[i2 - 1] -= nj;
+                            }
+
+                        });
+
+                        var ps = tops.Where(s => s.Item1 > 0).ToArray();
+                        if (ps.Length == 0)
+                            min = 1e20;
+                        else
+                            min = ps.Min(s => s.Item1);
+                        if (min < first)
+                        {
+                            first = min;
+                            inds = (i, j);
+                            rs = tops.First(s => s.Item1 == min).Item2;
+                            progress = true;
+                            Console.WriteLine($"New best val is {first}");
+
+                            //res[inds.Item1] = rs.Item1;
+
+                            res[inds.Item1] = rs.Item1;
+                            res[inds.Item2] = rs.Item2;
+
+
+                            WriteData(first);
+
+                            pr += prCosts[j][res[j] - 1];
+                            acr[res[j] - 1] += nj;
+                            pr += prCosts[i][res[i] - 1];
+                            acr[res[i] - 1] += ni;
+                            goto algol;
+                        }
+
+                    pr += prCosts[j][res[j] - 1];
+                    acr[res[j] - 1] += nj;
+                }
+
+                pr += prCosts[i][res[i] - 1];
+                acr[res[i] - 1] += ni;
+            }
+
+            //if (progress)
+            //{
+            //    res[inds.Item1] = rs.Item1;
+            //    res[inds.Item2] = rs.Item2;
+            //    res[inds.Item3] = rs.Item3;
+            //    res[inds.Item4] = rs.Item4;
+            //    res[inds.Item5] = rs.Item5;
+            //}
+        }
+        static void TopDown3(int top = 5)
+        {
+            int pr = preference_costsMemoized(res);
+            short[] acr = GetMap();
+            double first = scoreMemoized2(res), min;
+            (int, int, int) inds = (0, 0, 0);
+            (byte, byte, byte) rs = (0, 0, 0);
+            byte[] a1, a2, a3;
+            bool progress;
+            byte ni, nj, nk;
+
+        algol:
+            progress = false;
+            for (int i = 0; i < 4996; i++)
+            {
+                ni = n_people[i];
+                pr -= prCosts[i][res[i] - 1];
+                acr[res[i] - 1] -= ni;
+                a1 = Top(i, top);
+                i.Show();
+
+                for (int j = i + 1; j < 4997; j++)
+                {
+                    nj = n_people[j];
+                    pr -= prCosts[j][res[j] - 1];
+                    acr[res[j] - 1] -= nj;
+                    a2 = Top(j, top);
+                    Console.WriteLine($"j = {j}");
+
+                    for (int k = j + 1; k < 4998; k++)
+                    {
+                        nk = n_people[k];
+                        pr -= prCosts[k][res[k] - 1];
+                        acr[res[k] - 1] -= nk;
+                        a3 = Top(k, top);
+
+                        (double, (byte, byte, byte))[] tops = new (double, (byte, byte, byte))[top];
+
+                        Parallel.For(0, top, ii =>
+                        {
+                            int pr2 = pr + prCosts[i][a1[ii] - 1];
+                            var acr2 = acr.Dup();
+                            double f = first, tmp = 1e20;
+                            acr2[a1[ii] - 1] += n_people[a1[ii]];
+
+
+                            foreach (var i2 in a2)
+                            {
+                                pr2 += prCosts[j][i2 - 1];
+                                acr2[i2 - 1] += nj;
+                                foreach (var i3 in a3)
+                                {
+                                    pr2 += prCosts[k][i3 - 1];
+                                    acr2[i3 - 1] += nk;
+
+
+                                    if (pr2 < f && acr2.All(s => s >= 125 && s <= 300))
+                                    {
+                                        tmp = pr2 + accounting_penalty3(acr2);
+                                        if (tmp < f)
+                                        {
+                                            f = tmp;
+                                            tops[ii] = (f, (a1[ii], i2, i3));
+                                        }
+                                    }
+
+                                    pr2 -= prCosts[k][i3 - 1];
+                                    acr2[i3 - 1] -= nk;
+                                }
+                                pr2 -= prCosts[j][i2 - 1];
+                                acr2[i2 - 1] -= nj;
+                            }
+
+
+                        });
+
+                        var ps = tops.Where(s => s.Item1 > 0).ToArray();
+                        if (ps.Length == 0)
+                            min = 1e20;
+                        else
+                            min = ps.Min(s => s.Item1);
+                        if (min < first)
+                        {
+                            first = min;
+                            inds = (i, j, k);
+                            rs = tops.First(s => s.Item1 == min).Item2;
+                            progress = true;
+                            Console.WriteLine($"New best val is {first}");
+
+                            //res[inds.Item1] = rs.Item1;
+
+                            res[inds.Item1] = rs.Item1;
+                            res[inds.Item2] = rs.Item2;
+                            res[inds.Item3] = rs.Item3;
+
+
+                            WriteData(first);
+
+                            pr += prCosts[k][res[k] - 1];
+                            acr[res[k] - 1] += nk;
+                            pr += prCosts[j][res[j] - 1];
+                            acr[res[j] - 1] += nj;
+                            pr += prCosts[i][res[i] - 1];
+                            acr[res[i] - 1] += ni;
+                            goto algol;
+                        }
+
+                        pr += prCosts[k][res[k] - 1];
+                        acr[res[k] - 1] += nk;
+                    }
+                    pr += prCosts[j][res[j] - 1];
+                    acr[res[j] - 1] += nj;
+                }
+
+                pr += prCosts[i][res[i] - 1];
+                acr[res[i] - 1] += ni;
+            }
+
+            //if (progress)
+            //{
+            //    res[inds.Item1] = rs.Item1;
+            //    res[inds.Item2] = rs.Item2;
+            //    res[inds.Item3] = rs.Item3;
+            //    res[inds.Item4] = rs.Item4;
+            //    res[inds.Item5] = rs.Item5;
+            //}
+        }
         static void TopDown5(int top = 5)
         {
             int pr = preference_costsMemoized(res);
@@ -2299,64 +2563,76 @@ namespace Покоординатная_минимизация
             (int, int, int, int, int) inds = (0, 0, 0, 0, 0);
             (byte, byte, byte, byte, byte) rs = (0, 0, 0, 0, 0);
             byte[] a1, a2, a3, a4, a5;
-            bool progress = false;
+            bool progress;
+            byte ni, nj, nk, np, nt;
 
-
+        algol:
+            progress = false;
             for (int i = 0; i < 4996; i++)
             {
+                ni = n_people[i];
                 pr -= prCosts[i][res[i] - 1];
-                acr[res[i] - 1] -= n_people[i];
+                acr[res[i] - 1] -= ni;
                 a1 = Top(i, top);
                 i.Show();
+
                 for (int j = i + 1; j < 4997; j++)
                 {
+                    nj = n_people[j];
                     pr -= prCosts[j][res[j] - 1];
-                    acr[res[j] - 1] -= n_people[j];
+                    acr[res[j] - 1] -= nj;
                     a2 = Top(j, top);
+                    Console.WriteLine($"j = {j}");
 
                     for (int k = j + 1; k < 4998; k++)
                     {
+                        nk = n_people[k];
                         pr -= prCosts[k][res[k] - 1];
-                        acr[res[k] - 1] -= n_people[k];
+                        acr[res[k] - 1] -= nk;
                         a3 = Top(k, top);
+                        Console.WriteLine($"k = {k}");
 
                         for (int p = k + 1; p < 4999; p++)
                         {
+                            np = n_people[p];
                             pr -= prCosts[p][res[p] - 1];
-                            acr[res[p] - 1] -= n_people[p];
+                            acr[res[p] - 1] -= np;
                             a4 = Top(p, top);
+                            Console.WriteLine($"p = {p}");
 
                             for (int t = k + 1; t < 5000; t++)
                             {
+                                nt = n_people[t];
                                 pr -= prCosts[t][res[t] - 1];
-                                acr[res[t] - 1] -= n_people[t];
+                                acr[res[t] - 1] -= nt;
                                 a5 = Top(t, top);
 
                                 (double, (byte, byte, byte, byte, byte))[] tops = new (double, (byte, byte, byte, byte, byte))[top];
 
                                 Parallel.For(0, top, ii =>
                                  {
-                                     int pr2 = pr + prCosts[i][a1[ii]];
+                                     int pr2 = pr + prCosts[i][a1[ii] - 1];
                                      var acr2 = acr.Dup();
                                      double f = first, tmp = 1e20;
-                                     acr2[a1[ii]] += n_people[a1[ii]];
+                                     acr2[a1[ii] - 1] += n_people[a1[ii]];
+
 
                                      foreach (var i2 in a2)
                                      {
                                          pr2 += prCosts[j][i2 - 1];
-                                         acr2[i2 - 1] += n_people[j];
+                                         acr2[i2 - 1] += nj;
                                          foreach (var i3 in a3)
                                          {
                                              pr2 += prCosts[k][i3 - 1];
-                                             acr2[i3 - 1] += n_people[k];
+                                             acr2[i3 - 1] += nk;
                                              foreach (var i4 in a4)
                                              {
                                                  pr2 += prCosts[p][i4 - 1];
-                                                 acr2[i4 - 1] += n_people[p];
+                                                 acr2[i4 - 1] += np;
                                                  foreach (var i5 in a5)
                                                  {
                                                      pr2 += prCosts[t][i5 - 1];
-                                                     acr2[i5 - 1] += n_people[t];
+                                                     acr2[i5 - 1] += nt;
 
                                                      if (pr2 < f && acr2.All(s => s >= 125 && s <= 300))
                                                      {
@@ -2368,23 +2644,27 @@ namespace Покоординатная_минимизация
                                                          }
                                                      }
 
-                                                     pr2 += prCosts[t][i5 - 1];
-                                                     acr2[i5 - 1] -= n_people[t];
+                                                     pr2 -= prCosts[t][i5 - 1];
+                                                     acr2[i5 - 1] -= nt;
                                                  }
                                                  pr2 -= prCosts[p][i4 - 1];
-                                                 acr2[i4 - 1] -= n_people[p];
+                                                 acr2[i4 - 1] -= np;
                                              }
                                              pr2 -= prCosts[k][i3 - 1];
-                                             acr2[i3 - 1] -= n_people[k];
+                                             acr2[i3 - 1] -= nk;
                                          }
                                          pr2 -= prCosts[j][i2 - 1];
-                                         acr2[i2 - 1] -= n_people[j];
+                                         acr2[i2 - 1] -= nj;
                                      }
 
 
                                  });
 
-                                min = tops.Where(s => s.Item1 > 0).Min(s => s.Item1);
+                                var ps = tops.Where(s => s.Item1 > 0).ToArray();
+                                if (ps.Length == 0)
+                                    min = 1e20;
+                                else
+                                    min = ps.Min(s => s.Item1);
                                 if (min < first)
                                 {
                                     first = min;
@@ -2393,34 +2673,53 @@ namespace Покоординатная_минимизация
                                     progress = true;
                                     Console.WriteLine($"New best val is {first}");
 
+                                    //res[inds.Item1] = rs.Item1;
+
                                     res[inds.Item1] = rs.Item1;
+                                    res[inds.Item2] = rs.Item2;
+                                    res[inds.Item3] = rs.Item3;
+                                    res[inds.Item4] = rs.Item4;
+                                    res[inds.Item5] = rs.Item5;
+
+                                    WriteData(first);
+                                    pr += prCosts[t][res[t] - 1];
+                                    acr[res[t] - 1] += nt;
+                                    pr += prCosts[p][res[p] - 1];
+                                    acr[res[p] - 1] += np;
+                                    pr += prCosts[k][res[k] - 1];
+                                    acr[res[k] - 1] += nk;
+                                    pr += prCosts[j][res[j] - 1];
+                                    acr[res[j] - 1] += nj;
+                                    pr += prCosts[i][res[i] - 1];
+                                    acr[res[i] - 1] += ni;
+                                    goto algol;
                                 }
 
                                 pr += prCosts[t][res[t] - 1];
-                                acr[res[t] - 1] += n_people[t];
+                                acr[res[t] - 1] += nt;
                             }
-                            pr += prCosts[k][res[k] - 1];
-                            acr[res[k] - 1] += n_people[k];
+                            pr += prCosts[p][res[p] - 1];
+                            acr[res[p] - 1] += np;
                         }
                         pr += prCosts[k][res[k] - 1];
-                        acr[res[k] - 1] += n_people[k];
+                        acr[res[k] - 1] += nk;
                     }
-                    pr += prCosts[i][res[i] - 1];
-                    acr[res[i] - 1] += n_people[i];
+                    pr += prCosts[j][res[j] - 1];
+                    acr[res[j] - 1] += nj;
                 }
 
                 pr += prCosts[i][res[i] - 1];
-                acr[res[i] - 1] += n_people[i];
+                acr[res[i] - 1] += ni;
             }
 
-            if (progress)
-            {
-                res[inds.Item1] = rs.Item1;
-                res[inds.Item2] = rs.Item2;
-                res[inds.Item3] = rs.Item3;
-                res[inds.Item4] = rs.Item4;
-                res[inds.Item5] = rs.Item5;
-            }
+            //if (progress)
+            //{
+            //    res[inds.Item1] = rs.Item1;
+            //    res[inds.Item2] = rs.Item2;
+            //    res[inds.Item3] = rs.Item3;
+            //    res[inds.Item4] = rs.Item4;
+            //    res[inds.Item5] = rs.Item5;
+            //}
         }
 
 
