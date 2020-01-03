@@ -15,6 +15,8 @@ choise[res==choises[9]]=8
 choise[res==choises[10]]=9
 choise[choise<0]=-1
 
+which(res==choises[6])
+
 df=data.frame(fam=bes$family_id,ch=factor(choise,levels = c("0","1","2","3","4","5","6","7","8","9","no"))) %>% tbl_df()
 
 counts=df %>% group_by(ch) %>% summarise(ct=n())
@@ -31,11 +33,24 @@ ds=data.frame(p=peop,dc=factor(res)) %>% group_by(dc) %>% summarise(val=sum(p))
 
 ggplot(ds,aes(x=dc,y=val))+
   geom_col()+
-  labs(title=paste("acc =",accounting.penalty(res)," pre =",preference.cost(res)))+
+  labs(title=paste("acc =",accounting.penalty(res),"  pre =",preference.cost(res)))+
+  geom_hline(yintercept =c( 125,300),col="red",size=1.5)+
   theme_bw()
 
 
+ds=data.frame(p=peop,dc=factor(res),np=factor(peop)) %>% group_by(dc,np) %>% summarise(val=sum(p))
 
+ggplot(ds,aes(x=dc,y=val))+
+  geom_col()+
+  facet_wrap(vars(np))+
+  labs(title=paste("acc =",accounting.penalty(res),"  pre =",preference.cost(res)))+
+ geom_hline(yintercept =c( 125,300),col="red",size=1.5)+
+  theme_bw()
+
+
+N=ds$val[1:99]
+N2=c(N,N[99])[2:100]
+rs=( (N-125)/400*N^(0.5+0.02*abs(N-N2)))
 
 
 

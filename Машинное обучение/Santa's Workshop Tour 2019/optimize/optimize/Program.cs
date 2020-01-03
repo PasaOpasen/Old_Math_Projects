@@ -590,6 +590,10 @@ namespace Покоординатная_минимизация
             }
             return s;
         }
+        static int[] GetRandomIndexes(int count = 100)
+        {
+            return Enumerable.Range(0, count).Select(s => randomgen.Next(0, 4999)).ToArray();
+        }
         static int[] GetNotZeroChoises()
         {
             List<int> rs = new List<int>(4000);
@@ -667,7 +671,7 @@ namespace Покоординатная_минимизация
             acr = GetMap(res2);
             pr = preference_costsMemoized(res2);
             bst = pr;// + accounting_penalty3(acr);
-            numbers = GetRandom().Take(count).ToArray();
+            numbers = GetRandomIndexes(count); //GetRandom().Take(count).ToArray();
 
             foreach (var nb in numbers)
             {
@@ -678,12 +682,51 @@ namespace Покоординатная_минимизация
                     bst = sm.res;
                     existprogress = true;
                     res2[nb] = sm.val;
+                    acr = GetMap(res2);
+                    pr = preference_costsMemoized(res2);
                     //Console.WriteLine($"best score = {Math.Round(best, 3)}; iter = {nb}");
                 }
 
             }
             if (!existprogress)
                 goto iti;
+
+            //Console.WriteLine($"pr = {preference_costsMemoized(res2)}  acc = {accounting_penaltyMemoized(res2)}  sum = {scoreMemoized2(res2)}");
+        }
+        static void MakeCoordMinAcc(byte[] res2, int count = 5000)
+        {
+            bool existprogress = false;
+            double bst;
+
+            int[] numbers; //GetRange();
+            int pr;
+            short[] acr;
+
+        iti:
+            acr = GetMap(res2);
+            pr = preference_costsMemoized(res2);
+            bst = accounting_penalty3(acr);
+            numbers = GetRandomIndexes(count); //GetRandom().Take(count).ToArray();
+
+            foreach (var nb in numbers)
+            {
+                var sm = MinByOneAcc(nb, res2, pr, acr);
+
+                if (bst > sm.res)
+                {
+                    bst = sm.res;
+                    existprogress = true;
+                    res2[nb] = sm.val;
+                    acr = GetMap(res2);
+                    pr = preference_costsMemoized(res2);
+                    //Console.WriteLine($"best score = {Math.Round(best, 3)}; iter = {nb}");
+                }
+
+            }
+            if (!existprogress)
+                goto iti;
+
+            Console.WriteLine($"pr = {preference_costsMemoized(res2)}  acc = {accounting_penaltyMemoized(res2)}  sum = {scoreMemoized2(res2)}");
         }
 
         static bool MakeCoordMin2(Func<byte[], double> fun)
@@ -845,7 +888,51 @@ namespace Покоординатная_минимизация
             else
                 return (locbest, sample_res);
         }
+        static (double, byte[]) MakeCoordMinSlow2(byte[] sample_res)
+        { 
 
+            return MinByTwoChoise(sample_res, 0, new short[1]);
+        }
+        static (double, byte[]) MakeCoordMinSlowPr(byte[] sample_res,int count=15)
+        {
+            double locbest = preference_costsMemoized(sample_res);
+            bool existprogress;
+            var numbers = family_id;
+            var result = new (double, byte, int)[5000];
+            int index, pr;
+            double bst;
+            short[] acr;
+
+        begin1:
+            index = 0;
+            existprogress = false;
+            pr = preference_costsMemoized(sample_res);
+            acr = GetMap(sample_res);
+            foreach (var nb in numbers)
+            {
+                var sm = MinByOnePr(nb, sample_res, pr, acr);//--------------------------------------------------------------------------
+                result[index++] = (sm.res, sm.val, nb);
+            }
+
+            bst = result.Min(t => t.Item1);
+
+            if (locbest > bst)
+            {
+                var pi = result.First(t => t.Item1 == bst);
+                //Console.WriteLine($"best score = {Math.Round(bst, 3)} (from {Math.Round(best, 3)}); iter = {pi.Item3}");           
+                existprogress = true;
+                locbest = bst;
+                sample_res[pi.Item3] = pi.Item2;
+            }
+
+            if (existprogress && locbest != best &&count>0)
+            {
+                count--;
+                goto begin1;
+            }
+            else
+                return (locbest, sample_res);
+        }
 
 
         /// <summary>
@@ -1396,16 +1483,17 @@ namespace Покоординатная_минимизация
         {
             double result_best = 1e20, result;
             int index = 1;
+            byte np = n_people[ind], nd = (byte)(sample_res[ind] - 1);
 
-            pr -= prCosts[ind][sample_res[ind] - 1];
-            acr[sample_res[ind] - 1] -= n_people[ind];
+            pr -= prCosts[ind][nd];
+            acr[nd] -= np;
 
             for (int i = 1; i <= 100; i++)
             {
                 pr += prCosts[ind][i - 1];
-                acr[i - 1] += n_people[ind];
+                acr[i - 1] += np;
 
-                if (pr < best && !acr.Any(s => s < 125 || s > 300))
+                if (pr < best && acr[nd] >= 125 && acr[i - 1] >= 125 && acr[i - 1] <= 300/*acr.All(s => s >= 125&& s <= 300)*/)
                 {
                     result = accounting_penalty2(acr) + pr;
                     if (result < result_best)
@@ -1416,9 +1504,9 @@ namespace Покоординатная_минимизация
                 }
 
                 pr -= prCosts[ind][i - 1];
-                acr[i - 1] -= n_people[ind];
+                acr[i - 1] -= np;
             }
-            acr[sample_res[ind] - 1] += n_people[ind];
+            acr[nd] += np;
 
             return (res: result_best, val: (byte)index);
         }
@@ -1456,20 +1544,118 @@ namespace Покоординатная_минимизация
             return (res: result_best, val: (byte)index);
         }
 
+        static (double, byte[]) MinByTwoChoise(byte[] sample_res, int pr, short[] acr, int top = 8)
+        {
+            double first = scoreMemoized2(sample_res), min;
+            (int, int) inds = (0, 0);
+            (byte, byte) rs = (0, 0);
+            byte[] a1, a2;
+            byte ni, nj;
+            bool gut(short val) => val >= 125 && val <= 300;
+
+        algol:
+            //progress = false;
+            for (int i = 0; i < 4999; i++)
+            {
+                ni = n_people[i];
+                pr -= prCosts[i][sample_res[i] - 1];
+                acr[sample_res[i] - 1] -= ni;
+                a1 = Top(i, top);
+                //i.Show();
+
+                for (int j = i + 1; j < 5000; j++)
+                {
+                    nj = n_people[j];
+                    pr -= prCosts[j][sample_res[j] - 1];
+                    acr[sample_res[j] - 1] -= nj;
+                    a2 = Top(j, top);
+
+
+                    (double, (byte, byte))[] tops = new (double, (byte, byte))[top];
+
+                    for(int ii=0;ii<top;ii++)
+                    //Parallel.For(0, top, ii =>
+                    {
+                        int pr2 = pr + prCosts[i][a1[ii] - 1];
+                        //var acr2 = acr.Dup();
+                        double f = first, tmp = 1e20;
+                        acr[a1[ii] - 1] += ni;
+
+                        foreach (var i2 in a2)
+                        {
+                            pr2 += prCosts[j][i2 - 1];
+                            acr[i2 - 1] += nj;
+
+                            if (pr2 < f&&gut(acr[sample_res[i] - 1])&&gut(acr[sample_res[j] - 1]) && gut(acr[a1[ii] - 1])&&gut(acr[i2 - 1]))
+                            {
+                                tmp = pr2 + accounting_penalty3(acr);
+                                if (tmp < f)
+                                {
+                                    f = tmp;
+                                    tops[ii] = (f, (a1[ii], i2));
+                                }
+                            }
+
+                            pr2 -= prCosts[j][i2 - 1];
+                            acr[i2 - 1] -= nj;
+                        }
+                        acr[a1[ii] - 1] -= ni;
+                    }//);
+
+                    var ps = tops.Where(s => s.Item1 > 0).ToArray();
+                    if (ps.Length == 0)
+                        min = 1e20;
+                    else
+                        min = ps.Min(s => s.Item1);
+
+                    if (min < first)
+                    {
+                        first = min;
+                        inds = (i, j);
+                        rs = tops.First(s => s.Item1 == min).Item2;
+                        //Console.WriteLine($"New best val is {first}");
+
+                        //sample_res[inds.Item1] = rs.Item1;
+
+                        sample_res[inds.Item1] = rs.Item1;
+                        sample_res[inds.Item2] = rs.Item2;
+                        //WriteData(first);
+
+                        pr += prCosts[j][sample_res[j] - 1];
+                        acr[sample_res[j] - 1] += nj;
+                        pr += prCosts[i][sample_res[i] - 1];
+                        acr[sample_res[i] - 1] += ni;
+                        goto algol;
+                    }
+
+                    pr += prCosts[j][sample_res[j] - 1];
+                    acr[sample_res[j] - 1] += nj;
+                }
+
+                pr += prCosts[i][sample_res[i] - 1];
+                acr[sample_res[i] - 1] += ni;              
+            }
+            Console.WriteLine($"New result {first}");
+            return (first,sample_res);
+        }
+
+
         static (double res, byte val) MinByOnePr(int ind, byte[] sample_res, int pr, short[] acr)
         {
-            double result_best = 1e20, result;
+            double result_best = pr, result;
             int index = 1;
+            int sr = sample_res[ind] - 1;
+            byte nd = n_people[ind];
 
-            pr -= prCosts[ind][sample_res[ind] - 1];
-            acr[sample_res[ind] - 1] -= n_people[ind];
+            pr -= prCosts[ind][sr];
+            acr[sr] -= nd;
 
             for (int i = 1; i <= 100; i++)
             {
                 pr += prCosts[ind][i - 1];
-                acr[i - 1] += n_people[ind];
+                acr[i - 1] += nd;
 
-                if (pr < best && !acr.Any(s => s < 125 || s > 300))
+                if (acr[sr]>=125&&acr[sr]<=300 && acr[i - 1]>=125&& acr[i - 1]<=300)
                 {
                     result = pr;
                     if (result < result_best)
@@ -1480,12 +1666,45 @@ namespace Покоординатная_минимизация
                 }
 
                 pr -= prCosts[ind][i - 1];
-                acr[i - 1] -= n_people[ind];
+                acr[i - 1] -= nd;
             }
-            acr[sample_res[ind] - 1] += n_people[ind];
+            acr[sr] += nd;
 
             return (res: result_best, val: (byte)index);
         }
+        static (double res, byte val) MinByOneAcc(int ind, byte[] sample_res, int pr, short[] acr)
+        {
+            double result_best = accounting_penalty3(acr), result;
+            int index = 1;
+            int sr = sample_res[ind] - 1;
+            byte nd = n_people[ind];
+
+            pr -= prCosts[ind][sr];
+            acr[sr] -= nd;
+
+            for (int i = 1; i <= 100; i++)
+            {
+                pr += prCosts[ind][i - 1];
+                acr[i - 1] += nd;
+
+                if (acr[sr] >= 125 && acr[sr] <= 300 && acr[i - 1] >= 125 && acr[i - 1] <= 300)
+                {
+                    result = accounting_penalty3(acr);
+                    if (result < result_best)
+                    {
+                        index = i;
+                        result_best = result;
+                    }
+                }
+
+                pr -= prCosts[ind][i - 1];
+                acr[i - 1] -= nd;
+            }
+            acr[sr] += nd;
+
+            return (res: result_best, val: (byte)index);
+        }
+
 
         static bool MinByTwo(int ind1, int ind2, ref byte[][] mat, ref double[] results)
         {
@@ -1954,35 +2173,48 @@ namespace Покоординатная_минимизация
             Console.WriteLine($"down = {down_t}");
             Console.WriteLine($"up = {up_t}");
         }
+
+
+
         static void Main(string[] args)
         {
             ReadRES();
             ReadUpDown();
 
+            //var map = DaysOfMaxPrice(GetMap(res), 100);
+            //var inds = IndexOfDays(res, r => map.Contains(r));
+            //TopDown3(Enumerable.Range(0,4999).Where(p=>n_people[p]>6).ToArray(), 5);
+            
+            //GetNotZeroChoises();
+                                                               //MigratTest();
+
+            //TopDown2(4093, 6);
             //TopDown2(5);
+            var p = MinByTwoChoise(res,preference_costsMemoized(res),GetMap(res));
+            int o=0;
             //TopDown3(5);
             //Swap();
             //Swap3();
-            //Swap_2();
-            //Swap_3();
-            // Swap_4();
+            // Swap_2();
+            // Swap_3();
+            //  Swap_4();
             //Swap_5();
-            // Swap_6();
+            //  Swap_6();
             // Accord();
             //for (byte b = 0; b < 100;b++)
             //Swap_6(b);
             // MakeResult8();
             //NotRandomDown(3);
 
-            for (int count = 24; count <= 40; count += 2)
+            for (int count = 5; count <= 30; count += 5)
                 for (int top = 5; top >= 2; top--)
                 {
-                    $"_______________________________count = {count} top = {top}".Show(); "".Show();
+                    $"_____________________________count = {count} top = {top}".Show(); "".Show();
                     double b = best;
                     int q = 0;
-                    while (q < 8)
+                    while (q < 4)
                     {
-                        RandomDown4(count, top, 1000);
+                        RandomDown4(count, top, 250);
                         if (b == best)
                         {
                             q++;
@@ -2122,6 +2354,10 @@ namespace Покоординатная_минимизация
             System.Diagnostics.Process.Start("cmd", "/c shutdown -s -f -t 00");
         }
 
+
+
+
+
         static void RandomDown(int iter = 15, int down_t = 20, int up_t = 60)
         {
             double super = score(res);
@@ -2250,13 +2486,17 @@ namespace Покоординатная_минимизация
             int index, j;
             (double, byte[])[] links = new (double, byte[])[iter];
 
-            //var inds = GetNotZeroChoises();
-            //var icount = inds.Length;
+            //var map =Days( GetMap(res), s => s >= 200);
+            //var map = DaysOfMaxPrice(GetMap(res), 100);
+            var inds = Enumerable.Range(0, 4999)/*.Where(c => n_people[c] < 6 && n_people[c] > 3)*/.ToArray(); //IndexOfDays(res, r => r>1&&r<70/*map.Contains(r)*/); //GetNotZeroChoises();
+            var icount = inds.Length;
             //Console.WriteLine($"Not zero families count is {icount} ({Expendator.GetProcent(icount, 5000)}%)");
 
+            //var inds = IndexOfFamilies(f => f <4);
+            //var icount = inds.Length;
 
-            Parallel.For(0, iter, (int i) => 
-            //for (int i = 0; i < iter; i++)
+            //Parallel.For(0, iter, (int i) => 
+            for (int i = 0; i < iter; i++)
             {
                 ref var ob = ref obs[i];
 
@@ -2264,11 +2504,93 @@ namespace Покоординатная_минимизация
                 {
                     for (j = 0; j < dim; j++)
                     {
-                        mas[j] = randomgen.Next(0, 4999/*icount*/);
+                        mas[j] = randomgen.Next(0, /*4999*/icount);
+                       mas[j] = inds[mas[j]];
                     }
                     if (mas.Distinct().Count() != dim /*|| mas.Count(tt => inds.Contains(tt)) < min*/)
                         continue;
 
+                    for (j = 0; j < dim; j++)
+                    {
+                        index = mas[j];
+                        copy[j] = ob[index];
+                        if(n_people[index]>5)
+                            ob[index] = RandVal(index, 3);
+                       else ob[index] = RandVal(index, top);//choice_0[index]; //RandVal(index) ;// choice_0[index];//LevelDown(index, obs[i][index]);//choice_0[index];//choice_0[index];//
+                    }
+                    if (GetMap(ob).Any(p => p < 125 || p > 300))
+                    {
+                        for (j = 0; j < dim; j++)
+                            ob[mas[j]] = copy[j];
+                    }
+                    else break;
+                }
+
+                //links[i] = MakeCoordMinSlow(ob);
+            }
+            //);
+
+            "--->Start".Show();
+            Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow2(obs[i]));
+            //for (int i = 0; i < iter; i++) links[i] = MakeCoordMinSlow(obs[i]);
+
+            var bs = links.Min(p => p.Item1);
+            var t = links.First(p => p.Item1 == bs);
+            if (best > bs)
+            {
+                res = t.Item2;
+                best = bs;
+
+                Console.WriteLine($"Записывается в файл {bs}");
+                WriteData(bs, "");
+                ShowStructure();
+            }
+            else
+            {
+                Console.WriteLine($"-------> to best: {links.Count(p => p.Item1 == best)} ; to 1e20: {links.Count(p => p.Item1 == 1e20)}");
+                "".Show();
+            }
+        }
+
+        static byte[] DaysOfMaxPrice(short[] map,double morethan=100)
+        {
+            var res = new (double, byte)[99];
+            for (int i = 0; i < 99; i++)
+                res[i] = (Ntonumber[map[i]-125][map[i+1]-125],(byte)(i+1));
+
+            return res.Where(r => r.Item1 > 100).Select(r => r.Item2).ToArray();
+
+        }
+
+        static void RandomDown5(int dim = 10, int top = 5, int iter = 10000)
+        {
+            var mas = new int[dim];
+            var copy = new byte[dim];
+            var obs = GetNresCopy(iter);
+            int index, j;
+            (double, byte[])[] links = new (double, byte[])[iter];
+
+            //var inds = GetNotZeroChoises();
+            //var icount = inds.Length;
+            //Console.WriteLine($"Not zero families count is {icount} ({Expendator.GetProcent(icount, 5000)}%)");
+            while (true)
+            {
+                for (j = 0; j < dim; j++)
+                {
+                    mas[j] = randomgen.Next(0, 4999/*icount*/);
+                }
+                if (mas.Distinct().Count() == dim /*|| mas.Count(tt => inds.Contains(tt)) < min*/)
+                    break;
+            }
+            //new Vectors(mas).Show();
+
+            //Parallel.For(0, iter, (int i) => 
+            for (int i = 0; i < iter; i++)
+            {
+                ref var ob = ref obs[i];
+
+                while (true)
+                {
                     for (j = 0; j < dim; j++)
                     {
                         index = mas[j];
@@ -2279,12 +2601,14 @@ namespace Покоординатная_минимизация
                     {
                         for (j = 0; j < dim; j++)
                             ob[mas[j]] = copy[j];
-
                     }
                     else break;
                 }
-            });
-          
+
+                //links[i] = MakeCoordMinSlow(ob);
+            }
+            //);
+
             "--->Start".Show();
             Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow(obs[i]));
             //for (int i = 0; i < iter; i++) links[i] = MakeCoordMinSlow(obs[i]);
@@ -2306,6 +2630,91 @@ namespace Покоординатная_минимизация
                 "".Show();
             }
         }
+
+        static void RandomDown6(int dim = 10, int top = 5, int iter = 10000)
+        {
+            var obs = GetNresCopy(iter);
+            (double, byte[])[] links = new (double, byte[])[iter];
+
+
+            Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlowPr(obs[i],dim+2*i));
+            obs = links.Select(u => u.Item2).ToArray();
+
+            //for (int i = 0; i < iter; i++)
+            //{
+            //    MakeCoordMinPr(obs[i], dim);
+            //}
+
+            "--->Start".Show();
+            Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow(obs[i]));
+
+            var bs = links.Min(p => p.Item1);
+            var t = links.First(p => p.Item1 == bs);
+            if (best > bs)
+            {
+                res = t.Item2;
+                best = bs;
+
+                Console.WriteLine($"Записывается в файл {bs}");
+                WriteData(bs, "");
+                ShowStructure();
+            }
+            else
+            {
+                Console.WriteLine($"-------> to best: {links.Count(p => p.Item1 == best)} ; to 1e20: {links.Count(p => p.Item1 == 1e20)}");
+                "".Show();
+            }
+        }
+
+        static void RandomDown7(int dim = 10, int top = 5, int iter = 10000)
+        {
+            var mas = new int[dim];
+            var copy = new byte[dim];
+            var obs = GetNresCopy(iter);
+            int index, j;
+            (double, byte[])[] links = new (double, byte[])[iter];
+
+            //Parallel.For(0, iter, (int i) => 
+            for (int i = 0; i < iter; i++)
+            {
+                ref var ob = ref obs[i];
+
+                while (true)
+                {
+                    ob.Swap(dim);
+                    if (GetMap(ob).Any(p => p < 125 || p > 300))
+                    {
+                        ob = res.Dup();
+                    }
+                    else break;
+                }
+               // accounting_penaltyMemoized(ob).Show();
+                //links[i] = MakeCoordMinSlow(ob);
+            }
+            //);
+
+            "--->Start".Show();
+            Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow(obs[i]));
+            //for (int i = 0; i < iter; i++) links[i] = MakeCoordMinSlow(obs[i]);
+
+            var bs = links.Min(p => p.Item1);
+            var t = links.First(p => p.Item1 == bs);
+            if (best > bs)
+            {
+                res = t.Item2;
+                best = bs;
+
+                Console.WriteLine($"Записывается в файл {bs}");
+                WriteData(bs, "");
+                ShowStructure();
+            }
+            else
+            {
+                Console.WriteLine($"-------> to best: {links.Count(p => p.Item1 == best)} ; to 1e20: {links.Count(p => p.Item1 == 1e20)}");
+                "".Show();
+            }
+        }
+
         static void ShowStructure()
         {
             int c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, no;
@@ -2448,6 +2857,121 @@ namespace Покоординатная_минимизация
             //    res[inds.Item5] = rs.Item5;
             //}
         }
+        static void TopDown2(int by, int top = 5)
+        {
+            int pr = preference_costsMemoized(res);
+            short[] acr = GetMap();
+            double first = scoreMemoized2(res), min;
+            (int, int, int) inds = (0, 0, 0);
+            (byte, byte, byte) rs = (0, 0, 0);
+            byte[] a1, a2;
+            bool progress;
+            byte ni, nj, nb = n_people[by];
+            var a0 = Top(by, top);
+
+        algol:
+            progress = false;
+            for (int i = 0; i < 4999; i++)
+            {
+                ni = n_people[i];
+                pr -= prCosts[i][res[i] - 1];
+                acr[res[i] - 1] -= ni;
+                a1 = Top(i, top);
+                i.Show();
+
+                for (int j = i + 1; j < 5000; j++)
+                {
+                    nj = n_people[j];
+                    pr -= prCosts[j][res[j] - 1];
+                    acr[res[j] - 1] -= nj;
+                    a2 = Top(j, top);
+
+
+                    (double, (byte, byte, byte))[] tops = new (double, (byte, byte, byte))[top];
+
+                    Parallel.For(0, top, ii =>
+                    {
+                        int pr2 = pr + prCosts[i][a1[ii] - 1];
+                        var acr2 = acr.Dup();
+                        double f = first, tmp = 1e20;
+                        acr2[a1[ii] - 1] += ni;
+
+                        foreach (var i0 in a0)
+                        {
+                            pr2 += prCosts[by][i0 - 1];
+                            acr2[i0 - 1] += nb;
+                            foreach (var i2 in a2)
+                            {
+                                pr2 += prCosts[j][i2 - 1];
+                                acr2[i2 - 1] += nj;
+
+                                if (pr2 < f && acr2.All(s => s >= 125 && s <= 300))
+                                {
+                                    tmp = pr2 + accounting_penalty3(acr2);
+                                    if (tmp < f)
+                                    {
+                                        f = tmp;
+                                        tops[ii] = (f, (i0, a1[ii], i2));
+                                    }
+                                }
+
+                                pr2 -= prCosts[j][i2 - 1];
+                                acr2[i2 - 1] -= nj;
+                            }
+                            pr2 -= prCosts[by][i0 - 1];
+                            acr2[i0 - 1] -= nb;
+                        }
+
+
+                    });
+
+                    var ps = tops.Where(s => s.Item1 > 0).ToArray();
+                    if (ps.Length == 0)
+                        min = 1e20;
+                    else
+                        min = ps.Min(s => s.Item1);
+                    if (min < first)
+                    {
+                        first = min;
+                        inds = (by, i, j);
+                        rs = tops.First(s => s.Item1 == min).Item2;
+                        progress = true;
+                        Console.WriteLine($"New best val is {first}");
+
+                        //res[inds.Item1] = rs.Item1;
+
+                        res[inds.Item1] = rs.Item1;
+                        res[inds.Item2] = rs.Item2;
+                        res[inds.Item3] = rs.Item3;
+
+                        WriteData(first);
+
+                        pr += prCosts[j][res[j] - 1];
+                        acr[res[j] - 1] += nj;
+                        pr += prCosts[i][res[i] - 1];
+                        acr[res[i] - 1] += ni;
+                        pr += prCosts[i][res[by] - 1];
+                        acr[res[by] - 1] += nb;
+                        goto algol;
+                    }
+
+                    pr += prCosts[j][res[j] - 1];
+                    acr[res[j] - 1] += nj;
+                }
+
+                pr += prCosts[i][res[i] - 1];
+                acr[res[i] - 1] += ni;
+            }
+
+            //if (progress)
+            //{
+            //    res[inds.Item1] = rs.Item1;
+            //    res[inds.Item2] = rs.Item2;
+            //    res[inds.Item3] = rs.Item3;
+            //    res[inds.Item4] = rs.Item4;
+            //    res[inds.Item5] = rs.Item5;
+            //}
+        }
         static void TopDown3(int top = 5)
         {
             int pr = preference_costsMemoized(res);
@@ -2564,6 +3088,132 @@ namespace Покоординатная_минимизация
 
                 pr += prCosts[i][res[i] - 1];
                 acr[res[i] - 1] += ni;
+            }
+
+            //if (progress)
+            //{
+            //    res[inds.Item1] = rs.Item1;
+            //    res[inds.Item2] = rs.Item2;
+            //    res[inds.Item3] = rs.Item3;
+            //    res[inds.Item4] = rs.Item4;
+            //    res[inds.Item5] = rs.Item5;
+            //}
+        }
+        static void TopDown3(int[] indexes,int top = 5)
+        {
+            int pr = preference_costsMemoized(res);
+            short[] acr = GetMap();
+            double first = scoreMemoized2(res), min;
+            (int, int, int) inds = (0, 0, 0);
+            (byte, byte, byte) rs = (0, 0, 0);
+            byte[] a1, a2, a3;
+            byte ni, nj, nk;
+
+        algol:
+           // progress = false;
+            for (int i = 0; i < indexes.Length-2; i++)
+            {
+                ni = n_people[indexes[i]];
+                pr -= prCosts[indexes[i]][res[indexes[i]] - 1];
+                acr[res[indexes[i]] - 1] -= ni;
+                a1 = Top(indexes[i], top);
+                i.Show();
+
+                for (int j = i + 1; j < indexes.Length - 1; j++)
+                {
+                    nj = n_people[indexes[j]];
+                    pr -= prCosts[indexes[j]][res[indexes[j]] - 1];
+                    acr[res[indexes[j]] - 1] -= nj;
+                    a2 = Top(indexes[j], top);
+                    Console.WriteLine($"j = {j}");
+
+                    for (int k = j + 1; k < indexes.Length; k++)
+                    {
+                        nk = n_people[indexes[k]];
+                        pr -= prCosts[indexes[k]][res[indexes[k]] - 1];
+                        acr[res[indexes[k]] - 1] -= nk;
+                        a3 = Top(indexes[k], top);
+
+                        (double, (byte, byte, byte))[] tops = new (double, (byte, byte, byte))[top];
+
+                        Parallel.For(0, top, ii =>
+                        {
+                            int pr2 = pr + prCosts[indexes[i]][a1[ii] - 1];
+                            var acr2 = acr.Dup();
+                            double f = first, tmp = 1e20;
+                            acr2[a1[ii] - 1] += ni;
+
+
+                            foreach (var i2 in a2)
+                            {
+                                pr2 += prCosts[indexes[j]][i2 - 1];
+                                acr2[i2 - 1] += nj;
+                                foreach (var i3 in a3)
+                                {
+                                    pr2 += prCosts[indexes[k]][i3 - 1];
+                                    acr2[i3 - 1] += nk;
+
+
+                                    if (pr2 < f && acr2.All(s => s >= 125 && s <= 300))
+                                    {
+                                        tmp = pr2 + accounting_penalty3(acr2);
+                                        if (tmp < f)
+                                        {
+                                            f = tmp;
+                                            tops[ii] = (f, (a1[ii], i2, i3));
+                                        }
+                                    }
+
+                                    pr2 -= prCosts[indexes[k]][i3 - 1];
+                                    acr2[i3 - 1] -= nk;
+                                }
+                                pr2 -= prCosts[indexes[j]][i2 - 1];
+                                acr2[i2 - 1] -= nj;
+                            }
+
+
+                        });
+
+                        var ps = tops.Where(s => s.Item1 > 0).ToArray();
+                        if (ps.Length == 0)
+                            min = 1e20;
+                        else
+                            min = ps.Min(s => s.Item1);
+                        if (min < first)
+                        {
+                            first = min;
+                            inds = (indexes[i], indexes[j], indexes[k]);
+                            rs = tops.First(s => s.Item1 == min).Item2;
+                            //progress = true;
+                            Console.WriteLine($"New best val is {first}");
+
+                            //res[inds.Item1] = rs.Item1;
+
+                            res[inds.Item1] = rs.Item1;
+                            res[inds.Item2] = rs.Item2;
+                            res[inds.Item3] = rs.Item3;
+
+
+                            WriteData(first);
+
+                            pr += prCosts[indexes[k]][res[indexes[k]] - 1];
+                            acr[res[indexes[k]] - 1] += nk;
+                            pr += prCosts[indexes[j]][res[indexes[j]] - 1];
+                            acr[res[indexes[j]] - 1] += nj;
+                            pr += prCosts[indexes[i]][res[indexes[i]] - 1];
+                            acr[res[indexes[i]] - 1] += ni;
+                            goto algol;
+                        }
+
+                        pr += prCosts[indexes[k]][res[indexes[k]] - 1];
+                        acr[res[indexes[k]] - 1] += nk;
+                    }
+                    pr += prCosts[indexes[j]][res[indexes[j]] - 1];
+                    acr[res[indexes[j]] - 1] += nj;
+                }
+
+                pr += prCosts[indexes[i]][res[indexes[i]] - 1];
+                acr[res[indexes[i]] - 1] += ni;
             }
 
             //if (progress)
@@ -2881,6 +3531,8 @@ namespace Покоординатная_минимизация
         }
         static int[] Mprice(int[] inds, byte from, byte to)
         {
+            //from--;to--;
+
             if (inds.Length == 0)
                 return inds;
 
@@ -3570,6 +4222,93 @@ namespace Покоординатная_минимизация
             return true;
         }
 
+        static byte[] Migration(byte[] arr,int more=250,int less=150,int batch = 15)
+        {
+            var map = GetMap(arr);
+            var up = Days(map,s => s >= more);
+            var down =Days( map,s => s <= less);
+
+            List<(int[],byte)> inds = new List<(int[], byte)>();
+
+            foreach(var m in up)
+            {
+                var mas = IndexOfDays(arr, m);
+                foreach(var l in down)
+                {
+                    var t = Mprice(mas, m, l);
+                    if (t.Length > 0)
+                        inds.Add((t, l));
+                }
+            }
+
+            List<(int, byte)> tmp = new List<(int, byte)>(inds.Capacity);
+            for (int i = 0; i < inds.Count; i++)
+                for (int j = 0; j < inds[i].Item1.Length; j++)
+                    tmp.Add((inds[i].Item1[j],inds[i].Item2));
+
+            int q;
+            (int, byte) d;
+            batch = Math.Min(batch, tmp.Count);
+            for(int i=0;i<batch;i++)
+            {
+                q = randomgen.Next(0, tmp.Count - 1);
+                d = tmp[q];
+                arr[d.Item1] = d.Item2;
+            }
+
+            return arr;
+        }
+
+        static void MigratTest()
+        {
+            Console.WriteLine($"before: pref = {preference_costsMemoized(res)}  acc = {accounting_penaltyMemoized(res)}");
+
+            for(int batch = 1; batch < 40; batch += 1)
+            {
+                var res2 =Migration( res.Dup(),240,160,batch);
+                Console.WriteLine($"after batch {batch}: pref = {preference_costsMemoized(res2)}  acc = {accounting_penaltyMemoized(res2)}");
+                if(scoreMemoized2(res2)<best)
+                {
+                    res = res2;
+                    WriteData(scoreMemoized2(res2));
+                }
+            }
+
+        }
+
+        static int[] IndexOfDays(byte[] arr,int day)
+        {
+            List<int> inds = new List<int>(125);
+            for (int i = 0; i < arr.Length; i++)
+                if (arr[i] == day)
+                    inds.Add(i);
+            return inds.ToArray();
+        }
+        static int[] IndexOfDays(byte[] arr, Func<byte,bool> pred)
+        {
+            List<int> inds = new List<int>(125);
+            for (int i = 0; i < arr.Length; i++)
+                if (pred( arr[i]))
+                    inds.Add(i);
+            return inds.ToArray();
+        }
+        static int[] IndexOfFamilies(Func<byte,bool> pred)
+        {
+            List<int> inds = new List<int>(200);
+            for (int i = 0; i < n_people.Length; i++)
+                if (pred(n_people[i]))
+                    inds.Add(i);
+            return inds.ToArray();
+        }
+        static byte[] Days(short[] map,Func<short,bool> pred)
+        {
+            List<byte> inds = new List<byte>(15);
+            for (byte i = 0; i < (byte)map.Length; i++)
+                if (pred(map[i]))
+                    inds.Add((byte)(i + 1));
+            return inds.ToArray();
+        }
+
         //static void Accord()
         //{
         //    byte[] ToByteArr(double[] arr)
@@ -3601,6 +4340,23 @@ namespace Покоординатная_минимизация
 
         //    WriteData(S.Value, "sb");
         //}
+
+    public static void Swap<T>(this T[] arr, int count)
+    {
+        T tmp;
+        int i1, i2;
+        for (int i = 0; i < count; i++)
+        {
+            i1 = randomgen.Next(0, arr.Length);
+            tmp = arr[i1];
+
+            i2 = randomgen.Next(0, arr.Length);
+            arr[i1] = arr[i2];
+            arr[i2] = tmp;
+        }
     }
+    }
+
+
 }
 

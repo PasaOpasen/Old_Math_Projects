@@ -43,6 +43,7 @@ accounting.penalty=function(dayvec){
 
 score=function(dayvec) preference.cost(dayvec)+accounting.penalty(dayvec)
 
+#######################################
 
 ct=0
 repeat{

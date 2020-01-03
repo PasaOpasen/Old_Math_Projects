@@ -257,7 +257,6 @@ opt_pred_2 <-function(cur_pred,ntimes = 1){
 }
 
 
-
 paths=list.files("samples")
 for(pth in paths){
   fpath = pth
@@ -265,11 +264,12 @@ gab = read.csv(paste0(getwd(),"/samples/",fpath))
 #gab$assigned_day=sample(1:100,5000,replace = T) %>% matrix(ncol=1)
 rownames(gab) <- submission$family_id
 
-opt_gab <- opt_pred_2(gab,100)
+opt_gab <- opt_pred_2(gab,1000)
 opt_score <- opt_gab[[2]]
 print(opt_score)
 
-write.csv(opt_gab[[1]],file =paste("submission",round(opt_score),".csv"),quote = F,row.names = F)
+
+if(opt_score<70523) write.csv(opt_gab[[1]],file =paste("submission",round(opt_score,2),".csv"),quote = F,row.names = F)
 }
 
 ##################################################
