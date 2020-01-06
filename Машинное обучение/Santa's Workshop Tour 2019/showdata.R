@@ -1,5 +1,4 @@
 bes=read_csv("res.csv")
-
 res= bes$assigned_day
 
 choise=-res
@@ -17,12 +16,14 @@ choise[choise<0]=-1
 
 which(res==choises[6])
 
-df=data.frame(fam=bes$family_id,ch=factor(choise,levels = c("0","1","2","3","4","5","6","7","8","9","no"))) %>% tbl_df()
+df=data.frame(fam=bes$family_id,ch=factor(choise,levels = c("0","1","2","3","4","5","6","7","8","9","no")),np=factor(peop)) %>% tbl_df()
 
-counts=df %>% group_by(ch) %>% summarise(ct=n())
+counts=df %>% group_by(ch,np) %>% summarise(ct=n())
 
 ggplot(counts,aes(x=ch,y=ct))+
-  geom_col()
+  facet_wrap(vars(np))+
+  geom_col()+
+  theme_light()
 
 counts
 
@@ -44,13 +45,31 @@ ggplot(ds,aes(x=dc,y=val))+
   geom_col()+
   facet_wrap(vars(np))+
   labs(title=paste("acc =",accounting.penalty(res),"  pre =",preference.cost(res)))+
- geom_hline(yintercept =c( 125,300),col="red",size=1.5)+
+# geom_hline(yintercept =c( 125,300),col="red",size=1.5)+
   theme_bw()
 
 
 N=ds$val[1:99]
 N2=c(N,N[99])[2:100]
 rs=( (N-125)/400*N^(0.5+0.02*abs(N-N2)))
+
+
+########################################
+
+resold= read_csv("resold.csv")$assigned_day
+
+tt=cbind(i=1:5000,resold,res,peop,choises[,1:6]) %>% tbl_df()
+
+pp=tt %>% filter(resold!=res)
+
+
+
+
+###
+alien=data.table::fread("alien.txt",header = T,sep='\t')
+
+rs=alien$assigned_day
+
 
 
 
