@@ -144,8 +144,13 @@ INPUT c:\Users\крендель\Desktop\MagicCode\Magistracy1Stats\многом�
 OUTPUT c:\Users\крендель\Desktop\MagicCode\Magistracy1Stats\многомерная статистика - экзамен\Ответы.out
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\larm1728.tfm
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\labx1728.tfm
-INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\lati1200.tfm
+INPUT c:\Users\крендель\Desktop\MagicCode\Magistracy1Stats\многомерная статистика - экзамен\Ответы.toc
+INPUT c:\Users\крендель\Desktop\MagicCode\Magistracy1Stats\многомерная статистика - экзамен\Ответы.toc
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\jknappen\ec\ecrm1200.tfm
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\labx1200.tfm
+OUTPUT c:\Users\крендель\Desktop\MagicCode\Magistracy1Stats\многомерная статистика - экзамен\Ответы.toc
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\pdftex\config\pdftex.map
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\lati1200.tfm
 INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr8.tfm
 INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr6.tfm
 INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi12.tfm
@@ -167,14 +172,16 @@ INPUT C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd
 INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\omscmr.fd
+INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\omscmr.fd
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\larm0800.tfm
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\larm0600.tfm
-INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\pdftex\config\pdftex.map
 INPUT C:\Program Files\MiKTeX 2.9\tex\latex\cyrillic\t2acmtt.fd
 INPUT C:\Program Files\MiKTeX 2.9\tex\latex\cyrillic\t2acmtt.fd
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\tfm\lh\lh-t2a\latt1200.tfm
-INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\omscmr.fd
-INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\omscmr.fd
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx12.tfm
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx8.tfm
+INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx6.tfm
 INPUT c:\Users\крендель\Desktop\MagicCode\Magistracy1Stats\многомерная статистика - экзамен\factors.png
 INPUT c:\Users\крендель\Desktop\MagicCode\Magistracy1Stats\многомерная статистика - экзамен\factors.png
 INPUT c:\Users\крендель\Desktop\MagicCode\Magistracy1Stats\многомерная статистика - экзамен\factors.png
@@ -196,21 +203,22 @@ INPUT c:\Users\крендель\Desktop\MagicCode\Magistracy1Stats\многом�
 INPUT c:\Users\крендель\Desktop\MagicCode\Magistracy1Stats\многомерная статистика - экзамен\prc.png
 INPUT c:\Users\крендель\Desktop\MagicCode\Magistracy1Stats\многомерная статистика - экзамен\prc.png
 INPUT c:\Users\крендель\Desktop\MagicCode\Magistracy1Stats\многомерная статистика - экзамен\Ответы.aux
-INPUT C:\Program Files\MiKTeX 2.9\fonts\tfm\jknappen\ec\ecrm1200.tfm
 INPUT c:\Users\крендель\Desktop\MagicCode\Magistracy1Stats\многомерная статистика - экзамен\Ответы.out
 INPUT c:\Users\крендель\Desktop\MagicCode\Magistracy1Stats\многомерная статистика - экзамен\Ответы.out
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\latt1200.pk
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\latt1200.pk
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\larm0800.pk
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\larm0800.pk
-INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\labx1200.pk
-INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\labx1200.pk
-INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\larm1200.pk
-INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\larm1200.pk
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\lati1200.pk
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\lati1200.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\larm1200.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\larm1200.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\labx1200.pk
+INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\labx1200.pk
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\labx1728.pk
 INPUT C:\Users\крендель\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\lh\lh-t2a\dpi600\labx1728.pk
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmbx12.pfb
+INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmbx12.pfb
 INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmex10.pfb
 INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmex10.pfb
 INPUT C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi12.pfb

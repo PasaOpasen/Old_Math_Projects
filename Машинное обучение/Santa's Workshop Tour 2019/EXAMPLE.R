@@ -269,7 +269,7 @@ opt_score <- opt_gab[[2]]
 print(opt_score)
 
 
-if(opt_score<70490) write.csv(opt_gab[[1]],file =paste("submission",round(opt_score,2),".csv"),quote = F,row.names = F)
+if(opt_score<69467) write.csv(opt_gab[[1]],file =paste("submission",round(opt_score,2),".csv"),quote = F,row.names = F)
 }
 
 ##################################################

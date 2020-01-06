@@ -990,7 +990,7 @@ namespace Покоординатная_минимизация
             double locbest = scoreMemoized2(sample_res);
             bool existprogress;
             var numbers = family_id;
-            var result = new (double, byte,byte, int)[4999];
+            var result = new (double, byte, byte, int)[4999];
             int index, pr;
             double bst;
             short[] acr;
@@ -1000,10 +1000,10 @@ namespace Покоординатная_минимизация
             existprogress = false;
             pr = preference_costsMemoized(sample_res);
             acr = GetMap(sample_res);
-            for(int nb=0;nb<4999;nb++)
+            for (int nb = 0; nb < 4999; nb++)
             {
                 var sm = MinByOneChoise2(nb, sample_res, pr, acr);//--------------------------------------------------------------------------
-                result[index++] = (sm.res, sm.val1,sm.val2, nb);
+                result[index++] = (sm.res, sm.val1, sm.val2, nb);
             }
 
             bst = result.Min(t => t.Item1);
@@ -1015,7 +1015,7 @@ namespace Покоординатная_минимизация
                 existprogress = true;
                 locbest = bst;
                 sample_res[pi.Item4] = pi.Item2;
-                sample_res[pi.Item4+1] = pi.Item3;
+                sample_res[pi.Item4 + 1] = pi.Item3;
             }
 
             if (locbest == 1e20)
@@ -1661,7 +1661,7 @@ namespace Покоординатная_минимизация
                 {
                     pr += prCosts[ind2][j - 1];
                     acr[j - 1] += np2;
-                    if (pr < best && acr[nd] >= 125&&acr[nd2]>124 &&good(acr[i-1])&&good(acr[j-1]))
+                    if (pr < best && acr[nd] >= 125 && acr[nd2] > 124 && good(acr[i - 1]) && good(acr[j - 1]))
                     {
                         result = accounting_penalty2(acr) + pr;
                         if (result < result_best)
@@ -1952,21 +1952,21 @@ namespace Покоординатная_минимизация
             return (res: result_best, val: (byte)index);
         }
 
-        static byte[] MinPreOrAcc(byte[] ss,int deep=20)
+        static byte[] MinPreOrAcc(byte[] ss, int deep = 20)
         {
             int pr = preference_costsMemoized(ss);
             var acr = GetMap(ss);
             double bst = pr /*+ accounting_penalty3(acr)*/;
 
-            foreach(int ind in GetRandom().Take(deep*5))
+            foreach (int ind in GetRandom().Take(deep * 5))
             {
                 var t = MinByOnePr(ind, ss, pr, acr);
                 if (t.res < bst)
                 {
                     bst = t.res;
-                ss[ind] = t.val;
-                pr = preference_costsMemoized(ss);
-                acr = GetMap(ss);
+                    ss[ind] = t.val;
+                    pr = preference_costsMemoized(ss);
+                    acr = GetMap(ss);
                 }
             }
             return ss;
@@ -2490,7 +2490,7 @@ namespace Покоординатная_минимизация
 
             var l = new List<int>();
             l.AddRange(ts);
-            l.AddRange(Enumerable.Range(0, 5000).Where(c => res[c] == choice_3[c] || res[c] == choice_4[c]||res[c]==choice_2[c]));
+            l.AddRange(Enumerable.Range(0, 5000).Where(c => res[c] == choice_3[c] || res[c] == choice_4[c] || res[c] == choice_2[c]));
 
             return l.Distinct().ToArray();
 
@@ -2499,10 +2499,19 @@ namespace Покоординатная_минимизация
 
         }
 
+        static void OtherTries()
+        {
+            BigRandomTopsTry(res, 50, 10000, 10000, 4);
+            var map = DaysOfMaxPrice(GetMap(res), 100);
+            var inds = IndexOfDays(res, r => map.Contains(r));
+            TopDown3(/*Enumerable.Range(0,4999).Where(p=>n_people[p]==2).ToArray()*/inds, 5);
 
-
-
-
+            TopDown3(Enumerable.Range(0, 4999).Where(p => n_people[p] < 4 || n_people[p] > 5).ToArray(), 5);
+            MigratTest();
+            Swap_3();
+            Swap_6();
+            WriteData(scoreMemoized2(res));
+        }
 
         static void Main(string[] args)
         {
@@ -2510,19 +2519,10 @@ namespace Покоординатная_минимизация
             ReadUpDown();
 
             //MakeResult2(accounting_penaltyMemoized);
-            BigRandomTopsTry(res,50, 10000, 10000, 4);
-            //WriteData(scoreMemoized2(res));
-
+            //OtherTries();
             // Replace();
 
-            var map = DaysOfMaxPrice(GetMap(res), 100);
-            var inds = IndexOfDays(res, r => map.Contains(r));
-            TopDown3(/*Enumerable.Range(0,4999).Where(p=>n_people[p]==2).ToArray()*/inds, 5);
-
-            TopDown3(Enumerable.Range(0,4999).Where(p=>n_people[p]<4 ||n_people[p]>5).ToArray(), 5);
-
             //GetNotZeroChoises();
-            MigratTest();
 
             //TopDown2(4093, 6);
             //TopDown2(5);
@@ -2532,10 +2532,10 @@ namespace Покоординатная_минимизация
             //Swap();
             //Swap3();
             // Swap_2();
-            Swap_3();
+
             //  Swap_4();
             //Swap_5();
-             Swap_6();
+
             // Accord();
             //for (byte b = 0; b < 100;b++)
             //Swap_6(b);
@@ -2824,8 +2824,8 @@ namespace Покоординатная_минимизация
 
             //var map =Days( GetMap(res), s => s >= 200);
             //var map = DaysOfMaxPrice(GetMap(res), 100);
-            var inds = Enumerable.Range(0, 4999).Where(c => peops1.Contains(n_people[c])  /*<= 6 && n_people[c] >= 3*/).ToArray(); //IndexOfDays(res, r => r>1&&r<70/*map.Contains(r)*/); //GetNotZeroChoises();
-            //var inds = Filter();
+            //var inds = Enumerable.Range(0, 4999).Where(c => peops1.Contains(n_people[c])  /*<= 6 && n_people[c] >= 3*/).ToArray(); //IndexOfDays(res, r => r>1&&r<70/*map.Contains(r)*/); //GetNotZeroChoises();
+            var inds = Filter();
             //var inds = Enumerable.Range(0, 4999).Where(c => res[c]!=choice_5[c]&&res[c]!=choice_4[c]  /*<= 6 && n_people[c] >= 3*/).ToArray();
 
             var icount = inds.Length;
@@ -3058,6 +3058,9 @@ namespace Покоординатная_минимизация
             }
         }
 
+        /// <summary>
+        /// Показывает разброс текущих данных по choises
+        /// </summary>
         static void ShowStructure()
         {
             int c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, no;
@@ -3090,7 +3093,7 @@ namespace Покоординатная_минимизация
 
             }
 
-            if (c5+c6 + c7 + c8 + c9 + no == 0)
+            if (c5 + c6 + c7 + c8 + c9 + no == 0)
                 Console.WriteLine($"0: {c0}  1: {c1}  2: {c2}  3: {c3}  4: {c4}");
             else
                 Console.WriteLine($"0: {c0}  1: {c1}  2: {c2}  3: {c3}  4: {c4}  5: {c5}  6: {c6}  7: {c7}  8: {c8}  9: {c9}  other: {no}");
@@ -3834,17 +3837,6 @@ namespace Покоординатная_минимизация
             for (int i = 0; i < arr.Length; i++)
                 k[i] = arr[i];
             return k;
-        }
-
-        static void Bee()
-        {
-            var t = BeeHiveAlgorithm.GetGlobalMin(
-                (Vectors v) => scoreMemoized2(ToByteArr(v.DoubleMas)),
-                n: 5000,
-               min: 1, max: 100, eps: 1e-10, countpoints: 300, maxcountstep: 200, center: new Vectors(ToDouble(res)), maxiter: 500);
-
-            best = t.Item2;
-            res = ToByteArr(t.Item1.DoubleMas);
         }
 
 
@@ -4718,6 +4710,13 @@ namespace Покоординатная_минимизация
                     inds.Add(i);
             return inds.ToArray();
         }
+
+        /// <summary>
+        /// Возвращает дни, удовлетворяющие предикату
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="pred"></param>
+        /// <returns></returns>
         static byte[] Days(short[] map, Func<short, bool> pred)
         {
             List<byte> inds = new List<byte>(15);
@@ -4727,38 +4726,13 @@ namespace Покоординатная_минимизация
             return inds.ToArray();
         }
 
-        //static void Accord()
-        //{
-        //    byte[] ToByteArr(double[] arr)
-        //    {
-        //        byte[] g = new byte[arr.Length];
-        //        byte b;
-        //        for (int i = 0; i < arr.Length; i++)
-        //        {
-        //            b = (byte)Math.Round(arr[i]);
-        //            if (b < 1) b = 1;
-        //            else if (b > 100) b = 100;
-        //            g[i] = b;
-        //        }
-        //        return g;
-        //    }
-        //    double[] ToDouble(byte[] arr)
-        //    {
-        //        var k = new double[arr.Length];
-        //        for (int i = 0; i < arr.Length; i++)
-        //            k[i] = arr[i];
-        //        return k;
-        //    }
 
-        //    var S = new Accord.Math.Optimization.NelderMead(5000, (mas) => score(ToByteArr(mas)));
-        //    Console.WriteLine(score(res));
-        //    S.Minimize(ToDouble(res));
-
-        //    res = ToByteArr(S.Solution);
-
-        //    WriteData(S.Value, "sb");
-        //}
-
+        /// <summary>
+        /// Перемешивает элементы массива указанное число раз
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arr"></param>
+        /// <param name="count"></param>
         public static void Swap<T>(this T[] arr, int count)
         {
             T tmp;
@@ -4773,6 +4747,14 @@ namespace Покоординатная_минимизация
                 arr[i2] = tmp;
             }
         }
+
+        /// <summary>
+        /// Возвращает массив случайных чисел от min до max
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static int[] GetRandomInArray(int min, int max, int count)
         {
             int[] r = new int[count];
@@ -4781,6 +4763,12 @@ namespace Покоординатная_минимизация
             return r.Distinct().ToArray();
         }
 
+        /// <summary>
+        /// Возвращает случайную подвыборку указанного массива
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static int[] GetRandomInArray(int[] from, int count)
         {
             int[] r = new int[count];
