@@ -1792,7 +1792,7 @@ namespace Покоординатная_минимизация
         algol:
             howmuch++;
             (first, sample_res) = MakeCoordMinSlow(sample_res);
-            if (howmuch == 500)
+            if (howmuch == 200)
             {
                 Console.WriteLine($"Limit!  New result {first} (count = {howmuch})");
                 return (first, sample_res);
@@ -2518,6 +2518,7 @@ namespace Покоординатная_минимизация
             ReadRES();
             ReadUpDown();
 
+            Bee(40);
             //MakeResult2(accounting_penaltyMemoized);
             //OtherTries();
             // Replace();
@@ -2544,14 +2545,14 @@ namespace Покоординатная_минимизация
            //WriteContributions("conts.csv");
             int[] inds;
             foreach(var p in new int[3])
-            for (int count = 5; count <= 30; count += 5)
+            for (int count = 3; count <= 30; count += 5)
                 for (int top = 5; top >= 2; top--)
                 {
                     $"_____________________________count = {count} top = {top}".Show(); "".Show();
                     double b = best;
                     int q = 0;
                    // inds = GetSub2();
-                    while (q < 5)
+                    while (q < 10)
                     {
                         RandomDown4(count, top, 500);
                         if (b == best)
@@ -3915,16 +3916,74 @@ namespace Покоординатная_минимизация
                 k[i] = Array.IndexOf(Tops[i],arr[i]);
             return k;
         }
-        static void Bee()
+        static void Bee(int dim=25)
         {
+            const int ct = 400;
+            var mas = new int[dim];
+            var copy = new byte[dim];
+            var obs = GetNresCopy(ct);
+            int index, j;
+            var inds = Enumerable.Range(0, 5000).ToArray();
+            var icount = inds.Length;
+
+            for (int i = 1; i < ct; i++)
+            {
+                ref var ob = ref obs[i];
+                //ob = MinPreOrAcc(ob, dim);
+                while (true)
+                {
+                    for (j = 0; j < dim; j++)
+                    {
+                        mas[j] = randomgen.Next(0, /*4999*/icount);
+                        mas[j] = inds[mas[j]];
+                    }
+                    if (mas.Distinct().Count() != dim /*|| mas.Count(tt => inds.Contains(tt)) < min*/)
+                        continue;
+
+                    for (j = 0; j < dim; j++)
+                    {
+                        index = mas[j];
+                        copy[j] = ob[index];
+                        ob[index] = RandVal(index, 4);
+                    }
+                    if (GetMap(ob).Any(p => p < 125 || p > 300))
+                    {
+                        for (j = 0; j < dim; j++)
+                            ob[mas[j]] = copy[j];
+                    }
+                    else break;
+                }
+            }
+
+            BeeHiveAlgorithm.w = 0.3;
+            BeeHiveAlgorithm.fp = 2;
+            BeeHiveAlgorithm.fg = 5;
+
             var t = BeeHiveAlgorithm.GetGlobalMin(
+                obs.Select(o=> new Vectors(ToDouble(o))).ToArray(),
                 (Vectors v) => scoreMemoized2(ToByteArr(v.DoubleMas)),
                 n: 5000,
-               min: 0, max: 4, eps: 1e-10, countpoints: 300, maxcountstep: 20000, center: new Vectors(ToDouble(res)), maxiter: 50000);
+               min: 0, max: 4, eps: 1e-10, countpoints: ct, maxcountstep: 2000, maxiter: 50000);
+
             best = t.Item2;
             res = ToByteArr(t.Item1.DoubleMas);
         }
+        static void Bee2()
+        {
+            const int ct = 400;
 
+            BeeHiveAlgorithm.w = 0.3;
+            BeeHiveAlgorithm.fp = 2;
+            BeeHiveAlgorithm.fg = 5;
+
+            var t = BeeHiveAlgorithm.GetGlobalMin(
+                (Vectors v) => scoreMemoized2(ToByteArr(v.DoubleMas)),
+                n: 5000,
+               min: 0, max: 4, eps: 1e-10, countpoints: ct, maxcountstep: 2000,center: new Vectors(ToDouble(res)), maxiter: 50000);
+
+            best = t.Item2;
+            res = ToByteArr(t.Item1.DoubleMas);
+        }
 
 
         static void RandomTopsTry(byte[] arr, int[] indexes, int count = 10000, int top = 5)

@@ -3,6 +3,8 @@ import pandas as pd
 from numba import njit
 from itertools import product
 from ortools.linear_solver import pywraplp
+import csv
+from os import path
 
 #######################################################################
 def get_penalty(n, choice):
@@ -236,6 +238,8 @@ def solveSantaLP():
         S.Add(daily_occupancy[j] >= MIN_OCCUPANCY)
         S.Add(daily_occupancy[j] <= MAX_OCCUPANCY)
 
+    #f_days, c_days, n_days = load("best.csv")
+    #res=c_days
     res = S.Solve()
 
     resdict = {0: 'OPTIMAL', 1: 'FEASIBLE', 2: 'INFEASIBLE', 3: 'UNBOUNDED',
@@ -345,10 +349,104 @@ ACOSTM = GetAccountingCostMatrix()     # Accounting cost matrix
 
 
 
+DBL_MAX = 1e+308
+
+N_FAMILES = 5000
+N_DAYS = 100
+N_CHOICES = 10
+MAX_OCCUPANCY = 300
+MIN_OCCUPANCY = 125
+
+MAX_DIFF = 300
+MAX_DIFF2 = MAX_DIFF * 2
+MAX_FAMILY_PER_DAY = 200
+
+DATA_DIR = "C:/Users/крендель/Desktop/MagicCode/Машинное обучение/Santa's Workshop Tour 2019"
+@njit(fastmath=True)
+def build_cost_lut(family_size, family_choice):
+    pref_cost = np.empty((N_FAMILES, N_DAYS), dtype=np.float64)
+    acc1_cost = np.empty((MAX_DIFF2,), dtype=np.float64)
+    acc_cost = np.empty((MAX_DIFF2, MAX_DIFF2), dtype=np.float64)
+    penalty = np.empty((MAX_DIFF2,), dtype=np.float64)
+
+    for i in range(N_FAMILES):
+        # preference cost
+        n = family_size[i]
+        pref_cost[i][:] = 500 + 36 * n + 398 * n
+        pref_cost[i][family_choice[i][0]] = 0
+        pref_cost[i][family_choice[i][1]] = 50
+        pref_cost[i][family_choice[i][2]] = 50 + 9 * n
+        pref_cost[i][family_choice[i][3]] = 100 + 9 * n
+        pref_cost[i][family_choice[i][4]] = 200 + 9 * n
+        pref_cost[i][family_choice[i][5]] = 200 + 18 * n
+        pref_cost[i][family_choice[i][6]] = 300 + 18 * n
+        pref_cost[i][family_choice[i][7]] = 300 + 36 * n
+        pref_cost[i][family_choice[i][8]] = 400 + 36 * n
+        pref_cost[i][family_choice[i][9]] = 500 + 36 * n + 199 * n
+
+    for i in range(MAX_DIFF2):
+        # accounting cost
+        acc1_cost[i] = max(0, (i - 125.0) / 400.0 * i ** 0.5)
+        for j in range(MAX_DIFF2):
+            diff = abs(j - MAX_DIFF)
+            acc_cost[i][j] = max(0, (i - 125.0) / 400.0 * i ** (0.5 + diff / 50.0))
+
+        # constraint penalty
+        if i > MAX_OCCUPANCY:
+            penalty[i] = 60 * (i - MAX_OCCUPANCY + 1) ** 1.2
+        elif i < MIN_OCCUPANCY:
+            penalty[i] = 60 * (MIN_OCCUPANCY - i + 1) ** 1.2
+        else:
+            penalty[i] = 0
+
+    return pref_cost, acc1_cost, acc_cost, penalty
+
+
+def build_global_data(data_dir):
+    # family data
+    family_choice = np.empty((N_FAMILES, N_CHOICES), dtype=np.int32)
+    family_size = np.empty((N_FAMILES,), dtype=np.int32)
+
+    with open(path.join(data_dir, "family_data.csv"), "r") as f:
+        reader = csv.reader(f)
+        next(reader, None)
+        for row in reader:
+            i = int(row[0])
+            choices = [int(c) - 1 for c in row[1:N_CHOICES + 1]]
+            members = int(row[N_CHOICES + 1])
+            family_size[i] = members
+            family_choice[i] = choices
+    # cost lut
+    pref_cost, acc1_cost, acc_cost, penalty = build_cost_lut(family_size, family_choice)
+    return pref_cost, acc1_cost, acc_cost, penalty, family_choice, family_size
+PREF_COST, ACC1_COST, ACC_COST, PENALTY, FAMILY_CHOICES, FAMILY_SIZE2 = build_global_data(DATA_DIR)
+@njit
+def day_insert(f_days, c_days, n_days, day, family_id):
+    """ insert family_id to day
+    """
+    f_days[day][c_days[day]] = family_id
+    c_days[day] += 1
+    n_days[day] += FAMILY_SIZE2[family_id]
+
+def load(filename):
+    f_days = np.zeros((N_FAMILES, MAX_FAMILY_PER_DAY), dtype=np.int32)
+    c_days = np.zeros((N_FAMILES,), dtype=np.int32)
+    n_days = np.zeros((N_FAMILES,), dtype=np.int32)
+
+    with open(filename, "r") as f:
+        reader = csv.reader(f)
+        next(reader, None)
+        for row in reader:
+            family_id, day = int(row[0]), int(row[1]) - 1
+            day_insert(f_days, c_days, n_days, day, family_id)
+    return f_days, c_days, n_days
 
 
 #######################################################################
+
 prediction = solveSanta()
+
+
 pc, occ = pcost(prediction)
 ac, _ = acost(occ)
 print('{}, {:.2f}, ({}, {})'.format(pc, ac, occ.min(), occ.max()))

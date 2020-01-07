@@ -68,7 +68,7 @@ pp=tt %>% filter(resold!=res)
 ###
 alien=data.table::fread("alien.txt",header = T,sep='\t')
 
-rs=alien$assigned_day
+best.res=alien$assigned_day
 
 
 
