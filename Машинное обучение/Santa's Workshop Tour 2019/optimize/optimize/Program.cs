@@ -2513,6 +2513,250 @@ namespace Покоординатная_минимизация
             WriteData(scoreMemoized2(res));
         }
 
+        static void RunWithLogs()
+        {
+            void Log(string message)
+            {
+                File.AppendAllText("log.txt", message);
+            }
+            DateTime past;
+            TimeSpan now;
+
+
+                ReadRES();
+                ReadUpDown();
+                past = DateTime.Now;
+                foreach (var p in new int[3])
+                    for (int count = 3; count <= 30; count += 5)
+                        for (int top = 5; top >= 1; top--)
+                        {
+                            $"_____________________________count = {count} top = {top}".Show(); "".Show();
+                            double b = best;
+                            int q = 0;
+                            while (q < 10)
+                            {
+                                RandomDown4(count, top, 500);
+                                if (b == best)
+                                {
+                                    q++;
+                                }
+                                else b = best;
+                            }
+
+                        }
+                now = DateTime.Now - past;
+
+                Log($"count top + -    time: {now}   res: {scoreMemoized2(res)}");
+
+
+
+            ReadRES();
+            ReadUpDown();
+            past = DateTime.Now;
+            foreach (var p in new int[3])
+                for (int count = 28; count >= 5; count -= 5)
+                    for (int top = 5; top >= 1; top--)
+                    {
+                        $"_____________________________count = {count} top = {top}".Show(); "".Show();
+                        double b = best;
+                        int q = 0;
+                        while (q < 10)
+                        {
+                            RandomDown4(count, top, 500);
+                            if (b == best)
+                            {
+                                q++;
+                            }
+                            else b = best;
+                        }
+
+                    }
+            now = DateTime.Now - past;
+
+            Log($"count top - -    time: {now}   res: {scoreMemoized2(res)}");
+
+
+
+            ReadRES();
+            ReadUpDown();
+            past = DateTime.Now;
+            foreach (var p in new int[3])
+                for (int count = 28; count >= 5; count -= 5)
+                    for (int top = 1; top <= 5; top++)
+                    {
+                        $"_____________________________count = {count} top = {top}".Show(); "".Show();
+                        double b = best;
+                        int q = 0;
+                        while (q < 10)
+                        {
+                            RandomDown4(count, top, 500);
+                            if (b == best)
+                            {
+                                q++;
+                            }
+                            else b = best;
+                        }
+
+                    }
+            now = DateTime.Now - past;
+
+            Log($"count top - +    time: {now}   res: {scoreMemoized2(res)}");
+
+
+
+            ReadRES();
+            ReadUpDown();
+            past = DateTime.Now;
+            foreach (var p in new int[3])
+                for (int count = 5; count <= 28; count += 5)
+                    for (int top = 1; top <= 5; top++)
+                    {
+                        $"_____________________________count = {count} top = {top}".Show(); "".Show();
+                        double b = best;
+                        int q = 0;
+                        while (q < 10)
+                        {
+                            RandomDown4(count, top, 500);
+                            if (b == best)
+                            {
+                                q++;
+                            }
+                            else b = best;
+                        }
+
+                    }
+            now = DateTime.Now - past;
+
+            Log($"count top + +    time: {now}   res: {scoreMemoized2(res)}");
+
+
+
+            ReadRES();
+            ReadUpDown();
+            past = DateTime.Now;
+            foreach (var p in new int[3])
+                for (int top = 5; top >= 1; top--)
+                for (int count = 3; count <= 30; count += 5)                   
+                    {
+                        $"_____________________________count = {count} top = {top}".Show(); "".Show();
+                        double b = best;
+                        int q = 0;
+                        while (q < 10)
+                        {
+                            RandomDown4(count, top, 500);
+                            if (b == best)
+                            {
+                                q++;
+                            }
+                            else b = best;
+                        }
+
+                    }
+            now = DateTime.Now - past;
+
+            Log($"top count + -    time: {now}   res: {scoreMemoized2(res)}");
+
+
+
+            ReadRES();
+            ReadUpDown();
+            past = DateTime.Now;
+            foreach (var p in new int[3])
+                for (int top = 5; top >= 1; top--)
+                for (int count = 28; count >= 5; count -= 5)                
+                    {
+                        $"_____________________________count = {count} top = {top}".Show(); "".Show();
+                        double b = best;
+                        int q = 0;
+                        while (q < 10)
+                        {
+                            RandomDown4(count, top, 500);
+                            if (b == best)
+                            {
+                                q++;
+                            }
+                            else b = best;
+                        }
+
+                    }
+            now = DateTime.Now - past;
+
+            Log($"top count - -    time: {now}   res: {scoreMemoized2(res)}");
+
+
+
+            ReadRES();
+            ReadUpDown();
+            past = DateTime.Now;
+            foreach (var p in new int[3])
+                for (int top = 1; top <= 5; top++)
+                for (int count = 28; count >= 5; count -= 5)                  
+                    {
+                        $"_____________________________count = {count} top = {top}".Show(); "".Show();
+                        double b = best;
+                        int q = 0;
+                        while (q < 10)
+                        {
+                            RandomDown4(count, top, 500);
+                            if (b == best)
+                            {
+                                q++;
+                            }
+                            else b = best;
+                        }
+
+                    }
+            now = DateTime.Now - past;
+
+            Log($"top count - +    time: {now}   res: {scoreMemoized2(res)}");
+
+
+
+            ReadRES();
+            ReadUpDown();
+            past = DateTime.Now;
+            foreach (var p in new int[3])
+                for (int top = 1; top <= 5; top++)
+                for (int count = 5; count <= 28; count += 5)                   
+                    {
+                        $"_____________________________count = {count} top = {top}".Show(); "".Show();
+                        double b = best;
+                        int q = 0;
+                        while (q < 10)
+                        {
+                            RandomDown4(count, top, 500);
+                            if (b == best)
+                            {
+                                q++;
+                            }
+                            else b = best;
+                        }
+
+                    }
+            now = DateTime.Now - past;
+
+            Log($"top count + +    time: {now}   res: {scoreMemoized2(res)}");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }
+
         static void Main(string[] args)
         {
             ReadRES();
@@ -2543,7 +2787,7 @@ namespace Покоординатная_минимизация
             // MakeResult8();
             //NotRandomDown(3);
            //WriteContributions("conts.csv");
-            int[] inds;
+           // int[] inds;
             foreach(var p in new int[3])
             for (int count = 3; count <= 30; count += 5)
                 for (int top = 5; top >= 2; top--)
