@@ -53,7 +53,7 @@ def create_init(initial_sub):
     return initial_choices
 
 
-initial_sub = pd.read_csv(best_submit_path / 'submission.csv')
+initial_sub = pd.read_csv('submission.csv')
 initial_choices = create_init(initial_sub)
 
 
@@ -195,6 +195,7 @@ for epoch in tqdm.tqdm_notebook(range(1_001)):
 
 
     ############################################################
+prev_best_score = best_score
 coef = 1
 count_failures = 0
 for _ in range(10_000):

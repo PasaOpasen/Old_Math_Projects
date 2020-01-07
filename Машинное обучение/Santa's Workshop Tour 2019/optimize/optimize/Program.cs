@@ -1792,7 +1792,7 @@ namespace Покоординатная_минимизация
         algol:
             howmuch++;
             (first, sample_res) = MakeCoordMinSlow(sample_res);
-            if (howmuch == 2000)
+            if (howmuch == 500)
             {
                 Console.WriteLine($"Limit!  New result {first} (count = {howmuch})");
                 return (first, sample_res);
@@ -2541,19 +2541,23 @@ namespace Покоординатная_минимизация
             //Swap_6(b);
             // MakeResult8();
             //NotRandomDown(3);
-
-            for (int count = 5; count <= 60; count += 3)
-                for (int top = 5; top >= 1; top--)
+           //WriteContributions("conts.csv");
+            int[] inds;
+            foreach(var p in new int[3])
+            for (int count = 5; count <= 30; count += 5)
+                for (int top = 5; top >= 2; top--)
                 {
                     $"_____________________________count = {count} top = {top}".Show(); "".Show();
                     double b = best;
                     int q = 0;
-                    while (q < 10)
+                   // inds = GetSub2();
+                    while (q < 5)
                     {
-                        RandomDown4(count, top, 250);
+                        RandomDown4(count, top, 500);
                         if (b == best)
                         {
                             q++;
+                            //inds = GetSub2();
                         }
                         else b = best;
                     }
@@ -2824,8 +2828,8 @@ namespace Покоординатная_минимизация
 
             //var map =Days( GetMap(res), s => s >= 200);
             //var map = DaysOfMaxPrice(GetMap(res), 100);
-            //var inds = Enumerable.Range(0, 4999).Where(c => peops1.Contains(n_people[c])  /*<= 6 && n_people[c] >= 3*/).ToArray(); //IndexOfDays(res, r => r>1&&r<70/*map.Contains(r)*/); //GetNotZeroChoises();
-            var inds = Filter();
+            var inds = Enumerable.Range(0, 4999).Where(c => peops1.Contains(n_people[c])  /*<= 6 && n_people[c] >= 3*/).ToArray(); //IndexOfDays(res, r => r>1&&r<70/*map.Contains(r)*/); //GetNotZeroChoises();
+           // var inds = Filter();
             //var inds = Enumerable.Range(0, 4999).Where(c => res[c]!=choice_5[c]&&res[c]!=choice_4[c]  /*<= 6 && n_people[c] >= 3*/).ToArray();
 
             var icount = inds.Length;
@@ -3039,6 +3043,77 @@ namespace Покоординатная_минимизация
             "--->Start".Show();
             Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow(obs[i]));
             //for (int i = 0; i < iter; i++) links[i] = MakeCoordMinSlow(obs[i]);
+
+            var bs = links.Min(p => p.Item1);
+            var t = links.First(p => p.Item1 == bs);
+            if (best > bs)
+            {
+                res = t.Item2;
+                best = bs;
+
+                Console.WriteLine($"Записывается в файл {bs}");
+                WriteData(bs, "");
+                ShowStructure();
+            }
+            else
+            {
+                Console.WriteLine($"-------> to best: {links.Count(p => p.Item1 == best)} ; to 1e20: {links.Count(p => p.Item1 == 1e20)}");
+                "".Show();
+            }
+        }
+
+        static void RandomDown8(int[] inds,int dim = 10, int top = 5, int iter = 10000)
+        {
+            var mas = new int[dim];
+            var copy = new byte[dim];
+            var obs = GetNresCopy(iter);
+            int index, j;
+            (double, byte[])[] links = new (double, byte[])[iter];
+
+            var icount = inds.Length;
+
+            //Parallel.For(0, iter, (int i) => 
+            for (int i = 0; i < iter; i++)
+            {
+                ref var ob = ref obs[i];
+                //ob = MinPreOrAcc(ob, dim);
+                while (true)
+                {
+                    for (j = 0; j < dim; j++)
+                    {
+                        mas[j] = randomgen.Next(0, /*4999*/icount);
+                        mas[j] = inds[mas[j]];
+                    }
+                    if (mas.Distinct().Count() != dim /*|| mas.Count(tt => inds.Contains(tt)) < min*/)
+                        continue;
+
+                    for (j = 0; j < dim; j++)
+                    {
+                        index = mas[j];
+                        copy[j] = ob[index];
+                        ob[index] = RandVal(index, top);
+                        // if(n_people[index]>5)
+                        //   ob[index] = RandVal(index, 3);
+                        // else ob[index] = RandVal(index, top);//choice_0[index]; //RandVal(index) ;// choice_0[index];//LevelDown(index, obs[i][index]);//choice_0[index];//choice_0[index];//
+                    }
+                    if (GetMap(ob).Any(p => p < 125 || p > 300))
+                    {
+                        for (j = 0; j < dim; j++)
+                            ob[mas[j]] = copy[j];
+                    }
+                    else break;
+                }
+
+                //WriteData(ob, @"C:\Users\крендель\Desktop\MagicCode\Машинное обучение\Santa's Workshop Tour 2019\samples");
+                //links[i] = MakeCoordMinSlow(ob);
+            }
+            //);
+
+            "--->Start".Show();
+            Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow(obs[i]));
+            //for (int i = 0; i < iter; i++) links[i] = MakeCoordMinSlow(obs[i]);
+            "--->Start2".Show();
+            Parallel.ForEach(Enumerable.Range(0, iter).Where(s => links[s].Item1 < best), (int i) => links[i] = MakeCoordMinSlow2(obs[i], Enumerable.Range(0, 4999).Where(c => peops2.Contains(n_people[c]) /*n_people[c] ==4*/).ToArray()));
 
             var bs = links.Min(p => p.Item1);
             var t = links.First(p => p.Item1 == bs);
@@ -3818,6 +3893,8 @@ namespace Покоординатная_минимизация
             }
         }
 
+
+
         static byte[] ToByteArr(double[] arr)
         {
             byte[] g = new byte[arr.Length];
@@ -3825,9 +3902,9 @@ namespace Покоординатная_минимизация
             for (int i = 0; i < arr.Length; i++)
             {
                 b = arr[i];
-                if (b < 1) b = 1;
-                else if (b > 100) b = 100;
-                g[i] = (byte)Math.Round(b);
+                if (b < 0) b = 0;
+                else if (b > 4) b = 4;
+                g[i] = Tops[i][(int)Math.Round(b)];
             }
             return g;
         }
@@ -3835,9 +3912,19 @@ namespace Покоординатная_минимизация
         {
             var k = new double[arr.Length];
             for (int i = 0; i < arr.Length; i++)
-                k[i] = arr[i];
+                k[i] = Array.IndexOf(Tops[i],arr[i]);
             return k;
         }
+        static void Bee()
+        {
+            var t = BeeHiveAlgorithm.GetGlobalMin(
+                (Vectors v) => scoreMemoized2(ToByteArr(v.DoubleMas)),
+                n: 5000,
+               min: 0, max: 4, eps: 1e-10, countpoints: 300, maxcountstep: 20000, center: new Vectors(ToDouble(res)), maxiter: 50000);
+            best = t.Item2;
+            res = ToByteArr(t.Item1.DoubleMas);
+        }
+
 
 
         static void RandomTopsTry(byte[] arr, int[] indexes, int count = 10000, int top = 5)
@@ -4776,6 +4863,55 @@ namespace Покоординатная_минимизация
                 r[i] = from[randomgen.Next(0, from.Length)];
             return r.Distinct().ToArray();
         }
+
+
+        static double[] ContributionPr()
+        {
+            double pr = preference_costsMemoized(res);
+            var t = new double[5000];
+            for (int i = 0; i < t.Length; i++)
+                t[i] = prCosts[i][res[i] - 1] / pr;
+            return t;
+        }
+
+        static double[] ContributionAcc()
+        {
+            var map = GetMap(res);
+            double r = accounting_penalty3(map);
+            double[] proc = new double[100];
+            for (int i = 0; i < 99; i++)
+                proc[i] = Ntonumber[map[i] - 125][map[i + 1] - 125] / r;
+            proc[99] = lastN[map[99] - 125] / r;
+
+            double[] t = new double[5000];
+            for (int i = 0; i < t.Length; i++)
+                t[i] = proc[res[i] - 1] * n_people[i] / map[res[i] - 1];
+            return t;
+        }
+
+        static void WriteContributions(string filemane)
+        {
+            var pr = ContributionPr();
+            var acc = ContributionAcc();
+            var s = Enumerable.Range(0, 5000).Select(i => $"{i + 1},{pr[i].ToString().Replace(',','.')},{acc[i].ToString().Replace(',', '.')}").ToList();
+            s.Insert(0, "id,pr,acc");
+            Expendator.WriteInFile(filemane, s.ToArray());
+        }
+        static int[] GetSub()
+        {
+            WriteContributions(@"C:\Users\крендель\Desktop\MagicCode\Машинное обучение\Santa's Workshop Tour 2019\conts.csv");
+            Expendator.StartProcessOnly("BuildSubset.r", 
+                false, 
+                @"C:\Users\крендель\Desktop\MagicCode\Машинное обучение\Santa's Workshop Tour 2019");
+            return Expendator.GetStringArrayFromFile(@"C:\Users\крендель\Desktop\MagicCode\Машинное обучение\Santa's Workshop Tour 2019\subset.txt").Select(i => Convert.ToInt32(i)).ToArray();
+        }
+        static int[] GetSub2()
+        {
+            var p = ContributionAcc();
+            var t = ContributionPr();
+           return Enumerable.Range(0, 5000).Where(i => p[i] + t[i] > 0).ToArray();
+        }
+
     }
 
 
