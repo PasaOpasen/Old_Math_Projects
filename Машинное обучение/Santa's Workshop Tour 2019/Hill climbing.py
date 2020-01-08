@@ -354,12 +354,12 @@ def hill_climbing(f_days, c_days, n_days, lahc_size=200, stuck_time=120, limit_t
 
 
 if __name__ == "__main__":
-    np.random.seed(71)
+    #np.random.seed(71)
     #f_days, c_days, n_days = generate_initial_solution()
     f_days, c_days, n_days = load("best.csv")
     # large lahc_size gives a good score but takes a lot of time
     # limit_time=3600*6 is for kaggle kernel timeout
-    hill_climbing(f_days, c_days, n_days, lahc_size=1500, stuck_time=120, limit_time=3600 * 6)
+    hill_climbing(f_days, c_days, n_days, lahc_size=100, stuck_time=120, limit_time=3600 * 6)
     f_days, c_days, n_days = load("best.csv")
     print("Done: ", total_cost(f_days, c_days, n_days))
     save("submission.csv", f_days, c_days)
