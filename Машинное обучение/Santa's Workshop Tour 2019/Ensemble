@@ -94,7 +94,6 @@ PCOSTM = GetPreferenceCostMatrix(data) # Preference cost matrix
 ACOSTM = GetAccountingCostMatrix()     # Accounting cost matrix
 
 
-
 DBL_MAX = 1e+308
 
 N_FAMILES = 5000
@@ -186,6 +185,19 @@ def load(filename):
             day_insert(f_days, c_days, n_days, day, family_id)
     return f_days, c_days, n_days
 
+def load2(filename):
+    ds = np.zeros((N_FAMILES,), dtype=np.int32)
+    i = 0
+
+    with open(filename, "r") as f:
+        reader = csv.reader(f)
+        next(reader, None)
+        for row in reader:
+            family_id, day = int(row[0]), int(row[1])
+            ds[i]=day
+            i=i+1
+    return ds
+
 ##########################################
 
 @njit(fastmath=True)
@@ -196,7 +208,7 @@ def get_daily_occupancy(schedule):
     return daily_occupancy
 
 
-@njit(fastmath=True)
+#@njit(fastmath=True)
 def cost_function(schedule):
     choice_cost = 0
     for f, d in enumerate(schedule):
@@ -213,6 +225,9 @@ def cost_function(schedule):
 
     violations = (np.count_nonzero(daily_occupancy < MIN_POP) +
                   np.count_nonzero(daily_occupancy > MAX_POP))
+    #violations = (sum(daily_occupancy < MIN_POP) +
+   #               sum(daily_occupancy > MAX_POP))
+
     penalty = int(violations * 10e8)
 
     return choice_cost, accounting_cost, penalty
@@ -302,7 +317,11 @@ for f, vals in enumerate(x_vals):
     d = np.argmax(vals)
     schedule[f] = d
 
-_, schedule, _ = load("best.csv") ######################################
+bb = load2("submission.csv") ######################################
+#print(aa)
+print(bb)
+#print(cc)
+schedule=bb-1
 
 score = cost_function(schedule)
 print(sum(score), '|', score)

@@ -2634,30 +2634,30 @@ namespace Покоординатная_минимизация
             TimeSpan now;
 
 
-                ReadRES();
-                ReadUpDown();
-                past = DateTime.Now;
-                foreach (var p in new int[3])
-                    for (int count = 3; count <= 30; count += 5)
-                        for (int top = 5; top >= 1; top--)
+            ReadRES();
+            ReadUpDown();
+            past = DateTime.Now;
+            foreach (var p in new int[3])
+                for (int count = 3; count <= 30; count += 5)
+                    for (int top = 5; top >= 1; top--)
+                    {
+                        $"_____________________________count = {count} top = {top}".Show(); "".Show();
+                        double b = best;
+                        int q = 0;
+                        while (q < 10)
                         {
-                            $"_____________________________count = {count} top = {top}".Show(); "".Show();
-                            double b = best;
-                            int q = 0;
-                            while (q < 10)
+                            RandomDown4(count, top, 500);
+                            if (b == best)
                             {
-                                RandomDown4(count, top, 500);
-                                if (b == best)
-                                {
-                                    q++;
-                                }
-                                else b = best;
+                                q++;
                             }
-
+                            else b = best;
                         }
-                now = DateTime.Now - past;
 
-                Log($"count top + -    time: {now}   res: {scoreMemoized2(res)}");
+                    }
+            now = DateTime.Now - past;
+
+            Log($"count top + -    time: {now}   res: {scoreMemoized2(res)}");
 
 
 
@@ -2747,7 +2747,7 @@ namespace Покоординатная_минимизация
             past = DateTime.Now;
             foreach (var p in new int[2])
                 for (int top = 5; top >= 1; top--)
-                for (int count = 3; count <= 30; count += 5)                   
+                    for (int count = 3; count <= 30; count += 5)
                     {
                         $"_____________________________count = {count} top = {top}".Show(); "".Show();
                         double b = best;
@@ -2774,7 +2774,7 @@ namespace Покоординатная_минимизация
             past = DateTime.Now;
             foreach (var p in new int[2])
                 for (int top = 5; top >= 1; top--)
-                for (int count = 28; count >= 5; count -= 5)                
+                    for (int count = 28; count >= 5; count -= 5)
                     {
                         $"_____________________________count = {count} top = {top}".Show(); "".Show();
                         double b = best;
@@ -2801,7 +2801,7 @@ namespace Покоординатная_минимизация
             past = DateTime.Now;
             foreach (var p in new int[2])
                 for (int top = 1; top <= 5; top++)
-                for (int count = 28; count >= 5; count -= 5)                  
+                    for (int count = 28; count >= 5; count -= 5)
                     {
                         $"_____________________________count = {count} top = {top}".Show(); "".Show();
                         double b = best;
@@ -2828,7 +2828,7 @@ namespace Покоординатная_минимизация
             past = DateTime.Now;
             foreach (var p in new int[2])
                 for (int top = 1; top <= 5; top++)
-                for (int count = 5; count <= 28; count += 5)                   
+                    for (int count = 5; count <= 28; count += 5)
                     {
                         $"_____________________________count = {count} top = {top}".Show(); "".Show();
                         double b = best;
@@ -2856,7 +2856,7 @@ namespace Покоординатная_минимизация
         {
             ReadRES();
             ReadUpDown();
-            RunWithLogs();
+            //RunWithLogs();
             //Bee2();
             //Bee(200);
             //MakeResult2(accounting_penaltyMemoized);
@@ -2882,28 +2882,32 @@ namespace Покоординатная_минимизация
             //Swap_6(b);
             // MakeResult8();
             //NotRandomDown(3);
-           //WriteContributions("conts.csv");
-           // int[] inds;
-            foreach(var p in new int[3])
-            for (int count = 60; count <= 200; count += 10)
-                for (int top = 5; top >= 1; top--)
-                {
-                    $"_____________________________count = {count} top = {top}".Show(); "".Show();
-                    double b = best;
-                    int q = 0;
-                   // inds = GetSub2();
-                    while (q < 5)
+            //WriteContributions("conts.csv");
+            // int[] inds;
+            foreach (var p in new int[3])
+                for (int count = 80; count <= 150; count += 10)
+                    for (int top = 5; top >= 1; top--)
                     {
-                        RandomDown9(count, top, 500);
-                        if (b == best)
+                        $"_____________________________count = {count} top = {top}".Show(); "".Show();
+                        double b = best;
+                        int q = 0;
+                        // inds = GetSub2();
+                        while (q < 5)
                         {
-                            q++;
-                            //inds = GetSub2();
-                        }
-                        else b = best;
-                    }
+                            RandomDown9(count, top, 500);
+                            RandomDown4(count / 8, top, 500);
+                            RandomDown5(count / 4, top, 500);
+                            RandomDown6(count / 8, 500);
+                            if (b == best)
+                            {
+                                q++;
 
-                }
+                                //inds = GetSub2();
+                            }
+                            else b = best;
+                        }
+
+                    }
             return;
 
             // var t = preference_costs(res);
@@ -3157,19 +3161,24 @@ namespace Покоординатная_минимизация
             }
         }
 
+        /// <summary>
+        /// Меняет в iter копиях случайные dim элементов на случайные choise от 0 до top-1
+        /// </summary>
+        /// <param name="dim"></param>
+        /// <param name="top"></param>
+        /// <param name="iter"></param>
         static void RandomDown4(int dim = 10, int top = 5, int iter = 10000)
         {
             var mas = new int[dim];
             var copy = new byte[dim];
             var obs = GetNresCopy(iter);
             int index, j;
-            (double, byte[])[] links = new (double, byte[])[iter];
 
             //var map =Days( GetMap(res), s => s >= 200);
             //var map = DaysOfMaxPrice(GetMap(res), 100);
             var inds = Enumerable.Range(0, 4999).Where(c => peops1.Contains(n_people[c])  /*<= 6 && n_people[c] >= 3*/).ToArray(); //IndexOfDays(res, r => r>1&&r<70/*map.Contains(r)*/); //GetNotZeroChoises();
-           // var inds = Filter();
-            //var inds = Enumerable.Range(0, 4999).Where(c => res[c]!=choice_5[c]&&res[c]!=choice_4[c]  /*<= 6 && n_people[c] >= 3*/).ToArray();
+                                                                                                                                   // var inds = Filter();
+                                                                                                                                   //var inds = Enumerable.Range(0, 4999).Where(c => res[c]!=choice_5[c]&&res[c]!=choice_4[c]  /*<= 6 && n_people[c] >= 3*/).ToArray();
 
             var icount = inds.Length;
             //Console.WriteLine($"Not zero families count is {icount} ({Expendator.GetProcent(icount, 5000)}%)");
@@ -3214,36 +3223,7 @@ namespace Покоординатная_минимизация
             }
             //);
 
-            "--->Start".Show();
-            Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow(obs[i]));
-            //for (int i = 0; i < iter; i++) links[i] = MakeCoordMinSlow(obs[i]);
-            "--->Start2".Show();
-            var en = Enumerable.Range(0, iter).Where(s => links[s].Item1 < best).ToArray();
-            if(en.Length>0)
-            {
-                if (en.Length == 1)
-                    links[en[0]] = MakeCoordMinSlow2Parallel(obs[en[0]], Enumerable.Range(0, 4999).Where(c => peops2.Contains(n_people[c]) /*n_people[c] ==4*/).ToArray());
-                else
-                  Parallel.ForEach(en, (int i) => links[i] = MakeCoordMinSlow2(obs[i], Enumerable.Range(0, 4999).Where(c => peops2.Contains(n_people[c]) /*n_people[c] ==4*/).ToArray()));
-            }
-            
-
-            var bs = links.Min(p => p.Item1);
-            var t = links.First(p => p.Item1 == bs);
-            if (best > bs)
-            {
-                res = t.Item2;
-                best = bs;
-
-                Console.WriteLine($"Записывается в файл {bs}");
-                WriteData(bs, "");
-                ShowStructure();
-            }
-            else
-            {
-                Console.WriteLine($"-------> to best: {links.Count(p => p.Item1 == best)} ; to 1e20: {links.Count(p => p.Item1 == 1e20)}");
-                "".Show();
-            }
+            MakeDown(obs);
         }
 
         static byte[] DaysOfMaxPrice(short[] map, double morethan = 100)
@@ -3255,7 +3235,12 @@ namespace Покоординатная_минимизация
             return res.Where(r => r.Item1 > 100).Select(r => r.Item2).ToArray();
 
         }
-
+        /// <summary>
+        /// То же самое, что и 4, но в каждой копии случайно меняются одни и те же координаты
+        /// </summary>
+        /// <param name="dim"></param>
+        /// <param name="top"></param>
+        /// <param name="iter"></param>
         static void RandomDown5(int dim = 10, int top = 5, int iter = 10000)
         {
             var mas = new int[dim];
@@ -3303,61 +3288,23 @@ namespace Покоординатная_минимизация
             }
             //);
 
-            "--->Start".Show();
-            Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow(obs[i]));
-            //for (int i = 0; i < iter; i++) links[i] = MakeCoordMinSlow(obs[i]);
-
-            var bs = links.Min(p => p.Item1);
-            var t = links.First(p => p.Item1 == bs);
-            if (best > bs)
-            {
-                res = t.Item2;
-                best = bs;
-
-                Console.WriteLine($"Записывается в файл {bs}");
-                WriteData(bs, "");
-                ShowStructure();
-            }
-            else
-            {
-                Console.WriteLine($"-------> to best: {links.Count(p => p.Item1 == best)} ; to 1e20: {links.Count(p => p.Item1 == 1e20)}");
-                "".Show();
-            }
+            MakeDown(obs);
         }
-
-        static void RandomDown6(int dim = 10, int top = 5, int iter = 10000)
+        /// <summary>
+        /// По копиям сначала делается градиентный спуск по первой функции
+        /// </summary>
+        /// <param name="dim"></param>
+        /// <param name="top"></param>
+        /// <param name="iter"></param>
+        static void RandomDown6(int dim = 10, int iter = 10000)
         {
             var obs = GetNresCopy(iter);
             (double, byte[])[] links = new (double, byte[])[iter];
 
-
             Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlowPr(obs[i], dim + 2 * i));
             obs = links.Select(u => u.Item2).ToArray();
 
-            //for (int i = 0; i < iter; i++)
-            //{
-            //    MakeCoordMinPr(obs[i], dim);
-            //}
-
-            "--->Start".Show();
-            Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow(obs[i]));
-
-            var bs = links.Min(p => p.Item1);
-            var t = links.First(p => p.Item1 == bs);
-            if (best > bs)
-            {
-                res = t.Item2;
-                best = bs;
-
-                Console.WriteLine($"Записывается в файл {bs}");
-                WriteData(bs, "");
-                ShowStructure();
-            }
-            else
-            {
-                Console.WriteLine($"-------> to best: {links.Count(p => p.Item1 == best)} ; to 1e20: {links.Count(p => p.Item1 == 1e20)}");
-                "".Show();
-            }
+            MakeDown(obs);
         }
 
         static void RandomDown7(int dim = 10, int top = 5, int iter = 10000)
@@ -3409,7 +3356,7 @@ namespace Покоординатная_минимизация
             }
         }
 
-        static void RandomDown8(int[] inds,int dim = 10, int top = 5, int iter = 10000)
+        static void RandomDown8(int[] inds, int dim = 10, int top = 5, int iter = 10000)
         {
             var mas = new int[dim];
             var copy = new byte[dim];
@@ -3480,9 +3427,23 @@ namespace Покоординатная_минимизация
             }
         }
 
+        /// <summary>
+        /// По сути то же самое, что и RandomDown4, но чуть иначе меняются копии
+        /// </summary>
+        /// <param name="dim"></param>
+        /// <param name="top"></param>
+        /// <param name="iter"></param>
         static void RandomDown9(int dim = 10, int top = 5, int iter = 10000)
         {
-            var obs = GetSuperRandom(iter,dim,top);
+            var obs = GetSuperRandom(iter, dim, top);
+
+            MakeDown(obs);
+        }
+
+
+        static void MakeDown(byte[][] obs)
+        {
+            var iter = obs.GetLength(0);
             (double, byte[])[] links = new (double, byte[])[iter];
 
             "--->Start".Show();
@@ -3515,6 +3476,7 @@ namespace Покоординатная_минимизация
                 "".Show();
             }
         }
+
 
         /// <summary>
         /// Показывает разброс текущих данных по choises
@@ -4276,23 +4238,23 @@ namespace Покоординатная_минимизация
             }
         }
 
-        static byte[][] GetSuperRandom(int count,int take=100,int top=5)
+        static byte[][] GetSuperRandom(int count, int take = 100, int top = 5)
         {
             var gv = GetNresCopy(count);
             var Map = GetMap(res);
             bool gut(short v) => v >= 125 && v <= 300;
-            Parallel.For(0, count, p => 
+            Parallel.For(0, count, p =>
             {
                 ref var ob = ref gv[p];
                 var map = Map.Dup();
 
-                foreach(var ind in GetRandom().Take(take))
+                foreach (var ind in GetRandom().Take(take))
                 {
-                    var pi = ob[ind]-1;
+                    var pi = ob[ind] - 1;
                     var peop = n_people[ind];
                     map[pi] -= peop;
-                    var arr = Top(ind, top).ToArray();arr.Swap(top);
-                    foreach(var vl in arr)
+                    var arr = Top(ind, top).ToArray(); arr.Swap(top);
+                    foreach (var vl in arr)
                     {
                         map[vl - 1] += peop;
                         if (gut(map[pi]) && gut(map[vl - 1]))
@@ -4309,7 +4271,7 @@ namespace Покоординатная_минимизация
 
             return gv;
         }
-       
+
         static byte[] ToByteArr(double[] arr)
         {
             byte[] g = new byte[arr.Length];
@@ -4327,16 +4289,16 @@ namespace Покоординатная_минимизация
         {
             var k = new double[arr.Length];
             for (int i = 0; i < arr.Length; i++)
-                k[i] = Array.IndexOf(Tops[i],arr[i]);
+                k[i] = Array.IndexOf(Tops[i], arr[i]);
             return k;
         }
-        static void Bee(int dim=25)
+        static void Bee(int dim = 25)
         {
             const int ct = 400;
             var mas = new int[dim];
             var copy = new byte[dim];
 
-            var obs = GetSuperRandom(ct,dim, 5);
+            var obs = GetSuperRandom(ct, dim, 5);
             obs[0] = res;
 
             //var obs = GetNresCopy(ct);
@@ -4378,7 +4340,7 @@ namespace Покоординатная_минимизация
             BeeHiveAlgorithm.fg = 5;
 
             var t = BeeHiveAlgorithm.GetGlobalMin(
-                obs.Select(o=> new Vectors(ToDouble(o))).ToArray(),
+                obs.Select(o => new Vectors(ToDouble(o))).ToArray(),
                 (Vectors v) => scoreMemoized2(ToByteArr(v.DoubleMas)),
                 n: 5000,
                min: 0, max: 4, eps: 1e-10, countpoints: ct, maxcountstep: 2000, maxiter: 50000);
@@ -4397,7 +4359,7 @@ namespace Покоординатная_минимизация
             var t = BeeHiveAlgorithm.GetGlobalMin(
                 (Vectors v) => scoreMemoized2(ToByteArr(v.DoubleMas)),
                 n: 5000,
-               min: 0, max: 4, eps: 1e-10, countpoints: ct, maxcountstep: 2000,center: new Vectors(ToDouble(res)), maxiter: 50000);
+               min: 0, max: 4, eps: 1e-10, countpoints: ct, maxcountstep: 2000, center: new Vectors(ToDouble(res)), maxiter: 50000);
 
             best = t.Item2;
             res = ToByteArr(t.Item1.DoubleMas);
@@ -5370,15 +5332,15 @@ namespace Покоординатная_минимизация
         {
             var pr = ContributionPr();
             var acc = ContributionAcc();
-            var s = Enumerable.Range(0, 5000).Select(i => $"{i + 1},{pr[i].ToString().Replace(',','.')},{acc[i].ToString().Replace(',', '.')}").ToList();
+            var s = Enumerable.Range(0, 5000).Select(i => $"{i + 1},{pr[i].ToString().Replace(',', '.')},{acc[i].ToString().Replace(',', '.')}").ToList();
             s.Insert(0, "id,pr,acc");
             Expendator.WriteInFile(filemane, s.ToArray());
         }
         static int[] GetSub()
         {
             WriteContributions(@"C:\Users\крендель\Desktop\MagicCode\Машинное обучение\Santa's Workshop Tour 2019\conts.csv");
-            Expendator.StartProcessOnly("BuildSubset.r", 
-                false, 
+            Expendator.StartProcessOnly("BuildSubset.r",
+                false,
                 @"C:\Users\крендель\Desktop\MagicCode\Машинное обучение\Santa's Workshop Tour 2019");
             return Expendator.GetStringArrayFromFile(@"C:\Users\крендель\Desktop\MagicCode\Машинное обучение\Santa's Workshop Tour 2019\subset.txt").Select(i => Convert.ToInt32(i)).ToArray();
         }
@@ -5386,7 +5348,7 @@ namespace Покоординатная_минимизация
         {
             var p = ContributionAcc();
             var t = ContributionPr();
-           return Enumerable.Range(0, 5000).Where(i => p[i] + t[i] > 0).ToArray();
+            return Enumerable.Range(0, 5000).Where(i => p[i] + t[i] > 0).ToArray();
         }
 
     }
