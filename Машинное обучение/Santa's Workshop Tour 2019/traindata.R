@@ -6,7 +6,7 @@ library(compiler)
 
 data=read_csv("family_data.csv")
 peop=data$n_people
-choises=data[,2:11]
+choises=data[,2:11] %>% tbl_df()
 
 
 preference.cost=function(dayvec){

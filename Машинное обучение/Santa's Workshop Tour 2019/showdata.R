@@ -71,5 +71,48 @@ alien=data.table::fread("alien.txt",header = T,sep='\t')
 best.res=alien$assigned_day
 
 
+#####################
+library(factoextra)  #графика по главным компонентам
+print(fviz_cluster(list(data = choises[, 1:5], cluster =  res), ellipse.type = "norm"))
+
+
+
+#######
+ifelse(res==choises[1]&res==1,peop,0) %>% sum()
+
+ifelse(choises[1]==1,peop,0) %>% factor()%>%  summary()
+
+
+bes=read_csv("res.csv")
+res= bes$assigned_day
+
+ds=data.frame(p=peop,dc=factor(res)) %>% group_by(dc) %>% summarise(val=sum(p))
+
+ggplot(ds,aes(x=dc,y=val))+
+  geom_col()+
+  labs(title=paste("acc =",accounting.penalty(res),"  pre =",preference.cost(res)))+
+  geom_hline(yintercept =c( 125,300),col="red",size=1.5)+
+  theme_bw()
+
+
+res[choises[1]==1&peop==8]=1
+
+res[(res==1&peop==2)]=choises[(res==1&peop==2),2]%>% unclass() %$%choice_1 
+
+day=97
+chs=4
+inds=ifelse(choises[chs]==day,1,0)
+sum((res==1)*inds)
+res[(res==1)*inds]=day 
+
+
+res[res==1&peop==4]=choises[res==1&peop==4,3] %>% unclass() %$%choice_2 
+res[res==1&peop<=3]=choises[res==1&peop<=3,4] %>% unclass() %$%choice_3 
+
+
+tt=cbind(i=1:5000,res,peop,choises[,1:6]) %>% tbl_df()
+
+res[3249]=2
+
 
 
