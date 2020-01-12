@@ -34,7 +34,7 @@ ds=data.frame(p=peop,dc=factor(res)) %>% group_by(dc) %>% summarise(val=sum(p))
 
 ggplot(ds,aes(x=dc,y=val))+
   geom_col()+
-  labs(title=paste("acc =",accounting.penalty(res),"  pre =",preference.cost(res)))+
+  labs(title=paste("acc =",accounting.penalty(res),"  pre =",preference.cost(res),"  sum =",score(res)))+
   geom_hline(yintercept =c( 125,300),col="red",size=1.5)+
   theme_bw()
 

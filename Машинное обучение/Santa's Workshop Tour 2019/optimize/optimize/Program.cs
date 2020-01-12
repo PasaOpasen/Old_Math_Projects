@@ -44,14 +44,14 @@ namespace Покоординатная_минимизация
             ifchoice9 = new int[5000],
             ifnochoice = new int[5000];
 
-        static double best;
+        static float best;
         static (int, int)[] Fs = new (int, int)[5000];
         static readonly (byte, byte, byte)[] samples3 = new (byte, byte, byte)[1000000];
         static readonly (byte, byte)[] samples2 = new (byte, byte)[10000];
 
-        static double[] lastN = new double[176];
+        static float[] lastN = new float[176];
         static int[][] prCosts = new int[5000][];
-        static double[][] Ntonumber = new double[176][];
+        static float[][] Ntonumber = new float[176][];
 
         /// <summary>
         /// Всевозможные комбинации пар от 1 до 100
@@ -128,14 +128,14 @@ namespace Покоординатная_минимизация
             for (int i = 0; i < lastN.Length; i++)
             {
                 n = i + 125;
-                lastN[i] = (n - 125.0) / 400.0 * Math.Sqrt(n);
+                lastN[i] = ((n - 125.0) / 400.0 * Math.Sqrt(n)).ToFloat();
             }
 
             for (short i = 125; i <= 300; i++)
             {
-                Ntonumber[i - 125] = new double[176];
+                Ntonumber[i - 125] = new float[176];
                 for (short j = 125; j <= 300; j++)
-                    Ntonumber[i - 125][j - 125] = (i - 125.0) / 400.0 * Math.Pow(i, 0.5 + 0.02 * Math.Abs(i - j));
+                    Ntonumber[i - 125][j - 125] = ((i - 125.0) / 400.0 * Math.Pow(i, 0.5 + 0.02 * Math.Abs(i - j))).ToFloat();
             }
 
             int u = 0, v = 0;
@@ -228,7 +228,7 @@ namespace Покоординатная_минимизация
             return false;
         };
 
-        static Func<byte[], double> preference_costs = (byte[] arr) =>
+        static Func<byte[], float> preference_costs = (byte[] arr) =>
         {
             int s = 0;
             byte arri;
@@ -281,7 +281,7 @@ namespace Покоординатная_минимизация
 
             return s;
         };
-        static Func<byte[], double> accounting_penalty = (byte[] arr) =>
+        static Func<byte[], float> accounting_penalty = (byte[] arr) =>
         {
             short[] count = new short[100];
             for (int i = 0; i < arr.Length; i++)
@@ -292,25 +292,25 @@ namespace Покоординатная_минимизация
             {
                 tmp = count[i];
                 if (tmp < 125 || tmp > 300)
-                    return 1e20;
+                    return 1e20f;
             }
 
-            double sum = 0;
+            float sum = 0;
             for (int i = 98; i >= 0; i--)
             {
                 tmp = count[i];
-                sum += (tmp - 125.0) / 400.0 * Math.Pow(tmp, 0.5 + 0.02 * Math.Abs(tmp - count[i + 1]));
+                sum += ((tmp - 125.0) / 400.0 * Math.Pow(tmp, 0.5 + 0.02 * Math.Abs(tmp - count[i + 1]))).ToFloat();
             }
 
-            return sum + (count[99] - 125.0) / 400.0 * Math.Sqrt(count[99]);
+            return sum + ((count[99] - 125.0) / 400.0 * Math.Sqrt(count[99])).ToFloat();
         };
-        static Func<byte[], double> preference_costs2 = (byte[] arr) =>
+        static Func<byte[], float> preference_costs2 = (byte[] arr) =>
         {
             if (wall(arr))
-                return 1e20;
+                return 1e20f;
             return preference_costs(arr);
         };
-        static Func<byte[], double> accounting_penaltyMemoized = (byte[] arr) =>
+        static Func<byte[], float> accounting_penaltyMemoized = (byte[] arr) =>
         {
             short[] count = new short[100];
             for (int i = 0; i < arr.Length; i++)
@@ -323,10 +323,10 @@ namespace Покоординатная_минимизация
             {
                 tmp = count[i];
                 if (tmp < 125 || tmp > 300)
-                    return 1e20;
+                    return 1e20f;
             }
 
-            double sum = lastN[count[99] - 125];
+            float sum = lastN[count[99] - 125];
             for (int i = 98; i >= 0; i--)
             {
                 sum += Ntonumber[count[i] - 125][count[i + 1] - 125];
@@ -345,23 +345,23 @@ namespace Покоординатная_минимизация
             return S;
         };
 
-        static Func<short[], double> accounting_penalty2 = (short[] count) =>
+        static Func<short[], float> accounting_penalty2 = (short[] count) =>
         {
             short tmp;
             for (int i = 0; i < count.Length; i++)
             {
                 tmp = count[i];
                 if (tmp < 125 || tmp > 300)
-                    return 1e20;
+                    return 1e20f;
             }
             return accounting_penalty3(count);
         };
         /// <summary>
         /// То же самое, что и 2, но без проверки
         /// </summary>
-        static Func<short[], double> accounting_penalty3 = (short[] count) =>
+        static Func<short[], float> accounting_penalty3 = (short[] count) =>
         {
-            double sum = lastN[count[99] - 125];
+            float sum = lastN[count[99] - 125];
             for (int i = 98; i >= 0; i--)
             {
                 sum += Ntonumber[count[i] - 125][count[i + 1] - 125];
@@ -376,10 +376,10 @@ namespace Покоординатная_минимизация
         /// <param name="arr"></param>
         /// <param name="order"></param>
         /// <returns></returns>
-        static double PreferenceCosts(byte[] arr, ref int[] order)
+        static float PreferenceCosts(byte[] arr, ref int[] order)
         {
             //if (wall(arr))
-            //    return 1e20;
+            //    return 1e20f;
 
             int[] sums = new int[5000];
 
@@ -453,9 +453,9 @@ namespace Покоординатная_минимизация
 
             int[] order = new int[1];
             bool existresult;
-            double bst;
+            float bst;
             byte[][] mat = GetNresCopy();
-            double[] results = new double[100];
+            float[] results = new float[100];
             int iter;
 
             do
@@ -511,14 +511,14 @@ namespace Покоординатная_минимизация
         /// <summary>
         /// Функция счёта. Она так написана, чтоб быстрее работать в случаях, когда аргумент выходит за границы
         /// </summary>
-        static Func<byte[], double> score = (byte[] arr) =>
+        static Func<byte[], float> score = (byte[] arr) =>
         {
-            double acc = accounting_penalty(arr);
-            if (acc >= 1e20) return acc;
+            float acc = accounting_penalty(arr);
+            if (acc >= 1e20f) return acc;
             return acc + preference_costs(arr);
         };
 
-        static Func<byte[], double> scoreMemoized = (byte[] arr) =>
+        static Func<byte[], float> scoreMemoized = (byte[] arr) =>
         {
             int S = 0, arrm1;
             short[] count = new short[100];
@@ -534,10 +534,10 @@ namespace Покоординатная_минимизация
             {
                 tmp = count[i];
                 if (tmp < 125 || tmp > 300)
-                    return 1e20;
+                    return 1e20f;
             }
 
-            double sum = lastN[count[99] - 1];
+            float sum = lastN[count[99] - 1];
             for (int i = 98; i >= 0; i--)
             {
                 sum += Ntonumber[count[i] - 125][count[i + 1] - 125];
@@ -546,10 +546,10 @@ namespace Покоординатная_минимизация
             return sum + S;
 
         };
-        static Func<byte[], double> scoreMemoized2 = (byte[] arr) =>
+        static Func<byte[], float> scoreMemoized2 = (byte[] arr) =>
         {
-            double acc = accounting_penaltyMemoized(arr);
-            if (acc >= 1e20) return acc;
+            float acc = accounting_penaltyMemoized(arr);
+            if (acc >= 1e20f) return acc;
             return acc + preference_costsMemoized(arr);
         };
 
@@ -564,7 +564,7 @@ namespace Покоординатная_минимизация
             }
             best = scoreMemoized2(res);
         }
-        static void WriteData(double reslt, string acc = "")
+        static void WriteData(float reslt, string acc = "")
         {
             using (var s = new StreamWriter($"res {acc} {reslt}.csv"))
             {
@@ -629,7 +629,7 @@ namespace Покоординатная_минимизация
             }
             return mat;
         }
-        static bool MakeCoordMin(Func<byte[], double> fun, int count = 5000)
+        static bool MakeCoordMin(Func<byte[], float> fun, int count = 5000)
         {
             best = fun(res);
 
@@ -638,7 +638,7 @@ namespace Покоординатная_минимизация
             byte[][] mat = GetNresCopy();
 
             var numbers = GetRandom().Take(count).ToArray(); //GetRange();
-            double[] results = new double[100];
+            float[] results = new float[100];
 
             foreach (var nb in numbers)
             {
@@ -646,7 +646,7 @@ namespace Покоординатная_минимизация
                 //    mat[i][nb] = (byte)(i + 1);
 
                 //results = mat.AsParallel().Select(arr => fun(arr)).ToArray();
-                //double bst = results.Min();
+                //float bst = results.Min();
                 //int n = Array.IndexOf(results, bst) + 1;
 
                 //byte bn = (byte)n;
@@ -670,7 +670,7 @@ namespace Покоординатная_минимизация
         static void MakeCoordMinPr(byte[] res2, int count = 5000)
         {
             bool existprogress = false;
-            double bst;
+            float bst;
 
             int[] numbers; //GetRange();
             int pr;
@@ -705,7 +705,7 @@ namespace Покоординатная_минимизация
         static void MakeCoordMinAcc(byte[] res2, int count = 5000)
         {
             bool existprogress = false;
-            double bst;
+            float bst;
 
             int[] numbers; //GetRange();
             int pr;
@@ -738,7 +738,7 @@ namespace Покоординатная_минимизация
             Console.WriteLine($"pr = {preference_costsMemoized(res2)}  acc = {accounting_penaltyMemoized(res2)}  sum = {scoreMemoized2(res2)}");
         }
 
-        static bool MakeCoordMin2(Func<byte[], double> fun)
+        static bool MakeCoordMin2(Func<byte[], float> fun)
         {
             best = fun(res);
 
@@ -750,7 +750,7 @@ namespace Покоординатная_минимизация
 
             var numbers = GetRandom(); //GetRange();
 
-            double[] results = new double[howmany];
+            float[] results = new float[howmany];
             int ind2;
             (byte, byte) vals;
 
@@ -768,7 +768,7 @@ namespace Покоординатная_минимизация
                 }
 
                 results = mat.AsParallel().Select(arr => fun(arr)).ToArray();
-                double bst = results.Min();
+                float bst = results.Min();
                 int n = 0;
                 for (int i = 0; i < results.Length; i++)
                     if (results[i] == bst)
@@ -802,7 +802,7 @@ namespace Покоординатная_минимизация
             return existprogress;
         }
 
-        static bool MakeCoordMinSlow(Func<byte[], double> fun)
+        static bool MakeCoordMinSlow(Func<byte[], float> fun)
         {
             best = fun(res);
 
@@ -811,11 +811,11 @@ namespace Покоординатная_минимизация
             //byte[][] mat = GetNresCopy();
 
             var numbers = GetRange();
-            var result = new (double, byte, int)[5000];
+            var result = new (float, byte, int)[5000];
             int index = 0;
-            double bst;
+            float bst;
 
-            double[] results = new double[100];
+            float[] results = new float[100];
             foreach (var nb in numbers)
             {
                 //for (byte i = 0; i < 100; i++)
@@ -857,14 +857,14 @@ namespace Покоординатная_минимизация
         /// </summary>
         /// <param name="sample_res"></param>
         /// <returns></returns>
-        static (double, byte[]) MakeCoordMinSlow(byte[] sample_res)
+        static (float, byte[]) MakeCoordMinSlow(byte[] sample_res)
         {
-            double locbest = scoreMemoized2(sample_res);
+            float locbest = scoreMemoized2(sample_res);
             bool existprogress;
             var numbers = family_id;
-            var result = new (double, byte, int)[5000];
+            var result = new (float, byte, int)[5000];
             int index, pr;
-            double bst;
+            float bst;
             short[] acr;
 
         begin1:
@@ -889,7 +889,7 @@ namespace Покоординатная_минимизация
                 sample_res[pi.Item3] = pi.Item2;
             }
 
-            if (locbest == 1e20)
+            if (locbest == 1e20f)
                 return (locbest, sample_res);
 
             if (existprogress && locbest != best)
@@ -897,27 +897,27 @@ namespace Покоординатная_минимизация
             else
                 return (locbest, sample_res);
         }
-        static (double, byte[]) MakeCoordMinSlow2(byte[] sample_res)
+        static (float, byte[]) MakeCoordMinSlow2(byte[] sample_res)
         {
 
             return MinByTwoChoise(sample_res, preference_costsMemoized(sample_res), GetMap(sample_res));
         }
-        static (double, byte[]) MakeCoordMinSlow2(byte[] sample_res, int[] bt)
+        static (float, byte[]) MakeCoordMinSlow2(byte[] sample_res, int[] bt)
         {
             return MinByTwoChoise(sample_res, bt, preference_costsMemoized(sample_res), GetMap(sample_res));
         }
-        static (double, byte[]) MakeCoordMinSlow2Parallel(byte[] sample_res, int[] bt)
+        static (float, byte[]) MakeCoordMinSlow2Parallel(byte[] sample_res, int[] bt)
         {
             return MinByTwoChoiseParallel(sample_res, bt, preference_costsMemoized(sample_res), GetMap(sample_res));
         }
-        static (double, byte[]) MakeCoordMinSlowPr(byte[] sample_res, int count = 15)
+        static (float, byte[]) MakeCoordMinSlowPr(byte[] sample_res, int count = 15)
         {
-            double locbest = preference_costsMemoized(sample_res);
+            float locbest = preference_costsMemoized(sample_res);
             bool existprogress;
             var numbers = family_id;
-            var result = new (double, byte, int)[5000];
+            var result = new (float, byte, int)[5000];
             int index, pr;
-            double bst;
+            float bst;
             short[] acr;
 
         begin1:
@@ -951,12 +951,12 @@ namespace Покоординатная_минимизация
                 return (locbest, sample_res);
         }
 
-        static (double, byte[]) MakeCoordMinRand(byte[] sample_res)
+        static (float, byte[]) MakeCoordMinRand(byte[] sample_res)
         {
-            double locbest = scoreMemoized2(sample_res);
+            float locbest = scoreMemoized2(sample_res);
             bool existprogress;
             var numbers = family_id;
-            var result = new (double, byte, int)[5000];
+            var result = new (float, byte, int)[5000];
             int pr;
             short[] acr;
 
@@ -989,14 +989,14 @@ namespace Покоординатная_минимизация
         }
 
 
-        static (double, byte[]) Make2CoordMinSlow(byte[] sample_res)
+        static (float, byte[]) Make2CoordMinSlow(byte[] sample_res)
         {
-            double locbest = scoreMemoized2(sample_res);
+            float locbest = scoreMemoized2(sample_res);
             bool existprogress;
             var numbers = family_id;
-            var result = new (double, byte, byte, int)[4999];
+            var result = new (float, byte, byte, int)[4999];
             int index, pr;
-            double bst;
+            float bst;
             short[] acr;
 
         begin1:
@@ -1022,7 +1022,7 @@ namespace Покоординатная_минимизация
                 sample_res[pi.Item4 + 1] = pi.Item3;
             }
 
-            if (locbest == 1e20)
+            if (locbest == 1e20f)
                 return (locbest, sample_res);
 
             if (existprogress && locbest != best)
@@ -1063,14 +1063,14 @@ namespace Покоординатная_минимизация
         /// <param name="rows">В скольки строках за раз меняются значения</param>
         /// <param name="range">Максимальный по модулю сдвиг, то есть к координатам вектора будут прибавляться целые числа от -range до range (включая 0, но он маловероятен)</param>
         /// <returns></returns>
-        static bool MakeSampleBest(Func<byte[], double> fun, int samplecount = 100, int rows = 10, int range = 5)
+        static bool MakeSampleBest(Func<byte[], float> fun, int samplecount = 100, int rows = 10, int range = 5)
         {
             bool exist = false;
 
             var mat = GetNresCopy(samplecount);
 
             var numbers = GetRandom();
-            double[] results = new double[samplecount];
+            float[] results = new float[samplecount];
             for (int tt = 0; tt < numbers.Length; tt += rows)
             {
                 for (byte i = 0; i < samplecount; i++)
@@ -1088,7 +1088,7 @@ namespace Покоординатная_минимизация
                 }
 
                 results = mat.AsParallel().Select(arr => fun(arr)).ToArray();
-                double bst = results.Min();
+                float bst = results.Min();
                 int n = 0;
                 for (int i = 0; i < results.Length; i++)
                     if (results[i] == bst)
@@ -1116,7 +1116,7 @@ namespace Покоординатная_минимизация
             return exist;
         }
 
-        static void MakeResult2(Func<byte[], double> fun, string acc = "")
+        static void MakeResult2(Func<byte[], float> fun, string acc = "")
         {
             while (MakeCoordMin(fun))
             {
@@ -1124,7 +1124,7 @@ namespace Покоординатная_минимизация
                 WriteData(best, acc);
             }
         }
-        static void MakeResult3(Func<byte[], double> fun, string acc = "")
+        static void MakeResult3(Func<byte[], float> fun, string acc = "")
         {
             while (MakeSampleBest(fun, 200, 5, 1))
             {
@@ -1143,7 +1143,7 @@ namespace Покоординатная_минимизация
             }
             return;
         }
-        static void MakeResult5(Func<byte[], double> fun, string acc = "")
+        static void MakeResult5(Func<byte[], float> fun, string acc = "")
         {
             while (MakeCoordMinSlow(fun))
             {
@@ -1164,7 +1164,7 @@ namespace Покоординатная_минимизация
         static void MakeResult7(string acc = "")
         {
             byte[][] mat = GetNresCopy();
-            double[] results = new double[100];
+            float[] results = new float[100];
 
             for (int i = 115; i < 4999; i++)
             {
@@ -1195,7 +1195,7 @@ namespace Покоординатная_минимизация
         /// <param name="acc"></param>
         static void MakeResult8(string acc = "")
         {
-            double[] results = new double[100];
+            float[] results = new float[100];
             int[] pres = new int[100];
             short[][] accs = new short[100][];
 
@@ -1307,7 +1307,7 @@ namespace Покоординатная_минимизация
                 for (int j = i + 1; j < 4999; j += jstep)
                 {
                     Console.WriteLine($"j = {j}");
-                    var vals = new (double, (int, int, int), (byte, byte, byte))[4999 - j];
+                    var vals = new (float, (int, int, int), (byte, byte, byte))[4999 - j];
                     Parallel.For(j + 1, 5000, (int p) => vals[p - j - 1] = MinByThreeForParallel(i, j, p, samples3));
 
                     var bt = vals.Min(v => v.Item1);
@@ -1340,7 +1340,7 @@ namespace Покоординатная_минимизация
             for (int i = 0; i < 4999; i += istep)
             {
                 Console.WriteLine($"i = {i}");
-                var vals = new (double, (int, int), (byte, byte))[4999 - i];
+                var vals = new (float, (int, int), (byte, byte))[4999 - i];
 
                 Parallel.For(i + 1, 5000, (int j) => vals[j - i - 1] = MinByTwoForParallel(i, j));
 
@@ -1374,7 +1374,7 @@ namespace Покоординатная_минимизация
                 else ch1.Add(i);
 
 
-            var vals = new (double, (int, int), (byte, byte))[ch0.Count];
+            var vals = new (float, (int, int), (byte, byte))[ch0.Count];
             foreach (var i in ch1)
             {
                 Console.WriteLine($"i = {i}");
@@ -1412,7 +1412,7 @@ namespace Покоординатная_минимизация
                 if (tmp != choice_0[number])
                 {
                     res[number] = choice_0[number];
-                    if (score(res) >= 1e20)
+                    if (score(res) >= 1e20f)
                     {
                         res[number] = tmp;
                         i--;
@@ -1444,7 +1444,7 @@ namespace Покоординатная_минимизация
         static bool MinByRandomize()
         {
             byte tmp;
-            double bst = scoreMemoized2(res);
+            float bst = scoreMemoized2(res);
             for (int i = 0; i < 4999; i++)
             {
                 if (i % 25 == 0)
@@ -1474,10 +1474,10 @@ namespace Покоординатная_минимизация
         static bool MinByRandomize2(int dim = 10, int count = 2000, int top = 5)
         {
             bool existprogress = false;
-            double bsttmp, copybest = scoreMemoized2(res);
+            float bsttmp, copybest = scoreMemoized2(res);
             best = copybest;
 
-            double[] results = new double[count];
+            float[] results = new float[count];
             byte[][] samples = new byte[count][];
             var copy = GetNresCopy(1)[0];
 
@@ -1512,7 +1512,7 @@ namespace Покоординатная_минимизация
                 }
 
                 if (pr2 >= best || acr2.Any(s => s < 125 || s > 300))
-                    results[i] = 1e20;
+                    results[i] = 1e20f;
                 else
                     results[i] = accounting_penalty2(acr2) + pr2;
                 samples[i] = sample;
@@ -1543,9 +1543,9 @@ namespace Покоординатная_минимизация
             return existprogress;
         }
 
-        static (double res, byte val) MinByOne(int ind)
+        static (float res, byte val) MinByOne(int ind)
         {
-            double resultbest = 1e20, result = 1e20;
+            float resultbest = 1e20f, result = 1e20f;
             int index = 0;
 
             int pr = preference_costsMemoized(res);
@@ -1576,9 +1576,9 @@ namespace Покоординатная_минимизация
             return (res: resultbest, val: (byte)index);
         }
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static (double res, byte val) MinByOne(int ind, byte[] sample_res, int pr, short[] acr)
+        static (float res, byte val) MinByOne(int ind, byte[] sample_res, int pr, short[] acr)
         {
-            double result_best = 1e20, result;
+            float result_best = 1e20f, result;
             int index = 1;
             byte np = n_people[ind], nd = (byte)(sample_res[ind] - 1);
 
@@ -1608,9 +1608,9 @@ namespace Покоординатная_минимизация
             return (res: result_best, val: (byte)index);
         }
 
-        static (double res, byte val) MinByOneChoise(int ind, byte[] sample_res, int pr, short[] acr, int top = 8)
+        static (float res, byte val) MinByOneChoise(int ind, byte[] sample_res, int pr, short[] acr, int top = 8)
         {
-            double result_best = 1e20, result;
+            float result_best = 1e20f, result;
             byte index = 1;
             byte np = n_people[ind], nd = (byte)(sample_res[ind] - 1);
 
@@ -1640,9 +1640,9 @@ namespace Покоординатная_минимизация
 
             return (res: result_best, val: index);
         }
-        static (double res, byte val1, byte val2) MinByOneChoise2(int ind, byte[] sample_res, int pr, short[] acr, int top = 8)
+        static (float res, byte val1, byte val2) MinByOneChoise2(int ind, byte[] sample_res, int pr, short[] acr, int top = 8)
         {
-            double result_best = 1e20, result;
+            float result_best = 1e20f, result;
             int ind2 = ind + 1;
             byte index = 1, index2 = 2;
             byte np = n_people[ind], nd = (byte)(sample_res[ind] - 1), np2 = n_people[ind2], nd2 = (byte)(sample_res[ind2] - 1);
@@ -1688,9 +1688,9 @@ namespace Покоординатная_минимизация
             return (res: result_best, val1: index, val2: index2);
         }
 
-        static (double, byte[]) MinByTwoChoise(byte[] sample_res, int pr, short[] acr, int top = 8)
+        static (float, byte[]) MinByTwoChoise(byte[] sample_res, int pr, short[] acr, int top = 8)
         {
-            double first = scoreMemoized2(sample_res), min;
+            float first = scoreMemoized2(sample_res), min;
             (int, int) inds = (0, 0);
             (byte, byte) rs = (0, 0);
             byte[] a1, a2;
@@ -1715,14 +1715,14 @@ namespace Покоординатная_минимизация
                     a2 = Top(j, top);
 
 
-                    (double, (byte, byte))[] tops = new (double, (byte, byte))[top];
+                    (float, (byte, byte))[] tops = new (float, (byte, byte))[top];
 
                     for (int ii = 0; ii < top; ii++)
                     //Parallel.For(0, top, ii =>
                     {
                         int pr2 = pr + prCosts[i][a1[ii] - 1];
                         //var acr2 = acr.Dup();
-                        double f = first, tmp = 1e20;
+                        float f = first, tmp = 1e20f;
                         acr[a1[ii] - 1] += ni;
 
                         foreach (var i2 in a2)
@@ -1748,7 +1748,7 @@ namespace Покоординатная_минимизация
 
                     var ps = tops.Where(s => s.Item1 > 0).ToArray();
                     if (ps.Length == 0)
-                        min = 1e20;
+                        min = 1e20f;
                     else
                         min = ps.Min(s => s.Item1);
 
@@ -1783,9 +1783,9 @@ namespace Покоординатная_минимизация
             return (first, sample_res);
         }
 
-        static (double, byte[]) MinByTwoChoise(byte[] sample_res, int[] dx, int pr, short[] acr, int top = 6)
+        static (float, byte[]) MinByTwoChoise(byte[] sample_res, int[] dx, int pr, short[] acr, int top = 6)
         {
-            double first = scoreMemoized2(sample_res), min;
+            float first = scoreMemoized2(sample_res), min;
             (int, int) inds = (0, 0);
             (byte, byte) rs = (0, 0);
             byte[] a1, a2;
@@ -1819,14 +1819,14 @@ namespace Покоординатная_минимизация
                     a2 = Top(dx[j], top);
 
 
-                    (double, (byte, byte))[] tops = new (double, (byte, byte))[top];
+                    (float, (byte, byte))[] tops = new (float, (byte, byte))[top];
 
                     for (int ii = 0; ii < top; ii++)
                     //Parallel.For(0, top, ii =>
                     {
                         int pr2 = pr + prCosts[dx[i]][a1[ii] - 1];
                         //var acr2 = acr.Dup();
-                        double f = first, tmp = 1e20;
+                        float f = first, tmp = 1e20f;
                         acr[a1[ii] - 1] += ni;
 
                         foreach (var i2 in a2)
@@ -1852,7 +1852,7 @@ namespace Покоординатная_минимизация
 
                     var ps = tops.Where(s => s.Item1 > 0).ToArray();
                     if (ps.Length == 0)
-                        min = 1e20;
+                        min = 1e20f;
                     else
                         min = ps.Min(s => s.Item1);
 
@@ -1890,9 +1890,9 @@ namespace Покоординатная_минимизация
             Console.WriteLine($"New result {first} (count = {howmuch})");
             return (first, sample_res);
         }
-        static (double, byte[]) MinByTwoChoiseParallel(byte[] sample_res, int[] dx, int pr, short[] acr, int top = 6)
+        static (float, byte[]) MinByTwoChoiseParallel(byte[] sample_res, int[] dx, int pr, short[] acr, int top = 6)
         {
-            double first = scoreMemoized2(sample_res), min;
+            float first = scoreMemoized2(sample_res), min;
             (int, int) inds = (0, 0);
             (byte, byte) rs = (0, 0);
             byte[] a1, a2;
@@ -1926,14 +1926,14 @@ namespace Покоординатная_минимизация
                     a2 = Top(dx[j], top);
 
 
-                    (double, (byte, byte))[] tops = new (double, (byte, byte))[top];
+                    (float, (byte, byte))[] tops = new (float, (byte, byte))[top];
 
                     //for (int ii = 0; ii < top; ii++)
                     Parallel.For(0, top, ii =>
                     {
                         int pr2 = pr + prCosts[dx[i]][a1[ii] - 1];
                         var acr2 = acr.Dup();
-                        double f = first, tmp = 1e20;
+                        float f = first, tmp = 1e20f;
                         acr2[a1[ii] - 1] += ni;
 
                         foreach (var i2 in a2)
@@ -1959,7 +1959,7 @@ namespace Покоординатная_минимизация
 
                     var ps = tops.Where(s => s.Item1 > 0).ToArray();
                     if (ps.Length == 0)
-                        min = 1e20;
+                        min = 1e20f;
                     else
                         min = ps.Min(s => s.Item1);
 
@@ -1998,9 +1998,9 @@ namespace Покоординатная_минимизация
             return (first, sample_res);
         }
 
-        static (double res, byte val) MinByOnePr(int ind, byte[] sample_res, int pr, short[] acr)
+        static (float res, byte val) MinByOnePr(int ind, byte[] sample_res, int pr, short[] acr)
         {
-            double result_best = pr, result;
+            float result_best = pr, result;
             int index = 1;
             int sr = sample_res[ind] - 1;
             byte nd = n_people[ind];
@@ -2030,9 +2030,9 @@ namespace Покоординатная_минимизация
 
             return (res: result_best, val: (byte)index);
         }
-        static (double res, byte val) MinByOneAcc(int ind, byte[] sample_res, int pr, short[] acr)
+        static (float res, byte val) MinByOneAcc(int ind, byte[] sample_res, int pr, short[] acr)
         {
-            double result_best = accounting_penalty3(acr), result;
+            float result_best = accounting_penalty3(acr), result;
             int index = 1;
             int sr = sample_res[ind] - 1;
             byte nd = n_people[ind];
@@ -2067,7 +2067,7 @@ namespace Покоординатная_минимизация
         {
             int pr = preference_costsMemoized(ss);
             var acr = GetMap(ss);
-            double bst = pr;
+            float bst = pr;
 
             foreach (int ind in GetRandom().Take(deep))
             {
@@ -2086,7 +2086,7 @@ namespace Покоординатная_минимизация
         {
             int pr = preference_costsMemoized(ss);
             var acr = GetMap(ss);
-            double bst = accounting_penalty3(acr);
+            float bst = accounting_penalty3(acr);
 
             foreach (int ind in GetRandom().Take(deep))
             {
@@ -2102,12 +2102,12 @@ namespace Покоординатная_минимизация
             return ss;
         }
 
-        static bool MinByTwo(int ind1, int ind2, ref byte[][] mat, ref double[] results)
+        static bool MinByTwo(int ind1, int ind2, ref byte[][] mat, ref float[] results)
         {
             bool existprogress = false;
-            double bst = scoreMemoized2(res), bsttmp;
+            float bst = scoreMemoized2(res), bsttmp;
             //byte[][] mat = GetNresCopy();
-            //double[] results = new double[100];
+            //float[] results = new float[100];
             byte k1 = res[ind1], k2 = res[ind2], s1 = k1, s2 = k2;
             int n;
 
@@ -2169,10 +2169,10 @@ namespace Покоординатная_минимизация
             const int count = 100_00_00, dim = 3;
 
             bool existprogress = false;
-            double bsttmp, copybest = scoreMemoized2(res);
+            float bsttmp, copybest = scoreMemoized2(res);
             best = copybest;
 
-            double[] results = new double[count];
+            float[] results = new float[count];
             var copy = GetNresCopy(1)[0];
 
             int pr = preference_costsMemoized(res);
@@ -2206,7 +2206,7 @@ namespace Покоординатная_минимизация
 
 
                 if (pr2 >= best || acr2.Any(s => s < 125 || s > 300))
-                    results[i] = 1e20;
+                    results[i] = 1e20f;
                 else
                     results[i] = accounting_penalty2(acr2) + pr2;
             }
@@ -2231,11 +2231,11 @@ namespace Покоординатная_минимизация
             return existprogress;
         }
 
-        static (double res, (int x, int y), (byte s1, byte s2)) MinByTwoForParallel(int i1, int i2)
+        static (float res, (int x, int y), (byte s1, byte s2)) MinByTwoForParallel(int i1, int i2)
         {
             const int count = 100_00;
 
-            double resultbest = 1e20, result = 1e20;
+            float resultbest = 1e20f, result = 1e20f;
             int index = 0;
 
             int pr = preference_costsMemoized(res);
@@ -2271,11 +2271,11 @@ namespace Покоординатная_минимизация
 
             return (res: resultbest, (x: i1, y: i2), samples2[index]);
         }
-        static (double res, (int x, int y, int z), (byte s1, byte s2, byte s3)) MinByThreeForParallel(int i1, int i2, int i3, (byte, byte, byte)[] samples)
+        static (float res, (int x, int y, int z), (byte s1, byte s2, byte s3)) MinByThreeForParallel(int i1, int i2, int i3, (byte, byte, byte)[] samples)
         {
             const int count = 100_00_00;
 
-            double resultbest = 1e20, result = 1e20;
+            float resultbest = 1e20f, result = 1e20f;
             int index = 0;
 
             int pr = preference_costsMemoized(res);
@@ -2403,10 +2403,10 @@ namespace Покоординатная_минимизация
             return count;
         }
 
-        static bool MinByTwo2(int ind1, int ind2, ref int[] pres, ref short[][] accs, ref double[] results)
+        static bool MinByTwo2(int ind1, int ind2, ref int[] pres, ref short[][] accs, ref float[] results)
         {
             bool existprogress = false;
-            double bst = scoreMemoized2(res), bsttmp;
+            float bst = scoreMemoized2(res), bsttmp;
 
             //int[] pres = new int[100];
             //short[][] accs = new short[100][];
@@ -2493,13 +2493,13 @@ namespace Покоординатная_минимизация
             }
         }
 
-        static void BatchMethod(Func<byte[], double> fun, int size = 20, int count = 400)
+        static void BatchMethod(Func<byte[], float> fun, int size = 20, int count = 400)
         {
             best = fun(res);
             byte[][] mat = GetNresCopy();
 
             var numbers = Enumerable.Range(0, count);
-            double[] results = new double[100];
+            float[] results = new float[100];
 
             foreach (var nb in numbers)
             {
@@ -2507,8 +2507,8 @@ namespace Покоординатная_минимизация
                     for (byte s = 0; s < size; s++)
                         mat[i][randomgen.Next(0, 4999)] = (byte)randomgen.Next(1, 100);
                 results = mat.AsParallel().Select(arr => fun(arr)).ToArray();
-                double bst = results.Min();
-                if (bst >= 1e20)
+                float bst = results.Min();
+                if (bst >= 1e20f)
                     continue;
                 int n = 0;
                 for (int i = 0; i < results.Length; i++)
@@ -2533,7 +2533,7 @@ namespace Покоординатная_минимизация
             }
         }
 
-        static void Batch2(Func<byte[], double> fun, int size = 20, int count = 40)
+        static void Batch2(Func<byte[], float> fun, int size = 20, int count = 40)
         {
             byte[] res2 = new byte[5000];
             for (int i = 0; i < res.Length; i++)
@@ -2592,7 +2592,7 @@ namespace Покоординатная_минимизация
             }
 
 
-            double tt = scoreMemoized2(res);
+            float tt = scoreMemoized2(res);
             tt.Show();
             (tt, res) = MakeCoordMinSlow(res);
             tt.Show();
@@ -2661,7 +2661,7 @@ namespace Покоординатная_минимизация
                     for (int top = 5; top >= 1; top--)
                     {
                         $"_____________________________count = {count} top = {top}".Show(); "".Show();
-                        double b = best;
+                        float b = best;
                         int q = 0;
                         while (q < 10)
                         {
@@ -2688,7 +2688,7 @@ namespace Покоординатная_минимизация
                     for (int top = 5; top >= 1; top--)
                     {
                         $"_____________________________count = {count} top = {top}".Show(); "".Show();
-                        double b = best;
+                        float b = best;
                         int q = 0;
                         while (q < 10)
                         {
@@ -2715,7 +2715,7 @@ namespace Покоординатная_минимизация
                     for (int top = 1; top <= 5; top++)
                     {
                         $"_____________________________count = {count} top = {top}".Show(); "".Show();
-                        double b = best;
+                        float b = best;
                         int q = 0;
                         while (q < 10)
                         {
@@ -2742,7 +2742,7 @@ namespace Покоординатная_минимизация
                     for (int top = 1; top <= 5; top++)
                     {
                         $"_____________________________count = {count} top = {top}".Show(); "".Show();
-                        double b = best;
+                        float b = best;
                         int q = 0;
                         while (q < 10)
                         {
@@ -2769,7 +2769,7 @@ namespace Покоординатная_минимизация
                     for (int count = 3; count <= 30; count += 5)
                     {
                         $"_____________________________count = {count} top = {top}".Show(); "".Show();
-                        double b = best;
+                        float b = best;
                         int q = 0;
                         while (q < 10)
                         {
@@ -2796,7 +2796,7 @@ namespace Покоординатная_минимизация
                     for (int count = 28; count >= 5; count -= 5)
                     {
                         $"_____________________________count = {count} top = {top}".Show(); "".Show();
-                        double b = best;
+                        float b = best;
                         int q = 0;
                         while (q < 10)
                         {
@@ -2823,7 +2823,7 @@ namespace Покоординатная_минимизация
                     for (int count = 28; count >= 5; count -= 5)
                     {
                         $"_____________________________count = {count} top = {top}".Show(); "".Show();
-                        double b = best;
+                        float b = best;
                         int q = 0;
                         while (q < 10)
                         {
@@ -2850,7 +2850,7 @@ namespace Покоординатная_минимизация
                     for (int count = 5; count <= 28; count += 5)
                     {
                         $"_____________________________count = {count} top = {top}".Show(); "".Show();
-                        double b = best;
+                        float b = best;
                         int q = 0;
                         while (q < 10)
                         {
@@ -2870,7 +2870,7 @@ namespace Покоординатная_минимизация
         }
 
         static int GetIndexInChoise(int row, byte val) => Array.IndexOf(Tops[row], val);
-        static void DayDown(int deep=20)
+        static void DayDown(int deep = 20)
         {
             bool gut(short v) => v >= 125 && v <= 300;
 
@@ -2902,15 +2902,15 @@ namespace Покоординатная_минимизация
                                     result = true;
                                     break;
                                 }
-                                   
+
                                 map[Tops[ind][choice] - 1] -= p.Item2;
                                 choice++;
                             }
                             res[ind] = Tops[ind][choice];
                             map[res[ind] - 1] += pp;
 
-                            if(result)
-                            ShowStructure();
+                            if (result)
+                                ShowStructure();
                         }
                     }
                     else
@@ -2928,8 +2928,8 @@ namespace Покоординатная_минимизация
             ReadUpDown();
             ShowStructure();
 
-            
-            //DayDown(12);double d;
+
+            //DayDown(12);float d;
             //best = scoreMemoized2(res);
             //(d, res) = MakeCoordMinSlow2Parallel(res, Enumerable.Range(0, 5000).ToArray());
             //WriteData(d);
@@ -2971,17 +2971,26 @@ namespace Покоординатная_минимизация
             //NotRandomDown(3);
             //WriteContributions("conts.csv");
             // int[] inds;
+            var map = GetMap(res);
+            var pr = GetProcArray();
+            var days = Enumerable.Range(0, 100).Select(d => (d + 1, pr[d])).OrderBy(h => h.Item2).Select(h => h.Item1).Take(25).ToArray();
+            var ines = Enumerable.Range(0, 5000).Where(c => res[c] == choice_2[c] || res[c] == choice_3[c] || res[c] == choice_4[c] || days.Contains(res[c])).ToArray();
+
             foreach (var p in new int[3])
-                for (int count = 10; count <= 250; count += 10)
-                    for (int top = 5; top >= 1; top--)
+                for (int count = 10; count <= 200; count += 5)
+                    for (int top = 5; top >= 2; top--)
                     {
                         $"_____________________________count = {count} top = {top}".Show(); "".Show();
-                        double b = best;
+                        float b = best;
                         int q = 0;
                         // inds = GetSub2();
                         while (q < 2)
                         {
-                            RandomDown10(count, top, 1000);
+                            //RandomDown8(ines,count, top, 1000);
+                            //RandomDown9(count, top, 500);
+                            RandomDown10(count, top, 500);
+
+
                             //RandomDown4(count / 8, top, 500);
                             //RandomDown5(count / 4, top, 500);
                             // RandomDown7(count / 10, 500);
@@ -3014,7 +3023,7 @@ namespace Покоординатная_минимизация
             for (int i = 1; i <= 300; i++)
             {
                 //Console.WriteLine($"Осталось итераций: {300 - i}");
-                double b = best;
+                float b = best;
                 //RandomDown2(max, ct, min: min);
                 //RandomDown3(max, ct);
                 RandomDown4(max, min, ct);
@@ -3056,7 +3065,7 @@ namespace Покоординатная_минимизация
                     //MakeCoordMin2(score);
                     //WriteData(best, "lev2");
 
-                    // double beg = score(res);
+                    // float beg = score(res);
 
                     SuperMinimizingPreferenceCosts(30);
                     Console.WriteLine("Next step prf...");
@@ -3130,7 +3139,7 @@ namespace Покоординатная_минимизация
 
         static void RandomDown(int iter = 15, int down_t = 20, int up_t = 60)
         {
-            double super = score(res);
+            float super = score(res);
             var res0 = res.Take(5000).ToArray();
 
             int i = 0, count;
@@ -3201,7 +3210,7 @@ namespace Покоординатная_минимизация
                 }
             }
 
-            (double, byte[])[] links = new (double, byte[])[iter];
+            (float, byte[])[] links = new (float, byte[])[iter];
             //"Start".Show();
             Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow(obs[i]));
             //for (int i = 0; i < iter; i++) links[i] = MakeCoordMinSlow(obs[i]);
@@ -3230,7 +3239,7 @@ namespace Покоординатная_минимизация
 
             //var v= obs.Select(p => scoreMemoized2(p)).ToArray();
 
-            (double, byte[])[] links = new (double, byte[])[iter];
+            (float, byte[])[] links = new (float, byte[])[iter];
             //"Start".Show();
             Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow(obs[i]));
             //for (int i = 0; i < iter; i++) links[i] = MakeCoordMinSlow(obs[i]);
@@ -3313,9 +3322,9 @@ namespace Покоординатная_минимизация
             MakeDown(obs);
         }
 
-        static byte[] DaysOfMaxPrice(short[] map, double morethan = 100)
+        static byte[] DaysOfMaxPrice(short[] map, float morethan = 100)
         {
-            var res = new (double, byte)[99];
+            var res = new (float, byte)[99];
             for (int i = 0; i < 99; i++)
                 res[i] = (Ntonumber[map[i] - 125][map[i + 1] - 125], (byte)(i + 1));
 
@@ -3334,7 +3343,7 @@ namespace Покоординатная_минимизация
             var copy = new byte[dim];
             var obs = GetNresCopy(iter);
             int index, j;
-            (double, byte[])[] links = new (double, byte[])[iter];
+            (float, byte[])[] links = new (float, byte[])[iter];
 
             //var inds = GetNotZeroChoises();
             //var icount = inds.Length;
@@ -3386,7 +3395,7 @@ namespace Покоординатная_минимизация
         static void RandomDown6(int dim = 10, int iter = 10000)
         {
             var obs = GetNresCopy(iter);
-            (double, byte[])[] links = new (double, byte[])[iter];
+            (float, byte[])[] links = new (float, byte[])[iter];
 
             Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlowPr(obs[i], dim + 2 * i));
             obs = links.Select(u => u.Item2).ToArray();
@@ -3404,7 +3413,7 @@ namespace Покоординатная_минимизация
             var copy = new byte[dim];
             var obs = GetNresCopy(iter);
             int index, j;
-            (double, byte[])[] links = new (double, byte[])[iter];
+            (float, byte[])[] links = new (float, byte[])[iter];
 
             //Parallel.For(0, iter, (int i) => 
             for (int i = 0; i < iter; i++)
@@ -3442,7 +3451,7 @@ namespace Покоординатная_минимизация
             }
             else
             {
-                Console.WriteLine($"-------> to best: {links.Count(p => p.Item1 == best)} ; to 1e20: {links.Count(p => p.Item1 == 1e20)}");
+                Console.WriteLine($"-------> to best: {links.Count(p => p.Item1 == best)} ; to 1e20f: {links.Count(p => p.Item1 == 1e20f)}");
                 "".Show();
             }
         }
@@ -3453,7 +3462,7 @@ namespace Покоординатная_минимизация
             var copy = new byte[dim];
             var obs = GetNresCopy(iter);
             int index, j;
-            (double, byte[])[] links = new (double, byte[])[iter];
+            (float, byte[])[] links = new (float, byte[])[iter];
 
             var icount = inds.Length;
 
@@ -3513,7 +3522,7 @@ namespace Покоординатная_минимизация
             }
             else
             {
-                Console.WriteLine($"-------> to best: {links.Count(p => p.Item1 == best)} ; to 1e20: {links.Count(p => p.Item1 == 1e20)}");
+                Console.WriteLine($"-------> to best: {links.Count(p => p.Item1 == best)} ; to 1e20f: {links.Count(p => p.Item1 == 1e20f)}");
                 "".Show();
             }
         }
@@ -3540,7 +3549,7 @@ namespace Покоординатная_минимизация
 
         static void RandomDown11(int dim = 10, int top = 5, int iter = 10000)
         {
-            var obs = GetNresCopy(iter).Select(s => MinAcc(s, dim/5)).Select(s => MinPre(s, dim)).ToArray();
+            var obs = GetNresCopy(iter).Select(s => MinAcc(s, dim / 5)).Select(s => MinPre(s, dim)).ToArray();
             //var obs = GetStochacticRandom(iter, top, 3);
             MakeDown(obs);
         }
@@ -3548,7 +3557,7 @@ namespace Покоординатная_минимизация
         static void MakeDown(byte[][] obs)
         {
             var iter = obs.GetLength(0);
-            (double, byte[])[] links = new (double, byte[])[iter];
+            (float, byte[])[] links = new (float, byte[])[iter];
 
             "--->Start".Show();
             Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow(obs[i]));
@@ -3576,7 +3585,7 @@ namespace Покоординатная_минимизация
             }
             else
             {
-                Console.WriteLine($"-------> to best: {links.Count(p => p.Item1 == best)} ; to 1e20: {links.Count(p => p.Item1 == 1e20)}");
+                Console.WriteLine($"-------> to best: {links.Count(p => p.Item1 == best)} ; to 1e20f: {links.Count(p => p.Item1 == 1e20f)}");
                 "".Show();
             }
         }
@@ -3623,7 +3632,7 @@ namespace Покоординатная_минимизация
                 Console.WriteLine($"0: {c0}  1: {c1}  2: {c2}  3: {c3}  4: {c4}  5: {c5}  6: {c6}  7: {c7}  8: {c8}  9: {c9}  other: {no}");
 
             int pr = preference_costsMemoized(res);
-            double acc = accounting_penaltyMemoized(res);
+            float acc = accounting_penaltyMemoized(res);
             Console.WriteLine($"pref = {pr}   acc = {acc}   sum = {pr + acc}"); "".Show();
         }
 
@@ -3667,7 +3676,7 @@ namespace Покоординатная_минимизация
         {
             int pr = preference_costsMemoized(res);
             short[] acr = GetMap();
-            double first = scoreMemoized2(res), min;
+            float first = scoreMemoized2(res), min;
             (int, int) inds = (0, 0);
             (byte, byte) rs = (0, 0);
             byte[] a1, a2;
@@ -3692,13 +3701,13 @@ namespace Покоординатная_минимизация
                     a2 = Top(j, top);
 
 
-                    (double, (byte, byte))[] tops = new (double, (byte, byte))[top];
+                    (float, (byte, byte))[] tops = new (float, (byte, byte))[top];
 
                     Parallel.For(0, top, ii =>
                     {
                         int pr2 = pr + prCosts[i][a1[ii] - 1];
                         var acr2 = acr.Dup();
-                        double f = first, tmp = 1e20;
+                        float f = first, tmp = 1e20f;
                         acr2[a1[ii] - 1] += ni;
 
                         foreach (var i2 in a2)
@@ -3724,7 +3733,7 @@ namespace Покоординатная_минимизация
 
                     var ps = tops.Where(s => s.Item1 > 0).ToArray();
                     if (ps.Length == 0)
-                        min = 1e20;
+                        min = 1e20f;
                     else
                         min = ps.Min(s => s.Item1);
                     if (min < first)
@@ -3771,7 +3780,7 @@ namespace Покоординатная_минимизация
         {
             int pr = preference_costsMemoized(res);
             short[] acr = GetMap();
-            double first = scoreMemoized2(res), min;
+            float first = scoreMemoized2(res), min;
             (int, int, int) inds = (0, 0, 0);
             (byte, byte, byte) rs = (0, 0, 0);
             byte[] a1, a2;
@@ -3797,13 +3806,13 @@ namespace Покоординатная_минимизация
                     a2 = Top(j, top);
 
 
-                    (double, (byte, byte, byte))[] tops = new (double, (byte, byte, byte))[top];
+                    (float, (byte, byte, byte))[] tops = new (float, (byte, byte, byte))[top];
 
                     Parallel.For(0, top, ii =>
                     {
                         int pr2 = pr + prCosts[i][a1[ii] - 1];
                         var acr2 = acr.Dup();
-                        double f = first, tmp = 1e20;
+                        float f = first, tmp = 1e20f;
                         acr2[a1[ii] - 1] += ni;
 
                         foreach (var i0 in a0)
@@ -3837,7 +3846,7 @@ namespace Покоординатная_минимизация
 
                     var ps = tops.Where(s => s.Item1 > 0).ToArray();
                     if (ps.Length == 0)
-                        min = 1e20;
+                        min = 1e20f;
                     else
                         min = ps.Min(s => s.Item1);
                     if (min < first)
@@ -3886,7 +3895,7 @@ namespace Покоординатная_минимизация
         {
             int pr = preference_costsMemoized(res);
             short[] acr = GetMap();
-            double first = scoreMemoized2(res), min;
+            float first = scoreMemoized2(res), min;
             (int, int, int) inds = (0, 0, 0);
             (byte, byte, byte) rs = (0, 0, 0);
             byte[] a1, a2, a3;
@@ -3918,13 +3927,13 @@ namespace Покоординатная_минимизация
                         acr[res[k] - 1] -= nk;
                         a3 = Top(k, top);
 
-                        (double, (byte, byte, byte))[] tops = new (double, (byte, byte, byte))[top];
+                        (float, (byte, byte, byte))[] tops = new (float, (byte, byte, byte))[top];
 
                         Parallel.For(0, top, ii =>
                         {
                             int pr2 = pr + prCosts[i][a1[ii] - 1];
                             var acr2 = acr.Dup();
-                            double f = first, tmp = 1e20;
+                            float f = first, tmp = 1e20f;
                             acr2[a1[ii] - 1] += ni;
 
 
@@ -3960,7 +3969,7 @@ namespace Покоординатная_минимизация
 
                         var ps = tops.Where(s => s.Item1 > 0).ToArray();
                         if (ps.Length == 0)
-                            min = 1e20;
+                            min = 1e20f;
                         else
                             min = ps.Min(s => s.Item1);
                         if (min < first)
@@ -4013,7 +4022,7 @@ namespace Покоординатная_минимизация
         {
             int pr = preference_costsMemoized(res);
             short[] acr = GetMap();
-            double first = scoreMemoized2(res), min;
+            float first = scoreMemoized2(res), min;
             (int, int, int) inds = (0, 0, 0);
             (byte, byte, byte) rs = (0, 0, 0);
             byte[] a1, a2, a3;
@@ -4045,13 +4054,13 @@ namespace Покоординатная_минимизация
                         acr[res[indexes[k]] - 1] -= nk;
                         a3 = Top(indexes[k], top);
 
-                        (double, (byte, byte, byte))[] tops = new (double, (byte, byte, byte))[top];
+                        (float, (byte, byte, byte))[] tops = new (float, (byte, byte, byte))[top];
 
                         Parallel.For(0, top, ii =>
                         {
                             int pr2 = pr + prCosts[indexes[i]][a1[ii] - 1];
                             var acr2 = acr.Dup();
-                            double f = first, tmp = 1e20;
+                            float f = first, tmp = 1e20f;
                             acr2[a1[ii] - 1] += ni;
 
 
@@ -4087,7 +4096,7 @@ namespace Покоординатная_минимизация
 
                         var ps = tops.Where(s => s.Item1 > 0).ToArray();
                         if (ps.Length == 0)
-                            min = 1e20;
+                            min = 1e20f;
                         else
                             min = ps.Min(s => s.Item1);
                         if (min < first)
@@ -4140,7 +4149,7 @@ namespace Покоординатная_минимизация
         {
             int pr = preference_costsMemoized(res);
             short[] acr = GetMap();
-            double first = scoreMemoized2(res), min;
+            float first = scoreMemoized2(res), min;
             (int, int, int, int, int) inds = (0, 0, 0, 0, 0);
             (byte, byte, byte, byte, byte) rs = (0, 0, 0, 0, 0);
             byte[] a1, a2, a3, a4, a5;
@@ -4188,13 +4197,13 @@ namespace Покоординатная_минимизация
                                 acr[res[t] - 1] -= nt;
                                 a5 = Top(t, top);
 
-                                (double, (byte, byte, byte, byte, byte))[] tops = new (double, (byte, byte, byte, byte, byte))[top];
+                                (float, (byte, byte, byte, byte, byte))[] tops = new (float, (byte, byte, byte, byte, byte))[top];
 
                                 Parallel.For(0, top, ii =>
                                  {
                                      int pr2 = pr + prCosts[i][a1[ii] - 1];
                                      var acr2 = acr.Dup();
-                                     double f = first, tmp = 1e20;
+                                     float f = first, tmp = 1e20f;
                                      acr2[a1[ii] - 1] += ni;
 
 
@@ -4243,7 +4252,7 @@ namespace Покоординатная_минимизация
 
                                 var ps = tops.Where(s => s.Item1 > 0).ToArray();
                                 if (ps.Length == 0)
-                                    min = 1e20;
+                                    min = 1e20f;
                                 else
                                     min = ps.Min(s => s.Item1);
                                 if (min < first)
@@ -4354,7 +4363,7 @@ namespace Покоординатная_минимизация
 
             foreach (var t in Enumerable.Range(1, iter))
             {
-                double super = score(res);
+                float super = score(res);
                 var res0 = res.Take(5000).ToArray();
 
                 int deep = deeps[0];
@@ -4533,7 +4542,7 @@ namespace Покоординатная_минимизация
                 n: 5000,
                min: 0, max: 4, eps: 1e-10, countpoints: ct, maxcountstep: 2000, maxiter: 50000);
 
-            best = t.Item2;
+            best = t.Item2.ToFloat();
             res = ToByteArr(t.Item1.DoubleMas);
         }
         static void Bee2()
@@ -4549,7 +4558,7 @@ namespace Покоординатная_минимизация
                 n: 5000,
                min: 0, max: 4, eps: 1e-10, countpoints: ct, maxcountstep: 2000, center: new Vectors(ToDouble(res)), maxiter: 50000);
 
-            best = t.Item2;
+            best = t.Item2.ToFloat();
             res = ToByteArr(t.Item1.DoubleMas);
         }
 
@@ -4562,7 +4571,7 @@ namespace Покоординатная_минимизация
 
             int pr = preference_costsMemoized(arr), tmp;
             var acr = GetMap(arr);
-            double bst = pr + accounting_penalty3(acr), super = bst, f;
+            float bst = pr + accounting_penalty3(acr), super = bst, f;
             bool yes;
             bool bad(short v) => v < 125 || v > 300;
 
@@ -4671,7 +4680,7 @@ namespace Покоординатная_минимизация
             var per = PerDays();
             int[] d1, d2, p1, p2, r1, r2;
             best = scoreMemoized2(res);
-            double bst;
+            float bst;
             int min;
 
             for (byte day1 = 0; day1 < 99; day1++)
@@ -4730,7 +4739,7 @@ namespace Покоординатная_минимизация
             var per = PerDays();
             int[] d1, d2, d3, p1, p2, p3, r1, r2, r3;
             best = scoreMemoized2(res);
-            double bst;
+            float bst;
             int min;
 
             for (byte day1 = 0; day1 < 98; day1++)
@@ -4784,7 +4793,7 @@ namespace Покоординатная_минимизация
             var per = PerDays();
             int[] d1, d2, r1, r2;
             best = scoreMemoized2(res);
-            double bst;
+            float bst;
 
             for (byte day1 = 0; day1 < 99; day1++)
             {
@@ -4835,7 +4844,7 @@ namespace Покоординатная_минимизация
             var per = PerDays();
             int[] d1, d2, d3, r1, r2, r3;
             best = scoreMemoized2(res);
-            double bst;
+            float bst;
 
             for (byte day1 = 0; day1 < 100; day1++)
             {
@@ -4895,7 +4904,7 @@ namespace Покоординатная_минимизация
             var per = PerDays();
             int[] d1, d2, d3, d4, r1, r2, r3, r4, p1, p2, p3, p4;
             best = scoreMemoized2(res);
-            double bst;
+            float bst;
 
             for (byte day1 = 0; day1 < 100; day1++)
             {
@@ -4982,7 +4991,7 @@ namespace Покоординатная_минимизация
             var per = PerDays();
             int[] d1, d2, d3, d4, d5, r1, r2, r3, r4, r5, p1, p2, p3, p4, p5;
             best = scoreMemoized2(res);
-            double bst;
+            float bst;
 
             for (byte day1 = 0; day1 < 100; day1++)
             {
@@ -5083,7 +5092,7 @@ namespace Покоординатная_минимизация
             var per = PerDays();
             int[] d1, d2, d3, d4, d5, d6, r1, r2, r3, r4, r5, r6, p1, p2, p3, p4, p5, p6;
             best = scoreMemoized2(res);
-            double bst;
+            float bst;
 
             for (byte day1 = 0; day1 < 100; day1++)
             {
@@ -5192,7 +5201,7 @@ namespace Покоординатная_минимизация
             var per = PerDays();
             int[] d1, d2, d3, d4, d5, d6, r1, r2, r3, r4, r5, r6, p1, p2, p3, p4, p5, p6;
             best = scoreMemoized2(res);
-            double bst;
+            float bst;
 
             for (byte day1 = 0; day1 < 100; day1++)
             {
@@ -5492,34 +5501,34 @@ namespace Покоординатная_минимизация
         }
 
 
-        static double[] ContributionPr()
+        static float[] ContributionPr()
         {
-            double pr = preference_costsMemoized(res);
-            var t = new double[5000];
+            float pr = preference_costsMemoized(res);
+            var t = new float[5000];
             for (int i = 0; i < t.Length; i++)
                 t[i] = prCosts[i][res[i] - 1] / pr;
             return t;
         }
 
-        static double[] ContributionAcc()
+        static float[] ContributionAcc()
         {
             var map = GetMap(res);
-            double r = accounting_penalty3(map);
-            double[] proc = new double[100];
+            float r = accounting_penalty3(map);
+            float[] proc = new float[100];
             for (int i = 0; i < 99; i++)
                 proc[i] = Ntonumber[map[i] - 125][map[i + 1] - 125] / r;
             proc[99] = lastN[map[99] - 125] / r;
 
-            double[] t = new double[5000];
+            float[] t = new float[5000];
             for (int i = 0; i < t.Length; i++)
                 t[i] = proc[res[i] - 1] * n_people[i] / map[res[i] - 1];
             return t;
         }
-        static double[] GetProcArray()
+        static float[] GetProcArray()
         {
             var map = GetMap(res);
-            double r = accounting_penalty3(map);
-            double[] proc = new double[100];
+            float r = accounting_penalty3(map);
+            float[] proc = new float[100];
             for (int i = 0; i < 99; i++)
                 proc[i] = Ntonumber[map[i] - 125][map[i + 1] - 125] / r;
             proc[99] = lastN[map[99] - 125] / r;
