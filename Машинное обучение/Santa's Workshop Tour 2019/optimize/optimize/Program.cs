@@ -15,7 +15,7 @@ namespace Покоординатная_минимизация
     static class Program
     {
         static readonly SystemRandomSource randomgen = new SystemRandomSource();
-
+        static readonly int[] Range = Enumerable.Range(0, 5000).ToArray();
         static readonly int[] family_id = Enumerable.Range(0, 5000).ToArray();
 
         static readonly byte[]
@@ -584,12 +584,12 @@ namespace Покоординатная_минимизация
         }
 
         static int[] GetRange() => Enumerable.Range(0, 5000).ToArray();
-        static int[] GetRandom()
+        static int[] GetRandom(int deep = 5000)
         {
             var s = GetRange();
             int tmp1, tmp2;
             int tmp;
-            for (int i = 0; i < 5000; i++)
+            for (int i = 0; i < deep; i++)
             {
                 tmp1 = randomgen.Next(4999);
                 tmp2 = randomgen.Next(4999);
@@ -597,6 +597,33 @@ namespace Покоординатная_минимизация
                 s[tmp1] = s[tmp2];
                 s[tmp2] = tmp;
             }
+            return s;
+        }
+        static int[] GetRandom(int[] minimum, int deep = 5000)
+        {
+            var s = GetRange();
+            int tmp1, tmp2;
+            int tmp;
+            for (int i = 0; i < deep; i++)
+            {
+                tmp1 = randomgen.Next(4999);
+                tmp2 = randomgen.Next(4999);
+                tmp = s[tmp1];
+                s[tmp1] = s[tmp2];
+                s[tmp2] = tmp;
+            }
+
+
+            for (int i = 0; i < minimum.Length; i++)
+            {
+                int index = Array.IndexOf(s, minimum[i]);
+                tmp = s[index];
+                s[index] = s[i];
+                s[i] = tmp;
+            }
+
+
+
             return s;
         }
         static int[] GetRandomIndexes(int count = 100)
@@ -1541,6 +1568,740 @@ namespace Покоординатная_минимизация
             }
 
             return existprogress;
+        }
+
+        static (float, byte[]) MinByRandomizeBy10(int top = 5)
+        {
+            const int dim = 10;
+
+            // var indexes = GetRandom().Take(dim).ToArray();
+            var indexes = GetRandomInArray(Range.Where(c => n_people[c] < 6 && n_people[c] > 2).ToArray(), 20).Take(dim).ToArray();
+            var peop = indexes.Select(i => n_people[i]).ToArray();
+            var copy = res.Dup();
+            int pr = preference_costsMemoized(copy);
+            var acr = GetMap(copy);
+            var fval = pr + accounting_penalty3(acr);
+            float first = fval;
+            byte[][] TP = new byte[dim][];
+            int[][] Costs = new int[dim][];
+            byte[] vals = new byte[dim];
+
+            for (int i = 0; i < dim; i++)
+            {
+                vals[i] = (byte)(copy[indexes[i]] - 1);
+                Costs[i] = prCosts[indexes[i]];
+                pr -= Costs[i][vals[i]];
+                acr[vals[i]] -= peop[i];
+                TP[i] = Top(indexes[i], top);
+            }
+
+            bool bad(short val) => val < 125 || val > 300;
+            bool gut(params int[] I)
+            {
+                for (int i = 0; i < dim; i++)
+                    if (bad(acr[vals[i]]) || bad(acr[I[i] - 1]))
+                        return false;
+                return true;
+            }
+
+            foreach (var i1 in TP[0])
+            {
+                pr += Costs[0][i1 - 1];
+                acr[i1 - 1] += peop[0];
+
+                foreach (var i2 in TP[1])
+                {
+                    pr += Costs[1][i2 - 1];
+                    acr[i2 - 1] += peop[1];
+
+                    foreach (var i3 in TP[2])
+                    {
+                        pr += Costs[2][i3 - 1];
+                        acr[i3 - 1] += peop[2];
+
+                        foreach (var i4 in TP[3])
+                        {
+                            pr += Costs[3][i4 - 1];
+                            acr[i4 - 1] += peop[3];
+
+                            foreach (var i5 in TP[4])
+                            {
+                                pr += Costs[4][i5 - 1];
+                                acr[i5 - 1] += peop[4];
+
+                                foreach (var i6 in TP[5])
+                                {
+                                    pr += Costs[5][i6 - 1];
+                                    acr[i6 - 1] += peop[5];
+
+                                    foreach (var i7 in TP[6])
+                                    {
+                                        pr += Costs[6][i7 - 1];
+                                        acr[i7 - 1] += peop[6];
+
+                                        foreach (var i8 in TP[7])
+                                        {
+                                            pr += Costs[7][i8 - 1];
+                                            acr[i8 - 1] += peop[7];
+
+                                            foreach (var i9 in TP[8])
+                                            {
+                                                pr += Costs[8][i9 - 1];
+                                                acr[i9 - 1] += peop[8];
+
+                                                foreach (var i10 in TP[9])
+                                                {
+                                                    pr += Costs[9][i10 - 1];
+                                                    acr[i10 - 1] += peop[9];
+
+                                                    if (pr < first && gut(i1, i2, i3, i4, i5, i6, i7, i8, i9, i10))
+                                                    {
+                                                        fval = pr + accounting_penalty3(acr);
+                                                        if (fval < first)
+                                                        {
+                                                            Console.WriteLine($"NEW MINIMUM {fval} ON {new Vectors(indexes)} AND vals {new Vectors(i1, i2, i3, i4, i5, i6, i7, i8, i9, i10)}");
+                                                            first = fval;
+                                                            copy[indexes[0]] = i1;
+                                                            copy[indexes[1]] = i2;
+                                                            copy[indexes[2]] = i3;
+                                                            copy[indexes[3]] = i4;
+                                                            copy[indexes[4]] = i5;
+                                                            copy[indexes[5]] = i6;
+                                                            copy[indexes[6]] = i7;
+                                                            copy[indexes[7]] = i8;
+                                                            copy[indexes[8]] = i9;
+                                                            copy[indexes[9]] = i10;
+                                                            return (first, copy);
+                                                        }
+                                                    }
+
+
+                                                    pr -= Costs[9][i10 - 1];
+                                                    acr[i10 - 1] -= peop[9];
+                                                }
+
+                                                pr -= Costs[8][i9 - 1];
+                                                acr[i9 - 1] -= peop[8];
+                                            }
+
+                                            pr -= Costs[7][i8 - 1];
+                                            acr[i8 - 1] -= peop[7];
+                                        }
+
+                                        pr -= Costs[6][i7 - 1];
+                                        acr[i7 - 1] -= peop[6];
+                                    }
+
+                                    pr -= Costs[5][i6 - 1];
+                                    acr[i6 - 1] -= peop[5];
+                                }
+
+                                pr -= Costs[4][i5 - 1];
+                                acr[i5 - 1] -= peop[4];
+                            }
+
+                            pr -= Costs[3][i4 - 1];
+                            acr[i4 - 1] -= peop[3];
+                        }
+
+                        pr -= Costs[2][i3 - 1];
+                        acr[i3 - 1] -= peop[2];
+                    }
+
+                    pr -= Costs[1][i2 - 1];
+                    acr[i2 - 1] -= peop[1];
+                }
+
+                pr -= Costs[0][i1 - 1];
+                acr[i1 - 1] -= peop[0];
+            }
+
+
+            // Console.WriteLine($"{indexes[0]} {indexes[1]} {indexes[2]} {indexes[3]} {indexes[4]}");
+
+            return (first, copy);
+        }
+        static (float, byte[]) MinByRandomizeBy12(int top = 5)
+        {
+            const int dim = 12;
+
+            //var indexes = GetRandom(Range.Where(c=>res[c]==choice_4[c]).ToArray(),7000).Take(dim).ToArray();
+            var indexes = GetRandomInArray(Range, 20).Take(dim).ToArray();
+            var peop = indexes.Select(i => n_people[i]).ToArray();
+            var copy = res.Dup();
+            int pr = preference_costsMemoized(copy);
+            var acr = GetMap(copy);
+            var fval = pr + accounting_penalty3(acr);
+            float first = fval;
+            byte[][] TP = new byte[dim][];
+            int[][] Costs = new int[dim][];
+
+            for (int i = 0; i < dim; i++)
+            {
+                pr -= prCosts[indexes[i]][copy[indexes[i]] - 1];
+                acr[copy[indexes[i]] - 1] -= peop[i];
+                TP[i] = Top(indexes[i], top);
+                Costs[i] = prCosts[indexes[i]];
+            }
+
+            bool bad(short val) => val < 125 || val > 300;
+            bool gut(params int[] I)
+            {
+                for (int i = 0; i < dim; i++)
+                    if (bad(acr[copy[indexes[i]] - 1]) || bad(acr[I[i] - 1]))
+                        return false;
+                return true;
+            }
+
+            foreach (var i1 in TP[0])
+            {
+                pr += Costs[0][i1 - 1];
+                acr[i1 - 1] += peop[0];
+
+                foreach (var i2 in TP[1])
+                {
+                    pr += Costs[1][i2 - 1];
+                    acr[i2 - 1] += peop[1];
+
+                    foreach (var i3 in TP[2])
+                    {
+                        pr += Costs[2][i3 - 1];
+                        acr[i3 - 1] += peop[2];
+
+                        foreach (var i4 in TP[3])
+                        {
+                            pr += Costs[3][i4 - 1];
+                            acr[i4 - 1] += peop[3];
+
+                            foreach (var i5 in TP[4])
+                            {
+                                pr += Costs[4][i5 - 1];
+                                acr[i5 - 1] += peop[4];
+
+                                foreach (var i6 in TP[5])
+                                {
+                                    pr += Costs[5][i6 - 1];
+                                    acr[i6 - 1] += peop[5];
+
+                                    foreach (var i7 in TP[6])
+                                    {
+                                        pr += Costs[6][i7 - 1];
+                                        acr[i7 - 1] += peop[6];
+
+                                        foreach (var i8 in TP[7])
+                                        {
+                                            pr += Costs[7][i8 - 1];
+                                            acr[i8 - 1] += peop[7];
+
+                                            foreach (var i9 in TP[8])
+                                            {
+                                                pr += Costs[8][i9 - 1];
+                                                acr[i9 - 1] += peop[8];
+
+                                                foreach (var i10 in TP[9])
+                                                {
+                                                    pr += Costs[9][i10 - 1];
+                                                    acr[i10 - 1] += peop[9];
+
+                                                    foreach (var i11 in TP[10])
+                                                    {
+                                                        pr += Costs[10][i11 - 1];
+                                                        acr[i11 - 1] += peop[10];
+                                                        foreach (var i12 in TP[11])
+                                                        {
+                                                            pr += Costs[11][i12 - 1];
+                                                            acr[i12 - 1] += peop[11];
+
+                                                            if (pr < first && gut(i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12))
+                                                            {
+                                                                fval = pr + accounting_penalty3(acr);
+                                                                if (fval < first)
+                                                                {
+                                                                    Console.WriteLine($"NEW MINIMUM {first} ON {new Vectors(indexes).ToString()}");
+                                                                    first = fval;
+                                                                    copy[indexes[0]] = i1;
+                                                                    copy[indexes[1]] = i2;
+                                                                    copy[indexes[2]] = i3;
+                                                                    copy[indexes[3]] = i4;
+                                                                    copy[indexes[4]] = i5;
+                                                                    copy[indexes[5]] = i6;
+                                                                    copy[indexes[6]] = i7;
+                                                                    copy[indexes[7]] = i8;
+                                                                    copy[indexes[8]] = i9;
+                                                                    copy[indexes[9]] = i10;
+                                                                    copy[indexes[10]] = i11;
+                                                                    copy[indexes[11]] = i12;
+
+                                                                    return (first, copy);
+                                                                }
+                                                            }
+
+                                                            pr -= Costs[11][i12 - 1];
+                                                            acr[i12 - 1] -= peop[11];
+                                                        }
+
+                                                        pr -= Costs[10][i11 - 1];
+                                                        acr[i11 - 1] -= peop[10];
+                                                    }
+
+                                                    pr -= Costs[9][i10 - 1];
+                                                    acr[i10 - 1] -= peop[9];
+                                                }
+
+                                                pr -= Costs[8][i9 - 1];
+                                                acr[i9 - 1] -= peop[8];
+                                            }
+
+                                            pr -= Costs[7][i8 - 1];
+                                            acr[i8 - 1] -= peop[7];
+                                        }
+
+                                        pr -= Costs[6][i7 - 1];
+                                        acr[i7 - 1] -= peop[6];
+                                    }
+
+                                    pr -= Costs[5][i6 - 1];
+                                    acr[i6 - 1] -= peop[5];
+                                }
+
+                                pr -= Costs[4][i5 - 1];
+                                acr[i5 - 1] -= peop[4];
+                            }
+
+                            pr -= Costs[3][i4 - 1];
+                            acr[i4 - 1] -= peop[3];
+                        }
+
+                        pr -= Costs[2][i3 - 1];
+                        acr[i3 - 1] -= peop[2];
+                    }
+
+                    pr -= Costs[1][i2 - 1];
+                    acr[i2 - 1] -= peop[1];
+                }
+
+                pr -= Costs[0][i1 - 1];
+                acr[i1 - 1] -= peop[0];
+            }
+
+
+            Console.WriteLine($"{indexes[0]} {indexes[1]} {indexes[2]} {indexes[3]} {indexes[4]}");
+
+            return (first, copy);
+        }
+        static (float, byte[]) MinByRandomizeBy20(int top = 5)
+        {
+            const int dim = 20;
+
+            var indexes = GetRandom().Take(dim).ToArray();
+            var peop = indexes.Select(i => n_people[i]).ToArray();
+            var copy = res.Dup();
+            int pr = preference_costsMemoized(copy);
+            var acr = GetMap(copy);
+            var fval = pr + accounting_penalty3(acr);
+            float first = fval;
+            byte[][] TP = new byte[dim][];
+            int[][] Costs = new int[dim][];
+
+            for (int i = 0; i < dim; i++)
+            {
+                pr -= prCosts[indexes[i]][copy[indexes[i]] - 1];
+                acr[copy[indexes[i]] - 1] -= peop[i];
+                TP[i] = Top(indexes[i], top);
+                Costs[i] = prCosts[indexes[i]];
+            }
+
+            bool bad(short val) => val < 125 || val > 300;
+            bool gut(params int[] I)
+            {
+                for (int i = 0; i < dim; i++)
+                    if (bad(acr[copy[indexes[i]] - 1]) || bad(acr[I[i] - 1]))
+                        return false;
+                return true;
+            }
+
+            foreach (var i1 in TP[0])
+            {
+                pr += Costs[0][i1 - 1];
+                acr[i1 - 1] += peop[0];
+
+                foreach (var i2 in TP[1])
+                {
+                    pr += Costs[1][i2 - 1];
+                    acr[i2 - 1] += peop[1];
+
+                    foreach (var i3 in TP[2])
+                    {
+                        pr += Costs[2][i3 - 1];
+                        acr[i3 - 1] += peop[2];
+
+                        foreach (var i4 in TP[3])
+                        {
+                            pr += Costs[3][i4 - 1];
+                            acr[i4 - 1] += peop[3];
+
+                            foreach (var i5 in TP[4])
+                            {
+                                pr += Costs[4][i5 - 1];
+                                acr[i5 - 1] += peop[4];
+
+                                foreach (var i6 in TP[5])
+                                {
+                                    pr += Costs[5][i6 - 1];
+                                    acr[i6 - 1] += peop[5];
+
+                                    foreach (var i7 in TP[6])
+                                    {
+                                        pr += Costs[6][i7 - 1];
+                                        acr[i7 - 1] += peop[6];
+
+                                        foreach (var i8 in TP[7])
+                                        {
+                                            pr += Costs[7][i8 - 1];
+                                            acr[i8 - 1] += peop[7];
+
+                                            foreach (var i9 in TP[8])
+                                            {
+                                                pr += Costs[8][i9 - 1];
+                                                acr[i9 - 1] += peop[8];
+
+                                                foreach (var i10 in TP[9])
+                                                {
+                                                    pr += Costs[9][i10 - 1];
+                                                    acr[i10 - 1] += peop[9];
+
+                                                    foreach (var i11 in TP[10])
+                                                    {
+                                                        pr += Costs[10][i11 - 1];
+                                                        acr[i11 - 1] += peop[10];
+                                                        foreach (var i12 in TP[11])
+                                                        {
+                                                            pr += Costs[11][i12 - 1];
+                                                            acr[i12 - 1] += peop[11];
+                                                            foreach (var i13 in TP[12])
+                                                            {
+                                                                pr += Costs[12][i13 - 1];
+                                                                acr[i13 - 1] += peop[12];
+                                                                foreach (var i14 in TP[13])
+                                                                {
+                                                                    pr += Costs[13][i14 - 1];
+                                                                    acr[i14 - 1] += peop[13];
+                                                                    foreach (var i15 in TP[14])
+                                                                    {
+                                                                        pr += Costs[14][i15 - 1];
+                                                                        acr[i15 - 1] += peop[14];
+                                                                        foreach (var i16 in TP[15])
+                                                                        {
+                                                                            pr += Costs[15][i16 - 1];
+                                                                            acr[i16 - 1] += peop[15];
+                                                                            foreach (var i17 in TP[16])
+                                                                            {
+                                                                                pr += Costs[16][i17 - 1];
+                                                                                acr[i17 - 1] += peop[16];
+                                                                                foreach (var i18 in TP[17])
+                                                                                {
+                                                                                    pr += Costs[17][i18 - 1];
+                                                                                    acr[i18 - 1] += peop[17];
+                                                                                    foreach (var i19 in TP[18])
+                                                                                    {
+                                                                                        pr += Costs[18][i19 - 1];
+                                                                                        acr[i19 - 1] += peop[18];
+                                                                                        foreach (var i20 in TP[19])
+                                                                                        {
+                                                                                            pr += Costs[19][i20 - 1];
+                                                                                            acr[i20 - 1] += peop[19];
+
+
+                                                                                            if (pr < first && gut(i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20))
+                                                                                            {
+                                                                                                fval = pr + accounting_penalty3(acr);
+                                                                                                if (fval < first)
+                                                                                                {
+                                                                                                    Console.WriteLine($"NEW MINIMUM {first} ON {new Vectors(indexes).ToString()}");
+                                                                                                    first = fval;
+                                                                                                    copy[indexes[0]] = i1;
+                                                                                                    copy[indexes[1]] = i2;
+                                                                                                    copy[indexes[2]] = i3;
+                                                                                                    copy[indexes[3]] = i4;
+                                                                                                    copy[indexes[4]] = i5;
+                                                                                                    copy[indexes[5]] = i6;
+                                                                                                    copy[indexes[6]] = i7;
+                                                                                                    copy[indexes[7]] = i8;
+                                                                                                    copy[indexes[8]] = i9;
+                                                                                                    copy[indexes[9]] = i10;
+                                                                                                    copy[indexes[10]] = i11;
+                                                                                                    copy[indexes[11]] = i12;
+                                                                                                    copy[indexes[12]] = i13;
+                                                                                                    copy[indexes[13]] = i14;
+                                                                                                    copy[indexes[14]] = i15;
+                                                                                                    copy[indexes[15]] = i16;
+                                                                                                    copy[indexes[16]] = i17;
+                                                                                                    copy[indexes[17]] = i18;
+                                                                                                    copy[indexes[18]] = i19;
+                                                                                                    copy[indexes[19]] = i20;
+                                                                                                    return (first, copy);
+                                                                                                }
+                                                                                            }
+
+
+                                                                                            pr -= Costs[19][i20 - 1];
+                                                                                            acr[i20 - 1] -= peop[19];
+                                                                                        }
+
+                                                                                        pr -= Costs[18][i19 - 1];
+                                                                                        acr[i19 - 1] -= peop[18];
+                                                                                    }
+
+                                                                                    pr -= Costs[17][i18 - 1];
+                                                                                    acr[i18 - 1] -= peop[17];
+                                                                                }
+
+                                                                                pr -= Costs[16][i17 - 1];
+                                                                                acr[i17 - 1] -= peop[16];
+                                                                            }
+
+                                                                            pr -= Costs[15][i16 - 1];
+                                                                            acr[i16 - 1] -= peop[15];
+                                                                        }
+
+                                                                        pr -= Costs[14][i15 - 1];
+                                                                        acr[i15 - 1] -= peop[14];
+                                                                    }
+
+                                                                    pr -= Costs[13][i14 - 1];
+                                                                    acr[i14 - 1] -= peop[13];
+                                                                }
+
+                                                                pr -= Costs[12][i13 - 1];
+                                                                acr[i13 - 1] -= peop[12];
+                                                            }
+
+                                                            pr -= Costs[11][i12 - 1];
+                                                            acr[i12 - 1] -= peop[11];
+                                                        }
+
+                                                        pr -= Costs[10][i11 - 1];
+                                                        acr[i11 - 1] -= peop[10];
+                                                    }
+
+                                                    pr -= Costs[9][i10 - 1];
+                                                    acr[i10 - 1] -= peop[9];
+                                                }
+
+                                                pr -= Costs[8][i9 - 1];
+                                                acr[i9 - 1] -= peop[8];
+                                            }
+
+                                            pr -= Costs[7][i8 - 1];
+                                            acr[i8 - 1] -= peop[7];
+                                        }
+
+                                        pr -= Costs[6][i7 - 1];
+                                        acr[i7 - 1] -= peop[6];
+                                    }
+
+                                    pr -= Costs[5][i6 - 1];
+                                    acr[i6 - 1] -= peop[5];
+                                }
+
+                                pr -= Costs[4][i5 - 1];
+                                acr[i5 - 1] -= peop[4];
+                            }
+
+                            pr -= Costs[3][i4 - 1];
+                            acr[i4 - 1] -= peop[3];
+                        }
+
+                        pr -= Costs[2][i3 - 1];
+                        acr[i3 - 1] -= peop[2];
+                    }
+
+                    pr -= Costs[1][i2 - 1];
+                    acr[i2 - 1] -= peop[1];
+                }
+
+                pr -= Costs[0][i1 - 1];
+                acr[i1 - 1] -= peop[0];
+            }
+
+
+            Console.WriteLine($"{indexes[0]} {indexes[1]} {indexes[2]} {indexes[3]} {indexes[4]}");
+
+            return (first, copy);
+        }
+        static (float, byte[]) MinByRandomizeBy10(int[] indexes, int top = 5)
+        {
+            const int dim = 10;
+
+            var peop = indexes.Select(i => n_people[i]).ToArray();
+            var copy = res.Dup();
+            int pr = preference_costsMemoized(copy);
+            var acr = GetMap(copy);
+            var fval = pr + accounting_penalty3(acr);
+            float first = fval;
+            byte[][] TP = new byte[dim][];
+            int[][] Costs = new int[dim][];
+            byte[] vals = new byte[dim];
+
+            for (int i = 0; i < dim; i++)
+            {
+                vals[i] = (byte)(copy[indexes[i]] - 1);
+                Costs[i] = prCosts[indexes[i]];
+                pr -= Costs[i][vals[i]];
+                acr[vals[i]] -= peop[i];
+                TP[i] = Top(indexes[i], top);
+            }
+
+            bool bad(short val) => val < 125 || val > 300;
+            bool gut(params int[] I)
+            {
+                for (int i = 0; i < dim; i++)
+                    if (bad(acr[vals[i]]) || bad(acr[I[i] - 1]))
+                        return false;
+                return true;
+            }
+
+            foreach (var i1 in TP[0])
+            {
+                pr += Costs[0][i1 - 1];
+                acr[i1 - 1] += peop[0];
+
+                foreach (var i2 in TP[1])
+                {
+                    pr += Costs[1][i2 - 1];
+                    acr[i2 - 1] += peop[1];
+
+                    foreach (var i3 in TP[2])
+                    {
+                        pr += Costs[2][i3 - 1];
+                        acr[i3 - 1] += peop[2];
+
+                        foreach (var i4 in TP[3])
+                        {
+                            pr += Costs[3][i4 - 1];
+                            acr[i4 - 1] += peop[3];
+
+                            foreach (var i5 in TP[4])
+                            {
+                                pr += Costs[4][i5 - 1];
+                                acr[i5 - 1] += peop[4];
+
+                                foreach (var i6 in TP[5])
+                                {
+                                    pr += Costs[5][i6 - 1];
+                                    acr[i6 - 1] += peop[5];
+
+                                    foreach (var i7 in TP[6])
+                                    {
+                                        pr += Costs[6][i7 - 1];
+                                        acr[i7 - 1] += peop[6];
+
+                                        foreach (var i8 in TP[7])
+                                        {
+                                            pr += Costs[7][i8 - 1];
+                                            acr[i8 - 1] += peop[7];
+
+                                            foreach (var i9 in TP[8])
+                                            {
+                                                pr += Costs[8][i9 - 1];
+                                                acr[i9 - 1] += peop[8];
+
+                                                foreach (var i10 in TP[9])
+                                                {
+                                                    pr += Costs[9][i10 - 1];
+                                                    acr[i10 - 1] += peop[9];
+
+                                                    if (pr < first && gut(i1, i2, i3, i4, i5, i6, i7, i8, i9, i10))
+                                                    {
+                                                        fval = pr + accounting_penalty3(acr);
+                                                        if (fval < first)
+                                                        {
+                                                            Console.WriteLine($"NEW MINIMUM {fval} ON {new Vectors(indexes)} AND vals {new Vectors(i1, i2, i3, i4, i5, i6, i7, i8, i9, i10)}");
+                                                            first = fval;
+                                                            copy[indexes[0]] = i1;
+                                                            copy[indexes[1]] = i2;
+                                                            copy[indexes[2]] = i3;
+                                                            copy[indexes[3]] = i4;
+                                                            copy[indexes[4]] = i5;
+                                                            copy[indexes[5]] = i6;
+                                                            copy[indexes[6]] = i7;
+                                                            copy[indexes[7]] = i8;
+                                                            copy[indexes[8]] = i9;
+                                                            copy[indexes[9]] = i10;
+                                                            return (first, copy);
+                                                        }
+                                                    }
+
+
+                                                    pr -= Costs[9][i10 - 1];
+                                                    acr[i10 - 1] -= peop[9];
+                                                }
+
+                                                pr -= Costs[8][i9 - 1];
+                                                acr[i9 - 1] -= peop[8];
+                                            }
+
+                                            pr -= Costs[7][i8 - 1];
+                                            acr[i8 - 1] -= peop[7];
+                                        }
+
+                                        pr -= Costs[6][i7 - 1];
+                                        acr[i7 - 1] -= peop[6];
+                                    }
+
+                                    pr -= Costs[5][i6 - 1];
+                                    acr[i6 - 1] -= peop[5];
+                                }
+
+                                pr -= Costs[4][i5 - 1];
+                                acr[i5 - 1] -= peop[4];
+                            }
+
+                            pr -= Costs[3][i4 - 1];
+                            acr[i4 - 1] -= peop[3];
+                        }
+
+                        pr -= Costs[2][i3 - 1];
+                        acr[i3 - 1] -= peop[2];
+                    }
+
+                    pr -= Costs[1][i2 - 1];
+                    acr[i2 - 1] -= peop[1];
+                }
+
+                pr -= Costs[0][i1 - 1];
+                acr[i1 - 1] -= peop[0];
+            }
+
+
+            // Console.WriteLine($"{indexes[0]} {indexes[1]} {indexes[2]} {indexes[3]} {indexes[4]}");
+
+            return (first, copy);
+        }
+
+        static void MinRandomSeries(int count = 1000, int top = 5)
+        {
+            //var was = Enumerable.Range(0, count).AsParallel().Select(i => MinByRandomizeBy20(top)).ToArray();
+
+            var was = new (float, byte[])[count];
+            Parallel.For(0, count, (int i) => was[i] = MinByRandomizeBy10(top));
+
+            var min = was.Min(t => t.Item1);
+            var el = was.First(s => s.Item1 == min);
+            res = el.Item2;
+            WriteData(min);
+        }
+        static void MinRandomSeries2(int top = 5)
+        {
+            //var was = Enumerable.Range(0, count).AsParallel().Select(i => MinByRandomizeBy20(top)).ToArray();
+
+            var was = new (float, byte[])[4991];
+            Parallel.For(0, 4991, (int i) => was[i] = MinByRandomizeBy10(new int[] { i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7, i + 8, i + 9 }, top));
+
+            var min = was.Min(t => t.Item1);
+            var el = was.First(s => s.Item1 == min);
+            res = el.Item2;
+            WriteData(min);
         }
 
         static (float res, byte val) MinByOne(int ind)
@@ -2928,7 +3689,13 @@ namespace Покоординатная_минимизация
             ReadUpDown();
             ShowStructure();
 
+            EchoDown();
 
+            //for(int i=0;i<5;i++)
+            //MinRandomSeries(1000, 7);
+            //MinRandomSeries2( 5);
+
+            //TopDown4(Range.Where(c=>res[c]==choice_4[c]||res[c]==choice_3[c]|| res[c] == choice_2[c]).ToArray(),5);
             //DayDown(12);float d;
             //best = scoreMemoized2(res);
             //(d, res) = MakeCoordMinSlow2Parallel(res, Enumerable.Range(0, 5000).ToArray());
@@ -2973,12 +3740,12 @@ namespace Покоординатная_минимизация
             // int[] inds;
             var map = GetMap(res);
             var pr = GetProcArray();
-            var days = Enumerable.Range(0, 100).Select(d => (d + 1, pr[d])).OrderBy(h => h.Item2).Select(h => h.Item1).Take(25).ToArray();
-            var ines = Enumerable.Range(0, 5000).Where(c => res[c] == choice_2[c] || res[c] == choice_3[c] || res[c] == choice_4[c] || days.Contains(res[c])).ToArray();
+            // var days = Enumerable.Range(0, 100).Select(d => (d + 1, pr[d])).OrderBy(h => h.Item2).Select(h => h.Item1).Take(25).ToArray();
+            var ines = Enumerable.Range(0, 5000).Where(c => res[c] == choice_3[c] || res[c] == choice_4[c] || /*days*/peops1.Contains(res[c])).ToArray();
 
             foreach (var p in new int[3])
-                for (int count = 10; count <= 200; count += 5)
-                    for (int top = 5; top >= 2; top--)
+                for (int count = 10; count <= 100; count += 10)
+                    for (int top = 5; top >= 1; top--)
                     {
                         $"_____________________________count = {count} top = {top}".Show(); "".Show();
                         float b = best;
@@ -2986,10 +3753,10 @@ namespace Покоординатная_минимизация
                         // inds = GetSub2();
                         while (q < 2)
                         {
-                            //RandomDown8(ines,count, top, 1000);
-                            //RandomDown9(count, top, 500);
-                            RandomDown10(count, top, 500);
-
+                            // RandomDown8(ines,count, top, 1000);
+                            RandomDown9(count, top, 1000);
+                            //RandomDown12(count, top, 500);
+                            // RandomDown3(count, 500);
 
                             //RandomDown4(count / 8, top, 500);
                             //RandomDown5(count / 4, top, 500);
@@ -3231,30 +3998,11 @@ namespace Покоординатная_минимизация
         {
             var obs = GetNresCopy(iter);
 
-            var inds = GetNotZeroChoises();
-            var icount = inds.Length;
-            Console.WriteLine($"Not zero families count is {icount} ({Expendator.GetProcent(icount, 5000)}%)");
+            //Parallel.For(0, iter, (int i) => MakeCoordMinPr(obs[i], deep));
+            Parallel.For(0, iter, (int i) => MinAcc(obs[i], deep));
+            //Parallel.For(0, iter, (int i) => MinPre(obs[i], deep));
 
-            Parallel.For(0, iter, (int i) => MakeCoordMinPr(obs[i], deep));
-
-            //var v= obs.Select(p => scoreMemoized2(p)).ToArray();
-
-            (float, byte[])[] links = new (float, byte[])[iter];
-            //"Start".Show();
-            Parallel.For(0, iter, (int i) => links[i] = MakeCoordMinSlow(obs[i]));
-            //for (int i = 0; i < iter; i++) links[i] = MakeCoordMinSlow(obs[i]);
-
-            best = scoreMemoized2(res);
-            var bs = links.Min(p => p.Item1);
-            var t = links.First(p => p.Item1 == bs);
-            if (best > bs)
-            {
-                res = t.Item2;
-                best = bs;
-
-                Console.WriteLine($"Записывается в файл {bs}");
-                WriteData(bs, "");
-            }
+            MakeDown(obs);
         }
 
         /// <summary>
@@ -3554,6 +4302,18 @@ namespace Покоординатная_минимизация
             MakeDown(obs);
         }
 
+        static void RandomDown12(int dim = 10, int top = 5, int iter = 10000)
+        {
+            var range = Enumerable.Range(0, 5000);
+            int[] st = range.Where(i => res[i] == choice_4[i]).ToArray();
+            if (dim > 50)
+                st = range.Where(i => res[i] == choice_4[i] || res[i] == choice_3[i]).ToArray();
+
+            var obs = GetSuperRandom(st, iter, dim, top, false)/*.Select(s => MinPre(s, dim)).ToArray()*/;
+            //var obs = GetStochacticRandom(iter, top, 3);
+            MakeDown(obs);
+        }
+
         static void MakeDown(byte[][] obs)
         {
             var iter = obs.GetLength(0);
@@ -3633,12 +4393,12 @@ namespace Покоординатная_минимизация
 
             int pr = preference_costsMemoized(res);
             float acc = accounting_penaltyMemoized(res);
-            Console.WriteLine($"pref = {pr}   acc = {acc}   sum = {pr + acc}"); "".Show();
+            Console.WriteLine($"pref = {pr}   acc = {acc}   sum = {pr + acc}");
+            Console.WriteLine($"sub length = {GetSub2().Length}"); "".Show();
         }
 
         static int[] GetStructure(int top = 5)
         {
-
             int c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, no;
             c0 = c1 = c2 = c3 = c4 = c5 = c6 = c7 = c8 = c9 = no = 0;
             byte t;
@@ -4190,7 +4950,7 @@ namespace Покоординатная_минимизация
                             a4 = Top(p, top);
                             Console.WriteLine($"p = {p}");
 
-                            for (int t = k + 1; t < 5000; t++)
+                            for (int t = p + 1; t < 5000; t++)
                             {
                                 nt = n_people[t];
                                 pr -= prCosts[t][res[t] - 1];
@@ -4311,7 +5071,334 @@ namespace Покоординатная_минимизация
             //    res[inds.Item5] = rs.Item5;
             //}
         }
+        static void TopDown5(int[] indexes, int top = 5)
+        {
+            int pr = preference_costsMemoized(res);
+            short[] acr = GetMap();
+            float first = scoreMemoized2(res), min;
+            (int, int, int, int, int) inds = (0, 0, 0, 0, 0);
+            (byte, byte, byte, byte, byte) rs = (0, 0, 0, 0, 0);
+            byte[] a1, a2, a3, a4, a5;
+            bool progress;
+            byte ni, nj, nk, np, nt;
 
+        algol:
+            progress = false;
+            for (int i = 0; i < indexes.Length - 4; i++)
+            {
+                ni = n_people[indexes[i]];
+                pr -= prCosts[indexes[i]][res[indexes[i]] - 1];
+                acr[res[indexes[i]] - 1] -= ni;
+                a1 = Top(indexes[i], top);
+                indexes[i].Show();
+
+                for (int j = i + 1; j < indexes.Length - 3; j++)
+                {
+                    nj = n_people[indexes[j]];
+                    pr -= prCosts[indexes[j]][res[indexes[j]] - 1];
+                    acr[res[indexes[j]] - 1] -= nj;
+                    a2 = Top(indexes[j], top);
+                    // Console.WriteLine($"j = {indexes[j]}");
+
+                    for (int k = j + 1; k < indexes.Length - 2; k++)
+                    {
+                        nk = n_people[indexes[k]];
+                        pr -= prCosts[indexes[k]][res[indexes[k]] - 1];
+                        acr[res[indexes[k]] - 1] -= nk;
+                        a3 = Top(indexes[k], top);
+                        // Console.WriteLine($"k = {indexes[k]}");
+
+                        for (int p = k + 1; p < indexes.Length - 1; p++)
+                        {
+                            np = n_people[indexes[p]];
+                            pr -= prCosts[indexes[p]][res[indexes[p]] - 1];
+                            acr[res[indexes[p]] - 1] -= np;
+                            a4 = Top(indexes[p], top);
+                            //Console.WriteLine($"p = {indexes[p]}");
+
+                            for (int t = p + 1; t < indexes.Length; t++)
+                            {
+                                nt = n_people[indexes[t]];
+                                pr -= prCosts[indexes[t]][res[indexes[t]] - 1];
+                                acr[res[indexes[t]] - 1] -= nt;
+                                a5 = Top(indexes[t], top);
+
+                                (float, (byte, byte, byte, byte, byte))[] tops = new (float, (byte, byte, byte, byte, byte))[top];
+
+                                Parallel.For(0, top, ii =>
+                                {
+                                    int pr2 = pr + prCosts[indexes[i]][a1[ii] - 1];
+                                    var acr2 = acr.Dup();
+                                    float f = first, tmp = 1e20f;
+                                    acr2[a1[ii] - 1] += ni;
+
+
+                                    foreach (var i2 in a2)
+                                    {
+                                        pr2 += prCosts[indexes[j]][i2 - 1];
+                                        acr2[i2 - 1] += nj;
+                                        foreach (var i3 in a3)
+                                        {
+                                            pr2 += prCosts[indexes[k]][i3 - 1];
+                                            acr2[i3 - 1] += nk;
+                                            foreach (var i4 in a4)
+                                            {
+                                                pr2 += prCosts[indexes[p]][i4 - 1];
+                                                acr2[i4 - 1] += np;
+                                                foreach (var i5 in a5)
+                                                {
+                                                    pr2 += prCosts[indexes[t]][i5 - 1];
+                                                    acr2[i5 - 1] += nt;
+
+                                                    if (pr2 < f && acr2.All(s => s >= 125 && s <= 300))
+                                                    {
+                                                        tmp = pr2 + accounting_penalty3(acr2);
+                                                        if (tmp < f)
+                                                        {
+                                                            f = tmp;
+                                                            tops[ii] = (f, (a1[ii], i2, i3, i4, i5));
+                                                        }
+                                                    }
+
+                                                    pr2 -= prCosts[indexes[t]][i5 - 1];
+                                                    acr2[i5 - 1] -= nt;
+                                                }
+                                                pr2 -= prCosts[indexes[p]][i4 - 1];
+                                                acr2[i4 - 1] -= np;
+                                            }
+                                            pr2 -= prCosts[indexes[k]][i3 - 1];
+                                            acr2[i3 - 1] -= nk;
+                                        }
+                                        pr2 -= prCosts[indexes[j]][i2 - 1];
+                                        acr2[i2 - 1] -= nj;
+                                    }
+
+
+                                });
+
+                                var ps = tops.Where(s => s.Item1 > 0).ToArray();
+                                if (ps.Length == 0)
+                                    min = 1e20f;
+                                else
+                                    min = ps.Min(s => s.Item1);
+                                if (min < first)
+                                {
+                                    first = min;
+                                    inds = (indexes[i], indexes[j], indexes[k], indexes[p], indexes[t]);
+                                    rs = tops.First(s => s.Item1 == min).Item2;
+                                    progress = true;
+                                    Console.WriteLine($"New best val is {first}");
+
+                                    //res[inds.Item1] = rs.Item1;
+
+                                    res[inds.Item1] = rs.Item1;
+                                    res[inds.Item2] = rs.Item2;
+                                    res[inds.Item3] = rs.Item3;
+                                    res[inds.Item4] = rs.Item4;
+                                    res[inds.Item5] = rs.Item5;
+
+                                    WriteData(first);
+                                    pr += prCosts[indexes[t]][res[indexes[t]] - 1];
+                                    acr[res[indexes[t]] - 1] += nt;
+                                    pr += prCosts[indexes[p]][res[indexes[p]] - 1];
+                                    acr[res[indexes[p]] - 1] += np;
+                                    pr += prCosts[indexes[k]][res[indexes[k]] - 1];
+                                    acr[res[indexes[k]] - 1] += nk;
+                                    pr += prCosts[indexes[j]][res[indexes[j]] - 1];
+                                    acr[res[indexes[j]] - 1] += nj;
+                                    pr += prCosts[indexes[i]][res[indexes[i]] - 1];
+                                    acr[res[indexes[i]] - 1] += ni;
+
+                                    goto algol;
+                                }
+
+                                pr += prCosts[indexes[t]][res[indexes[t]] - 1];
+                                acr[res[indexes[t]] - 1] += nt;
+                            }
+                            pr += prCosts[indexes[p]][res[indexes[p]] - 1];
+                            acr[res[indexes[p]] - 1] += np;
+                        }
+                        pr += prCosts[indexes[k]][res[indexes[k]] - 1];
+                        acr[res[indexes[k]] - 1] += nk;
+                    }
+                    pr += prCosts[indexes[j]][res[indexes[j]] - 1];
+                    acr[res[indexes[j]] - 1] += nj;
+                }
+
+                pr += prCosts[indexes[i]][res[indexes[i]] - 1];
+                acr[res[indexes[i]] - 1] += ni;
+            }
+
+            //if (progress)
+            //{
+            //    res[inds.Item1] = rs.Item1;
+            //    res[inds.Item2] = rs.Item2;
+            //    res[inds.Item3] = rs.Item3;
+            //    res[inds.Item4] = rs.Item4;
+            //    res[inds.Item5] = rs.Item5;
+            //}
+        }
+
+        static void TopDown4(int[] indexes, int top = 5)
+        {
+            int pr = preference_costsMemoized(res);
+            short[] acr = GetMap();
+            float first = scoreMemoized2(res), min;
+            (int, int, int, int) inds = (0, 0, 0, 0);
+            (byte, byte, byte, byte) rs = (0, 0, 0, 0);
+            byte[] a1, a2, a3, a4, a5;
+            bool progress;
+            byte ni, nj, nk, np, nt;
+
+            bool gut(short v) => v >= 125 && v <= 300;
+
+        algol:
+            progress = false;
+            for (int i = 0; i < indexes.Length - 3; i++)
+            {
+                ni = n_people[indexes[i]];
+                pr -= prCosts[indexes[i]][res[indexes[i]] - 1];
+                acr[res[indexes[i]] - 1] -= ni;
+                a1 = Top(indexes[i], top);
+                indexes[i].Show();
+
+                for (int j = i + 1; j < indexes.Length - 2; j++)
+                {
+                    nj = n_people[indexes[j]];
+                    pr -= prCosts[indexes[j]][res[indexes[j]] - 1];
+                    acr[res[indexes[j]] - 1] -= nj;
+                    a2 = Top(indexes[j], top);
+                    // Console.WriteLine($"j = {indexes[j]}");
+
+                    for (int k = j + 1; k < indexes.Length - 1; k++)
+                    {
+                        nk = n_people[indexes[k]];
+                        pr -= prCosts[indexes[k]][res[indexes[k]] - 1];
+                        acr[res[indexes[k]] - 1] -= nk;
+                        a3 = Top(indexes[k], top);
+                        // Console.WriteLine($"k = {indexes[k]}");
+
+                        for (int p = k + 1; p < indexes.Length; p++)
+                        {
+                            np = n_people[indexes[p]];
+                            pr -= prCosts[indexes[p]][res[indexes[p]] - 1];
+                            acr[res[indexes[p]] - 1] -= np;
+                            a4 = Top(indexes[p], top);
+                            //Console.WriteLine($"p = {indexes[p]}");
+
+
+                            (float, (byte, byte, byte, byte))[] tops = new (float, (byte, byte, byte, byte))[top];
+
+                            Parallel.For(0, top, ii =>
+                            {
+                                int pr2 = pr + prCosts[indexes[i]][a1[ii] - 1];
+                                var acr2 = acr.Dup();
+                                float f = first, tmp = 1e20f;
+                                acr2[a1[ii] - 1] += ni;
+
+
+                                foreach (var i2 in a2)
+                                {
+                                    pr2 += prCosts[indexes[j]][i2 - 1];
+                                    acr2[i2 - 1] += nj;
+                                    foreach (var i3 in a3)
+                                    {
+                                        pr2 += prCosts[indexes[k]][i3 - 1];
+                                        acr2[i3 - 1] += nk;
+                                        foreach (var i4 in a4)
+                                        {
+                                            pr2 += prCosts[indexes[p]][i4 - 1];
+                                            acr2[i4 - 1] += np;
+
+
+                                            if (pr2 < f &&
+                                            gut(acr2[i4 - 1]) &&
+                                            gut(acr2[i3 - 1]) &&
+                                            gut(acr2[i2 - 1]) &&
+                                            gut(acr2[a1[ii] - 1]) &&
+                                            gut(acr2[res[indexes[p]] - 1]) &&
+                                            gut(acr2[res[indexes[k]] - 1]) &&
+                                            gut(acr2[res[indexes[j]] - 1]) &&
+                                            gut(acr2[res[indexes[i]] - 1]))
+                                            {
+                                                tmp = pr2 + accounting_penalty3(acr2);
+                                                if (tmp < f)
+                                                {
+                                                    f = tmp;
+                                                    tops[ii] = (f, (a1[ii], i2, i3, i4));
+                                                }
+                                            }
+
+                                            pr2 -= prCosts[indexes[p]][i4 - 1];
+                                            acr2[i4 - 1] -= np;
+                                        }
+                                        pr2 -= prCosts[indexes[k]][i3 - 1];
+                                        acr2[i3 - 1] -= nk;
+                                    }
+                                    pr2 -= prCosts[indexes[j]][i2 - 1];
+                                    acr2[i2 - 1] -= nj;
+                                }
+
+
+                            });
+
+                            var ps = tops.Where(s => s.Item1 > 0).ToArray();
+                            if (ps.Length == 0)
+                                min = 1e20f;
+                            else
+                                min = ps.Min(s => s.Item1);
+                            if (min < first)
+                            {
+                                first = min;
+                                inds = (indexes[i], indexes[j], indexes[k], indexes[p]);
+                                rs = tops.First(s => s.Item1 == min).Item2;
+                                progress = true;
+                                Console.WriteLine($"New best val is {first}");
+
+                                //res[inds.Item1] = rs.Item1;
+
+                                res[inds.Item1] = rs.Item1;
+                                res[inds.Item2] = rs.Item2;
+                                res[inds.Item3] = rs.Item3;
+                                res[inds.Item4] = rs.Item4;
+
+                                WriteData(first);
+
+                                pr += prCosts[indexes[p]][res[indexes[p]] - 1];
+                                acr[res[indexes[p]] - 1] += np;
+                                pr += prCosts[indexes[k]][res[indexes[k]] - 1];
+                                acr[res[indexes[k]] - 1] += nk;
+                                pr += prCosts[indexes[j]][res[indexes[j]] - 1];
+                                acr[res[indexes[j]] - 1] += nj;
+                                pr += prCosts[indexes[i]][res[indexes[i]] - 1];
+                                acr[res[indexes[i]] - 1] += ni;
+
+                                goto algol;
+                            }
+
+                            pr += prCosts[indexes[p]][res[indexes[p]] - 1];
+                            acr[res[indexes[p]] - 1] += np;
+                        }
+                        pr += prCosts[indexes[k]][res[indexes[k]] - 1];
+                        acr[res[indexes[k]] - 1] += nk;
+                    }
+                    pr += prCosts[indexes[j]][res[indexes[j]] - 1];
+                    acr[res[indexes[j]] - 1] += nj;
+                }
+
+                pr += prCosts[indexes[i]][res[indexes[i]] - 1];
+                acr[res[indexes[i]] - 1] += ni;
+            }
+
+            //if (progress)
+            //{
+            //    res[inds.Item1] = rs.Item1;
+            //    res[inds.Item2] = rs.Item2;
+            //    res[inds.Item3] = rs.Item3;
+            //    res[inds.Item4] = rs.Item4;
+            //    res[inds.Item5] = rs.Item5;
+            //}
+        }
 
         static byte LevelDown(int index, byte val)
         {
@@ -4404,14 +5491,14 @@ namespace Покоординатная_минимизация
 
                 var ar = GetRandom();
                 if (!allpeople)
-                    ar = ar.Where(c => peops1.Contains(n_people[c]) || res[c] == choice_4[c] || res[c] == choice_3[c]).ToArray();
+                    ar = ar.Where(c => peops1.Contains(n_people[c]) || res[c] == choice_4[c] || res[c] == choice_3[c] || res[c] == choice_2[c]).ToArray();
 
                 foreach (var ind in ar.Take(take))
                 {
                     var pi = ob[ind] - 1;
                     var peop = n_people[ind];
                     map[pi] -= peop;
-                    var arr = Top(ind, top).ToArray(); arr.Swap(top);
+                    var arr = Top(ind, peop > 5 ? Math.Min(3, top) : top).ToArray(); arr.Swap(top);
                     foreach (var vl in arr)
                     {
                         map[vl - 1] += peop;
@@ -4467,7 +5554,43 @@ namespace Покоординатная_минимизация
 
             return gv;
         }
+        static byte[][] GetSuperRandom(int[] minimum, int count, int take = 100, int top = 5, bool allpeople = true)
+        {
+            var gv = GetNresCopy(count);
+            var Map = GetMap(res);
+            bool gut(short v) => v >= 125 && v <= 300;
+            Parallel.For(0, count, p =>
+            {
+                ref var ob = ref gv[p];
+                var map = Map.Dup();
 
+                var ar = GetRandom(minimum);
+                if (!allpeople)
+                    ar = ar.Where(c => peops1.Contains(n_people[c]) || res[c] == choice_4[c] || res[c] == choice_3[c]).ToArray();
+
+                foreach (var ind in ar.Take(take))
+                {
+                    var pi = ob[ind] - 1;
+                    var peop = n_people[ind];
+                    map[pi] -= peop;
+                    var arr = Top(ind, top).ToArray(); arr.Swap(top);
+                    foreach (var vl in arr)
+                    {
+                        map[vl - 1] += peop;
+                        if (gut(map[pi]) && gut(map[vl - 1]))
+                        {
+                            ob[ind] = vl;
+                            break;
+                        }
+                        else
+                            map[vl - 1] -= peop;
+                    }
+                }
+
+            });
+
+            return gv;
+        }
 
         static byte[] ToByteArr(double[] arr)
         {
@@ -5558,6 +6681,87 @@ namespace Покоординатная_минимизация
             return Enumerable.Range(0, 5000).Where(i => p[i] + t[i] > 0).ToArray();
         }
 
+
+        static void EchoDown()
+        {
+            //зашумить
+            var inds = Range.Where(c => n_people[c] == 8||choice_0[c]==1).ToArray();
+            for (int i = 0; i < inds.Length; i++)
+                res[inds[i]] = choice_0[inds[i]];
+            //WriteData(res, Environment.CurrentDirectory);
+
+            //заполнить дни, меньшие 125
+            while (true)
+            {
+                var map = GetMap();
+                var mp = Enumerable.Range(0, 100).Where(c => map[c] < 125).Select(c => (byte)(c + 1)).ToArray();
+                var mp2 = Enumerable.Range(0, 100).Where(c => map[c] < 140).Select(c => (byte)(c + 1)).ToArray();
+                if (mp.Length == 0)
+                    break;
+                else Console.WriteLine($"{mp.Length} {preference_costsMemoized(res)}");
+                var not = Range.Where(c => !mp.Contains(res[c])).ToArray();
+                var not2 = Range.Where(c => !mp2.Contains(res[c])).ToArray();
+                int[] mins = new int[5000];
+                int[][] vals = new int[5000][];
+                for (int i = 0; i < 5000; i++)
+                {
+                    mins[i] = 1000000;
+                    vals[i] = new int[] { 10000000 };
+                }
+
+                foreach (var i in not2)
+                {
+                    int price = prCosts[i][res[i] - 1];
+                    vals[i] = new int[mp.Length];
+                    for (int j = 0; j < mp.Length; j++)
+                        vals[i][j] = prCosts[i][mp[j] - 1] - price;
+                    mins[i] = vals[i].Min();
+                }
+                var minrow = Array.IndexOf(mins, mins.Min());
+                var mincol = Array.IndexOf(vals[minrow], mins.Min());
+                res[minrow] = mp[mincol];
+
+            }
+            //WriteData(res, Environment.CurrentDirectory);
+
+
+            //раскидать с дней, больших 300
+            while (true)
+            {
+                var map = GetMap();
+                var mp = Enumerable.Range(0, 100).Where(c => map[c] >300).Select(c => (byte)(c + 1)).ToArray();
+                var mp2 = Enumerable.Range(0, 100).Where(c => map[c] <285).Select(c => (byte)(c + 1)).ToArray();
+                if (mp.Length == 0)
+                    break;
+                else Console.WriteLine($"{mp.Length} {preference_costsMemoized(res)}");
+                var not = Range.Where(c => mp.Contains(res[c])).ToArray();
+                var not2 = Range.Where(c => !mp2.Contains(res[c])).ToArray();
+                int[] mins = new int[5000];
+                int[][] vals = new int[5000][];
+                for (int i = 0; i < 5000; i++)
+                {
+                    mins[i] = 1000000;
+                    vals[i] = new int[] { 10000000 };
+                }
+
+                foreach (var i in not)
+                {
+                    int price = prCosts[i][res[i] - 1];
+                    vals[i] = new int[mp2.Length];
+                    for (int j = 0; j < mp2.Length; j++)
+                        vals[i][j] = prCosts[i][mp2[j] - 1] - price;
+                    mins[i] = vals[i].Min();
+                }
+                var minrow = Array.IndexOf(mins, mins.Min());
+                var mincol = Array.IndexOf(vals[minrow], mins.Min());
+                res[minrow] = mp2[mincol];
+
+            }
+            //WriteData(res, Environment.CurrentDirectory);
+            (best, res) = MakeCoordMinSlow2Parallel(res, Range);
+            for(int i=0;i<5;i++)
+            MinRandomSeries(400, 7);
+        }
     }
 
 
