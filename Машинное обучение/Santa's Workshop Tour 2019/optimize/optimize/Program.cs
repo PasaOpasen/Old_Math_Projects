@@ -2124,8 +2124,7 @@ namespace Покоординатная_минимизация
                 acr[i1 - 1] -= peop[0];
             }
 
-
-            Console.WriteLine($"{indexes[0]} {indexes[1]} {indexes[2]} {indexes[3]} {indexes[4]}");
+          //  Console.WriteLine($"{indexes[0]} {indexes[1]} {indexes[2]} {indexes[3]} {indexes[4]}");
 
             return (first, copy);
         }
@@ -3683,16 +3682,61 @@ namespace Покоординатная_минимизация
 
         }
 
+
+        static void CycleDown()
+        {
+            var map = GetMap(res);
+            var pr = GetProcArray();
+            // var days = Enumerable.Range(0, 100).Select(d => (d + 1, pr[d])).OrderBy(h => h.Item2).Select(h => h.Item1).Take(25).ToArray();
+            var ines = Enumerable.Range(0, 5000).Where(c => res[c] == choice_3[c] || res[c] == choice_4[c] || /*days*/peops1.Contains(res[c])).ToArray();
+
+            foreach (var p in new int[2])
+                for (int count = 2; count <= 30; count += 3)
+                    for (int top = 5; top >= 1; top--)
+                    {
+                        $"_____________________________count = {count} top = {top}".Show(); "".Show();
+                        float b = best;
+                        int q = 0;
+                        // inds = GetSub2();
+                        while (q < 2)
+                        {
+                            // RandomDown8(ines,count, top, 1000);
+                            RandomDown4dot2(count, top, 1000);
+                            //RandomDown12(count, top, 500);
+                            // RandomDown3(count, 500);
+
+                            //RandomDown4(count / 8, top, 500);
+                            //RandomDown5(count / 4, top, 500);
+                            // RandomDown7(count / 10, 500);
+                            if (b == best)
+                            {
+                                q++;
+
+                                //inds = GetSub2();
+                            }
+                            else b = best;
+                        }
+
+                    }
+            return;
+        }
+
         static void Main(string[] args)
         {
             ReadRES();
             ReadUpDown();
             ShowStructure();
 
-            EchoDown();
 
-            //for(int i=0;i<5;i++)
-            //MinRandomSeries(1000, 7);
+            //var inds = Range.Where(c => n_people[c] ==8 && res[c] == choice_3[c]).ToArray();
+            //for (int i = 0; i < inds.Length; i++)
+            //    res[inds[i]] = choice_0[inds[i]];
+            //EchoDown();
+            CycleDown();
+
+
+            //for(int i=0;i<50;i++)
+            //MinRandomSeries(1000, 2);
             //MinRandomSeries2( 5);
 
             //TopDown4(Range.Where(c=>res[c]==choice_4[c]||res[c]==choice_3[c]|| res[c] == choice_2[c]).ToArray(),5);
@@ -3738,40 +3782,7 @@ namespace Покоординатная_минимизация
             //NotRandomDown(3);
             //WriteContributions("conts.csv");
             // int[] inds;
-            var map = GetMap(res);
-            var pr = GetProcArray();
-            // var days = Enumerable.Range(0, 100).Select(d => (d + 1, pr[d])).OrderBy(h => h.Item2).Select(h => h.Item1).Take(25).ToArray();
-            var ines = Enumerable.Range(0, 5000).Where(c => res[c] == choice_3[c] || res[c] == choice_4[c] || /*days*/peops1.Contains(res[c])).ToArray();
 
-            foreach (var p in new int[3])
-                for (int count = 10; count <= 100; count += 10)
-                    for (int top = 5; top >= 1; top--)
-                    {
-                        $"_____________________________count = {count} top = {top}".Show(); "".Show();
-                        float b = best;
-                        int q = 0;
-                        // inds = GetSub2();
-                        while (q < 2)
-                        {
-                            // RandomDown8(ines,count, top, 1000);
-                            RandomDown9(count, top, 1000);
-                            //RandomDown12(count, top, 500);
-                            // RandomDown3(count, 500);
-
-                            //RandomDown4(count / 8, top, 500);
-                            //RandomDown5(count / 4, top, 500);
-                            // RandomDown7(count / 10, 500);
-                            if (b == best)
-                            {
-                                q++;
-
-                                //inds = GetSub2();
-                            }
-                            else b = best;
-                        }
-
-                    }
-            return;
 
             // var t = preference_costs(res);
             // var s = accounting_penalty(res);
@@ -4066,6 +4077,43 @@ namespace Покоординатная_минимизация
                 //links[i] = MakeCoordMinSlow(ob);
             }
             //);
+
+            MakeDown(obs);
+        }
+        /// <summary>
+        /// Меняет в iter копиях случайные dim элементов на случайные choise от 0 до top-1
+        /// </summary>
+        /// <param name="dim"></param>
+        /// <param name="top"></param>
+        /// <param name="iter"></param>
+        static void RandomDown4dot2(int dim = 10, int top = 5, int iter = 10000)
+        {
+            var mas = new int[dim];
+            //var copy = new byte[dim];
+            var obs = GetNresCopy(iter);
+            int index, j;
+
+            var inds = Enumerable.Range(0, 4999).Where(c => peops1.Contains(n_people[c])  ).ToArray(); 
+            var icount = inds.Length;
+
+            Parallel.For(0, iter, (int i) => 
+            //for (int i = 0; i < iter; i++)
+            {
+                ref var ob = ref obs[i];
+
+                    for (j = 0; j < dim; j++)
+                        mas[j] = inds[randomgen.Next(0, icount)];
+                    
+                    for (j = 0; j < dim; j++)
+                    {
+                        index = mas[j];
+                    // copy[j] = ob[index];
+                    ob[index] = LevelDown(index, ob[index]); //RandVal(index, top);
+                    }
+                ob = EchoDown(ob);
+
+            }
+            );
 
             MakeDown(obs);
         }
@@ -6682,60 +6730,25 @@ namespace Покоординатная_минимизация
         }
 
 
-        static void EchoDown()
+        static byte[] EchoDown(byte[] arr)
         {
             //зашумить
-            var inds = Range.Where(c => n_people[c] == 8||choice_0[c]==1).ToArray();
-            for (int i = 0; i < inds.Length; i++)
-                res[inds[i]] = choice_0[inds[i]];
-            //WriteData(res, Environment.CurrentDirectory);
+            //var inds = Range.Where(c => n_people[c] == 7&&choice_0[c]==1).ToArray();
 
-            //заполнить дни, меньшие 125
-            while (true)
+          //  var inds = Range.Where(c => /*(n_people[c] ==8|| n_people[c] == 7) &&*/ arr[c] == choice_4[c]).ToArray();
+           // for (int i = 0; i < inds.Length; i++)
+           //     arr[inds[i]] = choice_0[inds[i]];
+            //WriteData(arr, Environment.CurrentDirectory);
+while (true)
             {
-                var map = GetMap();
-                var mp = Enumerable.Range(0, 100).Where(c => map[c] < 125).Select(c => (byte)(c + 1)).ToArray();
-                var mp2 = Enumerable.Range(0, 100).Where(c => map[c] < 140).Select(c => (byte)(c + 1)).ToArray();
-                if (mp.Length == 0)
-                    break;
-                else Console.WriteLine($"{mp.Length} {preference_costsMemoized(res)}");
-                var not = Range.Where(c => !mp.Contains(res[c])).ToArray();
-                var not2 = Range.Where(c => !mp2.Contains(res[c])).ToArray();
-                int[] mins = new int[5000];
-                int[][] vals = new int[5000][];
-                for (int i = 0; i < 5000; i++)
-                {
-                    mins[i] = 1000000;
-                    vals[i] = new int[] { 10000000 };
-                }
-
-                foreach (var i in not2)
-                {
-                    int price = prCosts[i][res[i] - 1];
-                    vals[i] = new int[mp.Length];
-                    for (int j = 0; j < mp.Length; j++)
-                        vals[i][j] = prCosts[i][mp[j] - 1] - price;
-                    mins[i] = vals[i].Min();
-                }
-                var minrow = Array.IndexOf(mins, mins.Min());
-                var mincol = Array.IndexOf(vals[minrow], mins.Min());
-                res[minrow] = mp[mincol];
-
-            }
-            //WriteData(res, Environment.CurrentDirectory);
-
-
-            //раскидать с дней, больших 300
-            while (true)
-            {
-                var map = GetMap();
+                var map = GetMap(arr);
                 var mp = Enumerable.Range(0, 100).Where(c => map[c] >300).Select(c => (byte)(c + 1)).ToArray();
                 var mp2 = Enumerable.Range(0, 100).Where(c => map[c] <285).Select(c => (byte)(c + 1)).ToArray();
                 if (mp.Length == 0)
                     break;
-                else Console.WriteLine($"{mp.Length} {preference_costsMemoized(res)}");
-                var not = Range.Where(c => mp.Contains(res[c])).ToArray();
-                var not2 = Range.Where(c => !mp2.Contains(res[c])).ToArray();
+                //else Console.WriteLine($"{mp.Length} {preference_costsMemoized(arr)}");
+                var not = Range.Where(c => mp.Contains(arr[c])).ToArray();
+                var not2 = Range.Where(c => !mp2.Contains(arr[c])).ToArray();
                 int[] mins = new int[5000];
                 int[][] vals = new int[5000][];
                 for (int i = 0; i < 5000; i++)
@@ -6746,7 +6759,7 @@ namespace Покоординатная_минимизация
 
                 foreach (var i in not)
                 {
-                    int price = prCosts[i][res[i] - 1];
+                    int price = prCosts[i][arr[i] - 1];
                     vals[i] = new int[mp2.Length];
                     for (int j = 0; j < mp2.Length; j++)
                         vals[i][j] = prCosts[i][mp2[j] - 1] - price;
@@ -6754,13 +6767,56 @@ namespace Покоординатная_минимизация
                 }
                 var minrow = Array.IndexOf(mins, mins.Min());
                 var mincol = Array.IndexOf(vals[minrow], mins.Min());
-                res[minrow] = mp2[mincol];
+                arr[minrow] = mp2[mincol];
 
             }
-            //WriteData(res, Environment.CurrentDirectory);
-            (best, res) = MakeCoordMinSlow2Parallel(res, Range);
-            for(int i=0;i<5;i++)
-            MinRandomSeries(400, 7);
+            //заполнить дни, меньшие 125
+            while (true)
+            {
+                var map = GetMap(arr);
+                var mp = Enumerable.Range(0, 100).Where(c => map[c] < 125).Select(c => (byte)(c + 1)).ToArray();
+                var mp2 = Enumerable.Range(0, 100).Where(c => map[c] < 140).Select(c => (byte)(c + 1)).ToArray();
+                if (mp.Length == 0)
+                    break;
+                //else Console.WriteLine($"{mp.Length} {preference_costsMemoized(arr)}");
+                var not = Range.Where(c => !mp.Contains(arr[c])).ToArray();
+                var not2 = Range.Where(c => !mp2.Contains(arr[c])).ToArray();
+                int[] mins = new int[5000];
+                int[][] vals = new int[5000][];
+                for (int i = 0; i < 5000; i++)
+                {
+                    mins[i] = 1000000;
+                    vals[i] = new int[] { 10000000 };
+                }
+
+                foreach (var i in not2)
+                {
+                    int price = prCosts[i][arr[i] - 1];
+                    vals[i] = new int[mp.Length];
+                    for (int j = 0; j < mp.Length; j++)
+                        vals[i][j] = prCosts[i][mp[j] - 1] - price;
+                    mins[i] = vals[i].Min();
+                }
+                var minrow = Array.IndexOf(mins, mins.Min());
+                var mincol = Array.IndexOf(vals[minrow], mins.Min());
+                arr[minrow] = mp[mincol];
+
+            }
+            //WriteData(arr, Environment.CurrentDirectory);
+
+
+            //раскидать с дней, больших 300
+            
+
+
+            //WriteData(arr, Environment.CurrentDirectory);
+            //ShowStructure();
+            //(best, arr) = MakeCoordMinSlow2Parallel(arr, Range);
+            //ShowStructure();
+            // WriteData(arr, Environment.CurrentDirectory);
+            //for(int i=0;i<500;i++)
+            //MinRandomSeries(50, 7);
+            return arr;
         }
     }
 
