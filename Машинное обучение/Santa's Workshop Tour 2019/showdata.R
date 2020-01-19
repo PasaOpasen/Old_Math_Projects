@@ -66,9 +66,14 @@ pp=tt %>% filter(resold!=res)
 
 
 ###
-alien=data.table::fread("alien.txt",header = T,sep='\t')
+alien=data.table::fread("alien3.txt",header = T,sep='\t')
 
 best.res=alien$assigned_day
+
+res=read_csv("res.csv")
+res$assigned_day=best.res
+#best.res=res$assigned_day
+write_csv(res,"res.csv")
 
 
 #####################
