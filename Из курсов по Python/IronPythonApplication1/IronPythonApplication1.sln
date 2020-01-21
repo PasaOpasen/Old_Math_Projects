@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "IronPythonApplication1", "IronPythonApplication1\IronPythonApplication1.pyproj", "{4C7A32B0-0F92-4408-BCAC-13944D855C71}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4C7A32B0-0F92-4408-BCAC-13944D855C71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C7A32B0-0F92-4408-BCAC-13944D855C71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ED4B91BD-5609-4658-8B37-06F951FE7FA0}
+	EndGlobalSection
+EndGlobal
