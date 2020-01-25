@@ -172,6 +172,42 @@ class LoggableList(list,Loggable):
 
 
 
+try:
+    newClass.foo()
+except ZeroDivisionError:
+    print("ZeroDivisionError")
+except AssertionError:
+    print("AssertionError")
+except ArithmeticError:
+    print("ArithmeticError")
+
+
+
+
+
+class NonPositiveError(Exception):pass
+class PositiveList(list):
+    def append(self, object):
+        if object<=0:
+            raise NonPositiveError()
+        else:
+            super().append(object)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
