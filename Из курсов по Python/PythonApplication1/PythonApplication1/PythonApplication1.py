@@ -230,6 +230,104 @@ for s in password:
 
 
 
+def count_res(self, a):
+    res = [f(a) for f in self.funcs]
+    return res.count(True), res.count(False)
+pos, neg = self.count_res(i)
+
+
+class multifilter:
+
+    def judge_half(pos, neg):
+        if pos>=neg:
+            return True
+        else:
+            return False
+
+    def judge_any(pos, neg):
+        if pos>0:
+            return True
+        else:
+            return False
+
+    def judge_all(pos, neg):
+        if neg==0:
+            return True
+        else:
+            return False
+
+    def count_res(self, a):
+        res = [f(a) for f in self.funcs]
+        return res.count(True), res.count(False)
+
+    def __init__(self, iterable, *funcs, judge=judge_any):
+        # iterable - исходная последовательность
+        self.it=iterable
+        # funcs - допускающие функции
+        self.funcs=funcs
+        # judge - решающая функция
+        self.filt=judge
+
+    def __iter__(self):
+        # возвращает итератор по результирующей последовательности
+        for el in self.it:
+            if self.filt(*self.count_res(el)):
+                yield el
+            #raise StopIteration
+
+
+def mul2(x):
+    return x % 2 == 0
+
+def mul3(x):
+    return x % 3 == 0
+
+def mul5(x):
+    return x % 5 == 0
+
+
+a = [i for i in range(31)] # [0, 1, 2, ... , 30]
+
+print(list(multifilter(a, mul2, mul3, mul5))) 
+# [0, 2, 3, 4, 5, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 30]
+
+print(list(multifilter(a, mul2, mul3, mul5, judge=multifilter.judge_half))) 
+# [0, 6, 10, 12, 15, 18, 20, 24, 30]
+
+print(list(multifilter(a, mul2, mul3, mul5, judge=multifilter.judge_all))) 
+
+
+
+def issimple(val):
+    k=0
+    for i in range(1,val):
+        if val%i ==0:
+            k+=1
+    return k<=1
+[(issimple(n), n) for n in range(1,15)]
+
+def primes():
+    a = 1
+    while True:
+        a += 1
+        if issimple(a):
+            yield a
+
+
+
+
+lt=open("dataset_24465_4 (1).txt","r")
+s=[p.strip() for p in lt.readlines()]
+s.reverse()
+lt.close()
+f=open("dataset_24465_4(result).txt","w")
+f.write('\n'.join(s))
+f.close()
+
+
+
+
+
 
 
 
