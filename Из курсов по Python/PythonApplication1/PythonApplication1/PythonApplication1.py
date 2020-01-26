@@ -345,6 +345,191 @@ def mod_checker(x, mod=0):
 
 
 
+s="ababa"
+a="a"
+b="b"
+
+s=input()
+a=input()
+b=input()
+k=0
+while a in s and k<=1000:
+    s=s.replace(a,b)
+    k+=1
+if k>1000:
+    print("Impossible")
+else:
+    print(k)
+
+
+
+
+s = "abababa"
+t = "aba"
+
+s=input()
+t=input()
+i=0
+k=0
+while i<=len(s)-len(t):
+    if s[i:].startswith(t):
+        k+=1
+    i+=1
+
+print(k)
+
+
+
+
+
+import sys
+import re
+
+t=[]
+for line in sys.stdin:
+    line = line.rstrip()
+    count= len(re.findall("cat",line))
+    if count>1:
+        t.append(line)
+
+print("\n".join(t))
+
+
+
+import sys
+import re
+
+t=[]
+for line in sys.stdin:
+    line = line.rstrip()
+    count= len(re.findall(r"\bcat\b",line))
+    if count>0:
+        t.append(line)
+
+print("\n".join(t))
+
+
+
+
+import sys
+import re
+
+t=[]
+for line in sys.stdin:
+    line = line.rstrip()
+    count= len(re.findall(r"z.{3}z",line))
+    if count>0:
+        t.append(line)
+
+print("\n".join(t))
+
+
+
+
+import re
+st=[k for k in input().split() if len(re.findall(r"\\",k))>0]
+
+
+import sys
+import re
+
+t=[]
+for line in sys.stdin:
+    line = line.rstrip()
+    count= len(re.findall(r"\\",line))
+    if count>0:
+        t.append(line)
+
+print("\n".join(t))
+
+
+
+import sys
+import re
+
+t=[]
+for line in sys.stdin:
+    line = line.rstrip()
+    count= len(re.findall(r"\b().{2}\b",line))
+    if count>0:
+        t.append(line)
+
+print("\n".join(t))
+
+
+import sys
+import re
+
+t=[]
+for line in sys.stdin:
+    line = line.rstrip()
+    t.append(re.sub("human","computer",line))
+
+print("\n".join(t))
+
+
+
+import sys
+import re
+
+t=[]
+for line in sys.stdin:
+    line = line.rstrip()
+    t.append(re.sub("\b([aA]\w+)|([aA])\b","argh",line,1))
+
+print("\n".join(t))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
