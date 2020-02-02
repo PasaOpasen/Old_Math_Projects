@@ -118,16 +118,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Code\Библиотека графики\Библиотека графики.csproj">
-      <Project>{ce3c0ed7-208c-4043-89a9-19e93f1e2e46}</Project>
-      <Name>Библиотека графики</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Code\Классы\Классы %28библиотека%29.csproj">
-      <Project>{cd3eefde-74ed-48da-8e82-1e6abab1a140}</Project>
-      <Name>Классы %28библиотека%29</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="3D.resx">
       <DependentUpon>3D.cs</DependentUpon>
     </EmbeddedResource>
@@ -165,6 +155,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\2015_12_27_21_12_40_2641bb4826a94d44e8a2877100e40989.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\MathClasses\Библиотека графики\Библиотека графики.csproj">
+      <Project>{ce3c0ed7-208c-4043-89a9-19e93f1e2e46}</Project>
+      <Name>Библиотека графики</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MathClasses\Классы\Классы %28библиотека%29.csproj">
+      <Project>{cd3eefde-74ed-48da-8e82-1e6abab1a140}</Project>
+      <Name>Классы %28библиотека%29</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

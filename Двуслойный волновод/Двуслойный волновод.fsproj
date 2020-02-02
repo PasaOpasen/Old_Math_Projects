@@ -75,7 +75,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Code\Классы\Классы %28библиотека%29.csproj">
+    <ProjectReference Include="..\..\MathClasses\Библиотека графики\Библиотека графики.csproj">
+      <Name>Библиотека графики</Name>
+      <Project>{ce3c0ed7-208c-4043-89a9-19e93f1e2e46}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MathClasses\Классы\Классы %28библиотека%29.csproj">
       <Name>Классы (библиотека)</Name>
       <Project>{cd3eefde-74ed-48da-8e82-1e6abab1a140}</Project>
       <Private>True</Private>

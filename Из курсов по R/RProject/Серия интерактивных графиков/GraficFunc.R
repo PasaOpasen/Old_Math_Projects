@@ -1,0 +1,69 @@
+library(data.table)
+library(ggplot2)
+library(plotly)
+library(htmlwidgets)
+
+
+tmp=readLines("FlagsForInteractive.txt")
+tmp[1]=stringr::str_sub(tmp[1],4)
+flags=as.logical(tmp)
+
+
+if(flags[1]){
+  
+strings=readLines("DefNames.txt")
+strings[1]=stringr::str_sub(strings[1],4)
+files=paste0(strings,".txt")
+
+x=fread(files[1],dec=',',sep = '\n')[[1]]
+
+sequ=seq(1,length(x),by=length(x)%/%5000) 
+
+x=x[sequ]
+
+colarr=c("blue","green","red","black","brown1","darkcyan","firebrick3")
+
+
+for(i in 2:length(files)){
+  y=fread(files[i],dec='.',sep = '\n')[[1]][sequ]
+  
+  df=data.frame(x,y)
+  colnames(df)=c(x=strings[1],y=strings[i])
+  ob=ggplotly(
+  ggplot(df,aes(x=x,y=y))+geom_line(col=colarr[i-1])+
+    labs(
+      title="Signal",
+      x="time",
+      y=strings[i]
+    )+
+    theme_bw()
+  )
+  saveWidget(as.widget(ob),paste0(strings[i], ".html"), FALSE)
+}
+}
+
+if(flags[2]){
+  
+strings=readLines("VarietyPaths.txt")
+strings[1]=stringr::str_sub(strings[1],4)
+files=paste0(strings,".txt")
+tmp=read.table(files[1],dec=".",header = T)
+x=tmp[[1]]/1000
+y=sqrt(tmp[[2]]^2+tmp[[3]]^2)
+df=data.frame(x,y,source=strings[1])
+for(i in 2:length(strings)){
+  tmp=read.table(files[i],dec=".",header = T)
+  y=sqrt(tmp[[2]]^2+tmp[[3]]^2)
+  df=rbind(df,data.frame(x,y,source=strings[i]))
+}
+df[[3]]=factor(df[[3]])
+
+ob=ggplotly(
+ggplot(df,aes(x,y))+geom_line(aes(col=source))+#geom_point(col="red",size=0.5)+
+  facet_wrap(~source,nrow=2)+
+  labs(x="frequancy,kGz",y="value",title = "Furier Transform of Signal")+
+  theme_bw()
+)
+saveWidget(as.widget(ob), "VAR.html", FALSE)
+}
+

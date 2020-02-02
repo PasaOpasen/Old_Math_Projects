@@ -90,7 +90,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Code\Классы\Классы %28библиотека%29.csproj">
+    <ProjectReference Include="..\..\MathClasses\Библиотека графики\Библиотека графики.csproj">
+      <Project>{ce3c0ed7-208c-4043-89a9-19e93f1e2e46}</Project>
+      <Name>Библиотека графики</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MathClasses\Классы\Классы %28библиотека%29.csproj">
       <Project>{cd3eefde-74ed-48da-8e82-1e6abab1a140}</Project>
       <Name>Классы %28библиотека%29</Name>
     </ProjectReference>
