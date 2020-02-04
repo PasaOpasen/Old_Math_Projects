@@ -81,10 +81,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Code\ДОПОЛНЕНИЯ\Demo_For_FlexibleMessageBox-noexe\Demo_For_FlexibleMessageBox\Demo_For_FlexibleMessageBox.csproj">
-      <Project>{f1fd937b-c84e-4f6c-b533-4982bd43914f}</Project>
-      <Name>Demo_For_FlexibleMessageBox</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\MathClasses\Библиотека графики\Библиотека графики.csproj">
       <Project>{ce3c0ed7-208c-4043-89a9-19e93f1e2e46}</Project>
       <Name>Библиотека графики</Name>

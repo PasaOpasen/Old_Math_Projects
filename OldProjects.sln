@@ -45,8 +45,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeriodSol", "PeriodSol\Peri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Свойства графов. Дм. Па", "drawgraphProgram\SystAnalys_lr1\Свойства графов. Дм. Па.csproj", "{F4F05F7E-E389-4178-9E81-716683ABFF47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo_For_FlexibleMessageBox", "..\Code\ДОПОЛНЕНИЯ\Demo_For_FlexibleMessageBox-noexe\Demo_For_FlexibleMessageBox\Demo_For_FlexibleMessageBox.csproj", "{F1FD937B-C84E-4F6C-B533-4982BD43914F}"
-EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Двуслойный волновод", "Двуслойный волновод\Двуслойный волновод.fsproj", "{283F695C-4881-42F7-85BA-D676CB16B3AD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{657E93F4-9EA0-4003-B95C-86F4A6C9B7C1}"
@@ -54,6 +52,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Классы (библиотека)", "..\MathClasses\Классы\Классы (библиотека).csproj", "{CD3EEFDE-74ED-48DA-8E82-1E6ABAB1A140}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Библиотека графики", "..\MathClasses\Библиотека графики\Библиотека графики.csproj", "{CE3C0ED7-208C-4043-89A9-19E93F1E2E46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo_For_FlexibleMessageBox", "D:\Code\ДОПОЛНЕНИЯ\Demo_For_FlexibleMessageBox-noexe\Demo_For_FlexibleMessageBox\Demo_For_FlexibleMessageBox.csproj", "{F1FD937B-C84E-4F6C-B533-4982BD43914F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -231,12 +231,6 @@ Global
 		{F4F05F7E-E389-4178-9E81-716683ABFF47}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F4F05F7E-E389-4178-9E81-716683ABFF47}.Release|x86.ActiveCfg = Release|Any CPU
 		{F4F05F7E-E389-4178-9E81-716683ABFF47}.Release|x86.Build.0 = Release|Any CPU
-		{F1FD937B-C84E-4F6C-B533-4982BD43914F}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{F1FD937B-C84E-4F6C-B533-4982BD43914F}.Debug|x86.ActiveCfg = Debug|x86
-		{F1FD937B-C84E-4F6C-B533-4982BD43914F}.Debug|x86.Build.0 = Debug|x86
-		{F1FD937B-C84E-4F6C-B533-4982BD43914F}.Release|Any CPU.ActiveCfg = Release|x86
-		{F1FD937B-C84E-4F6C-B533-4982BD43914F}.Release|x86.ActiveCfg = Release|x86
-		{F1FD937B-C84E-4F6C-B533-4982BD43914F}.Release|x86.Build.0 = Release|x86
 		{283F695C-4881-42F7-85BA-D676CB16B3AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{283F695C-4881-42F7-85BA-D676CB16B3AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{283F695C-4881-42F7-85BA-D676CB16B3AD}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -261,6 +255,12 @@ Global
 		{CE3C0ED7-208C-4043-89A9-19E93F1E2E46}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CE3C0ED7-208C-4043-89A9-19E93F1E2E46}.Release|x86.ActiveCfg = Release|Any CPU
 		{CE3C0ED7-208C-4043-89A9-19E93F1E2E46}.Release|x86.Build.0 = Release|Any CPU
+		{F1FD937B-C84E-4F6C-B533-4982BD43914F}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{F1FD937B-C84E-4F6C-B533-4982BD43914F}.Debug|x86.ActiveCfg = Debug|x86
+		{F1FD937B-C84E-4F6C-B533-4982BD43914F}.Debug|x86.Build.0 = Debug|x86
+		{F1FD937B-C84E-4F6C-B533-4982BD43914F}.Release|Any CPU.ActiveCfg = Release|x86
+		{F1FD937B-C84E-4F6C-B533-4982BD43914F}.Release|x86.ActiveCfg = Release|x86
+		{F1FD937B-C84E-4F6C-B533-4982BD43914F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
