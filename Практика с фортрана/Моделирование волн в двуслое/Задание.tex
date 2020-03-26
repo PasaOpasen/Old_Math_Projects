@@ -1,0 +1,48 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1,T2A]{fontenc}
+\usepackage[a4paper, top=2cm, bottom=2cm, left=1cm, right=1cm, marginparwidth=1.75cm]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{indentfirst}
+\usepackage[english, russian]{babel}
+\usepackage[section,above,below]{placeins}
+\usepackage[noend]{algorithmic}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{pdfpages}
+
+\newcommand{\df}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\dx}[1]{\df{#1}{x_2}}
+
+\begin{document}
+
+Найти функцию $u=u(x_1,x_2): \mathbb{R}^2 \rightarrow \mathbb{C}$, которая  удовлетворяет уравненям:
+\begin{equation}
+    \Delta u + k_1^2 u=0, x_2\geq -h_1,
+\end{equation}
+\begin{equation}
+    \Delta u + k_2^2 u=0, x_2 < -h_1
+\end{equation}
+и граничным условиям: $A$ на верхней границе, $B$ между слоями и $C$ на нижней границе, где
+
+$$A_1: u(x_1,0) = q(x_1)= \delta(x_0-x_1)$$
+$$A_2: \df{u(x_1,0)}{x_2}  = q(x_1)=\delta(x_0-x_1)$$
+
+$$B_1: u(x_1,-h_1+0)=u(x_1,-h_1-0), \mu_1\dx{u(x_1,-h_1+0)} =\mu_2 \dx{u(x_1,-h_1-0)}$$
+$$B_2: \dx{u(x_1,-h_1+0)} = \dx{u(x_1,-h_1-0)}=0$$
+$$B_3: \mu_1\dx{u(x_1,-h_1+0)} =\mu_2 \dx{u(x_1,-h_1-0)}=\kappa \left(u(x_1,-h_1-0)-u(x_1,-h_1+0)   \right) $$
+$$B_4: u(x_1,-h_1+0)-u(x_1,-h_1-0)=0, u(x_1,-h_1)=\nu \left( \mu_1\dx{u(x_1,-h_1+0)} -\mu_2 \dx{u(x_1,-h_1-0)}  \right)$$
+
+$$C_1: u(x_1,-h_2)=0$$
+$$C_2: \dx{u(x_1,-h_2)}=0$$
+
+Здесь $\delta(x_0-x_1) = \dfrac{1}{2 \pi} \int_{-\infty}^{\infty} e^{i \alpha (x_0-x_1)} d \alpha$ --- функция Дирака. Её образ Фурье --- $e^{i \alpha x_0}$.
+
+Ещё есть соотношения $k_i = \dfrac{\omega}{c_i},c_i =\sqrt{\dfrac{\rho}{\mu_i}}$, их надо просто в программе зафиксировать, чтобы менять параметры и смотреть что получится, не надо их при самом решении раскрывать.
+
+В итоге надо показать ему основные выкладки + сделать программу на любом языке, чтобы можно было быстро менять разные параметры типа $h_1,h_2$ и получать решение в виде графиков. Как я понял, надо на графиках показать, что граничные условия выполняются и сделать график самой функции $u$ на какой-нибудь полосе $ x_{\min} \leq x_1 \leq x_{\max}, 0 \geq x_2 \geq -h_1-h_2 $.
+
+Также контур, по которому ведётся интегрирование, проходит через точки $K_0=(0,0),K_1=(\dfrac{\min (k_1,k_2)}{4},0),K_2=(\dfrac{\min (k_1,k_2)}{4},-\delta i),K_3=(\max (k_1,k_2)+1,-\delta i),K_4=(\max (k_1,k_2)+1,0), K_5=(G,0)$ в комплексной плоскости, где $\delta$ -- маленькое число от 0.01 до 0.1 (надо на месте подбирать), $G$ -- достаточно большое число (до 10000), чтобы приблизить несобственный интеграл.
+
+\end{document}

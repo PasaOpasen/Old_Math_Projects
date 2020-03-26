@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{51F16A15-D962-4741-B0DE-F43733971CE4}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Набор_проектов</RootNamespace>
+    <AssemblyName>Набор проектов</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\MathClasses\Библиотека графики\Библиотека графики.csproj">
+      <Project>{ce3c0ed7-208c-4043-89a9-19e93f1e2e46}</Project>
+      <Name>Библиотека графики</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MathClasses\Классы\Классы %28библиотека%29.csproj">
+      <Project>{cd3eefde-74ed-48da-8e82-1e6abab1a140}</Project>
+      <Name>Классы %28библиотека%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\drawgraphProgram\SystAnalys_lr1\Свойства графов. Дм. Па.csproj">
+      <Project>{f4f05f7e-e389-4178-9e81-716683abff47}</Project>
+      <Name>Свойства графов. Дм. Па</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PeriodSol\PeriodSol.csproj">
+      <Project>{203270b6-da52-44f8-a494-5895c5a1bee2}</Project>
+      <Name>PeriodSol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Диплом\Диплом.csproj">
+      <Project>{54f8dc68-f14e-4d5b-87e0-84000a5f9362}</Project>
+      <Name>Диплом</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Задача Штурма-Лиувилля\Задача Штурма-Лиувилля. Дм. ПА.csproj">
+      <Project>{f2533f2d-f80f-4d3a-a93c-5c0d545e104c}</Project>
+      <Name>Задача Штурма-Лиувилля. Дм. ПА</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Интегралы. Дм. ПА\Интегралы. Дм. ПА.csproj">
+      <Project>{1592b4a1-522d-42b0-90ac-8c5a2e48e1d7}</Project>
+      <Name>Интегралы. Дм. ПА</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Истинное значение величины. Дм. ПА\Истинное значение величины. Дм. ПА.csproj">
+      <Project>{a5220af0-bbbe-4522-962a-733a2f2c6f25}</Project>
+      <Name>Истинное значение величины. Дм. ПА</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\КодировкаДекодировка\КодировкаДекодировка.csproj">
+      <Project>{f2b70ab8-161f-424e-8130-eae4020c5632}</Project>
+      <Name>КодировкаДекодировка</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Консоль\Консоль %28тестирование%29.csproj">
+      <Project>{838570d2-db6a-4d32-8e69-f2fc0e11b316}</Project>
+      <Name>Консоль %28тестирование%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Критерии принятия решений в условиях неопределённости\Критерии принятия решений в условиях неопределённости.csproj">
+      <Project>{9ee944df-95fc-4a85-8529-1d1548675201}</Project>
+      <Name>Критерии принятия решений в условиях неопределённости</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Курсач\Курсач по базисным потенциалам.csproj">
+      <Project>{27dc19f2-df46-41ac-abc3-5818b754b6d7}</Project>
+      <Name>Курсач по базисным потенциалам</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Метод наименьших квадратов\Метод наименьших квадратов.csproj">
+      <Project>{d301b373-e3c1-40ef-b917-346b30f9f09a}</Project>
+      <Name>Метод наименьших квадратов</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Оконное приложение\Полиномиальная интерполяция. Дм. ПА.csproj">
+      <Project>{74c91479-ba7f-49bf-af3b-a6056a77e87e}</Project>
+      <Name>Полиномиальная интерполяция. Дм. ПА</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Полином Эрмита\Полином Эрмита. Дм. ПА.csproj">
+      <Project>{ab943369-a585-4015-8f18-ae422037ceb8}</Project>
+      <Name>Полином Эрмита. Дм. ПА</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Практика с фортрана\Моделирование волн в двуслое.csproj">
+      <Project>{3b294b5d-a552-4646-b60f-76e3b3b5538b}</Project>
+      <Name>Моделирование волн в двуслое</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Распознавание цифр\Распознавание цифр.csproj">
+      <Project>{7adcd55a-be17-4f3f-bea7-5c8d23d0dae3}</Project>
+      <Name>Распознавание цифр</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Решение ОДУ. Дм. ПА\Решение ОДУ. Дм. ПА.csproj">
+      <Project>{ba058f2b-2189-4036-84b6-f9b25aee020f}</Project>
+      <Name>Решение ОДУ. Дм. ПА</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Решение уравнения теплопроводности. Дм. ПА\Метод стрельбы. Дм. ПА.csproj">
+      <Project>{d58c6435-ce8c-4f63-8ea6-c20319a58323}</Project>
+      <Name>Метод стрельбы. Дм. ПА</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Сжатие изображения DCT\Сжатие изображения DCT.csproj">
+      <Project>{2c1e5cb6-7bc7-4870-82d4-3941e1d5b642}</Project>
+      <Name>Сжатие изображения DCT</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Симплекс-метод\Симплекс-метод.csproj">
+      <Project>{dce7b861-4f9f-4b67-b712-48b80494ad58}</Project>
+      <Name>Симплекс-метод</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\СЛАУ\СЛАУ.csproj">
+      <Project>{eee04ddd-8e5a-4b40-a98b-efd091b96453}</Project>
+      <Name>СЛАУ</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Явная и неявная схема. Дм. ПА\Явная и неявная схема. Дм. ПА.csproj">
+      <Project>{120e2da1-3a6d-48b0-b5ac-a4ee5b81a4f5}</Project>
+      <Name>Явная и неявная схема. Дм. ПА</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

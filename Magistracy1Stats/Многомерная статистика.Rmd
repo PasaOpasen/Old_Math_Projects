@@ -1,0 +1,836 @@
+---
+title: "Лабораторная по многомерной статистике"
+author: "Дмитрий Пасько"
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+  word_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,include = TRUE,tidy = TRUE,cache = FALSE,eval = TRUE, message = FALSE,warning = FALSE,fig.align = "center")
+```
+
+```{r,echo=FALSE}
+library(knitr)
+setwd("C:\\Users\\крендель\\Desktop\\MagicCode\\Magistracy1Stats")
+```
+
+
+## Описание
+
+Для выполнения работы использовался язык **R** версии `r getRversion()`. Необходимые пакеты скачиваются командой
+```{r,eval=FALSE}
+install.packages(c("readxl","dplyr","ggplot2","ggpubr","corrplot",
+                  "psych","MASS","tree","randomForest","TeachingDemos","mice",
+                  "corrgram","magrittr","plotly","factoextra"))
+```
+и подключаются
+```{r}
+library(readxl)#чтение из excel
+library(dplyr)#современные средства программирования, включая функциональное
+library(ggplot2)#красивые удобные графики
+library(ggpubr)#группировка изображений
+library(corrplot)#картинка для корреляционной матрицы
+library(psych)#факторный анализ
+library(MASS)#линейный дискриминантный анализ
+library(tree)#визуализация деревьев
+library(randomForest)#случайные леса
+library(TeachingDemos)#пиктограммы
+library(mice)#обработка отсутствующих значений
+library(corrgram)#коррелограммы
+library(magrittr)#конвеерный оператор
+library(plotly)#интерактивная графика
+library(factoextra)#графика по главным компонентам
+```
+
+Также использовался номер варианта
+```{r}
+nv=7#номер варианта
+```
+Дополнительная информация: [сайт по статистике в R](http://www.sthda.com/english/),
+[огромная статья по построению моделей в R](https://ranalytics.github.io/data-mining/01-Data-Mining-Models-in-R.html), [cтатья по кластерному, факторному и дискриминантному анализу в R](https://rpubs.com/iezepov/e502lec7), [курс по анализу данных в R](https://stepik.org/course/129/syllabus), [курс по основам R как языка программирования](https://stepik.org/course/497/syllabus),  [курс по статистике в R](https://stepik.org/course/524/syllabus), [перечень основых функций языка](https://aakinshin.net/ru/posts/r-functions/),  [математические операции в R](https://ru.wikibooks.org/wiki/Язык_программирования_R/Математика),  [книги по R на моём GitHub](https://github.com/PasaOpasen/LittleHelps/tree/master/книги%20по%20языкам/R), [набор ссылок](https://ru.stackoverflow.com/questions/506597/Книги-и-учебные-ресурсы-по-языку-r), [отличный сайт по R](https://www.statmethods.net).
+
+***
+## Многомерный анализ
+
+### Задание 1
+Подготовим данные:
+
+```{r}
+datacrude =data.frame(read_excel("Таблица 1.xlsx")) #считывание таблицы
+data=datacrude[5:nrow(datacrude),-1]#удаление лишних строк и столбцов
+data=data[-nv,]#удаление строки в соответствиии с номером варианта
+colnames(data)=c("Country","Doctors","Deaths","GDP","Costs")#переименование столбцов (для лаконичности)
+data[,1]=factor(data[,1])#первая переменная из количественной преобразуется в номенативную
+row.names(data)=as.character(1:nrow(data))#наблюдения нумеруются
+
+data %>% tbl_df()#таблица старого образца переводится в более удобный и выводится
+data[,2:5]=apply(data[,2:5],2,function(x)scale(as.numeric(x)))#тут переменные из текста преобразуются в числа и стандартизируются
+
+```
+Полученная таблица (**стандартизованные данные**):
+```{r}
+data %>% tbl_df()
+```
+**Средние и стандартные отклонения**:
+```{r}
+means=apply(data[,-1],1, mean)
+sds=apply(data[,-1],1, sd)
+data_frame(countries=data[,1],means,sds)
+```
+
+
+Для решения задачи создается **матрица (евклидовых) расстояний**
+```{r}
+(d = dist(data[,2:5], method = "euclidean"))#матрица расстояний
+```
+которая используется функцией кластеризации по *методу ближайшего соседа* с расстоянием Варда между кластерами:
+```{r fit1}
+fit <- hclust(d, method = "ward.D")
+```
+**Дендрограмма полученной кластеризации**:
+```{r,fig.height=7}
+plot(fit, labels = data$Country,xlab = "Countries")
+```
+
+**сумма внутригрупповых расстояний** по мере объединения кластеров:
+```{r}
+plot(fit$height, xlab ="step",ylab="dist",type="b",col="blue",lwd=1,main="Расстояния при объединении кластеров")
+```
+
+**Схема объединения** по шагам:
+```{r, cache=T,dependson="fit1"}
+mat=fit$merge
+resu=list()
+countries=as.character(data$Country)
+for(i in 1:nrow(mat)){
+  
+  if(mat[i,1]<0){
+    a=countries[-mat[i,1]]
+  }else{
+    a=as.character(resu[[mat[i,1]]])
+  }
+  
+  if(mat[i,2]<0){
+    b=countries[-mat[i,2]]
+  }else{
+    b=as.character(resu[[mat[i,2]]])
+  }
+
+  resu[[i]]=c(a,b)
+}
+names(resu)=paste("Шаг",1:nrow(mat),"расстояние", fit$height)
+print(resu)
+```
+
+
+
+### Задание 2
+Попробуем узнать, сколько кластеров будет достаточно. Для этого рассчитаем **суммы внутригрупповых расстояний**, когда число кластеров равно 1, 2, ... 8, и изобразим их на графике:
+```{r}
+it=1:8
+sums=sapply(it, function(k) kmeans(data[,2:5], k)$tot.withinss)
+plot(it,sums,type = "b",col="red",main = "Суммы внутригрупповых расстояний при разном числе кластеров")
+```
+
+По принципу *метода каменистой осыпи* делаем вывод, что исходный набор данных естественно делится на 2 или 3 кластера. Напишем функцию, которая строит модель для заданного числа кластеров, проводит анализ этой модели и строит некоторые графики:
+```{r getimage}
+#функция, проводящая некоторый анализ и строящая графики для заданного числа кластеров
+getimage=function(k){
+  
+fit=kmeans(data[,2:5],k)#строится модель
+cat("Основная информация: \n")
+print(fit)
+
+#cat("Внутригрупповые суммы:",fit$withinss,"\n")#внутригрупповые суммы
+#cat("Общая сумма:", fit$betweenss,"\n") 
+cat("Матрица расстояний:\n")
+print(dist(fit$centers))#матрица расстояний
+cat("Центры:\n")
+print(fit$centers)
+
+
+#Добавляем кластер к фрейму данных
+library(dplyr)
+newdata=as_data_frame(data)%>%mutate(cluster=factor(fit$cluster))
+
+#агрегирование данных по группам
+means=newdata[,2:6]%>%group_by(cluster)%>%summarise(
+  meanCosts=mean(Costs),sdCosts=sd(Costs),
+  meanDoctors=mean(Doctors),sdDoctors=sd(Doctors),
+  meanGDP=mean(GDP),sdGDP=sd(GDP),
+  meanDeaths=mean(Deaths),sdDeaths=sd(Deaths)
+  )
+print(means)
+
+
+means=means[,c(1,2,4,6,8)]#берётся сабсет только из значений для средних
+
+lbs=c("cluster1","cluster2","cluster3","cluster4","cluster5")
+
+library(ggplot2)
+library(ggpubr)
+
+#здесь создаётся таблица со средними по каждой переменной и каждому классу в том виде, в каком удобней рисовать
+tmpdata=data.frame(x=1:4,means=as.numeric(means[1,2:5]),cluster=rep(lbs[1],4))
+for(i in 2:k){
+  tmpdata=rbind(tmpdata,data.frame(x=1:4,means=as.numeric(means[i,2:5]),cluster=rep(lbs[i],4)))
+}
+tmpdata$cluster=factor(tmpdata$cluster)
+
+
+ppp=ggplot(tmpdata,aes(x=x,y=means,col=cluster))+
+  geom_line()+
+  geom_point(size=4)
+
+
+pl1=ggplot(newdata, aes(x=Doctors, y=Deaths, col = cluster))+
+  geom_point(size = 3)+
+  theme_bw() 
+
+pl2=ggplot(newdata, aes(x=GDP, y=Costs, col = cluster))+
+  geom_point(size = 3)+
+  theme_bw()
+
+pl3=ggplot(newdata, aes(x=GDP, y=Deaths, col = cluster))+
+  geom_point(size = 3)+
+  theme_bw()
+pl4=ggplot(newdata, aes(x=GDP, y=Doctors, col = cluster))+
+  geom_point(size = 3)+
+  theme_bw()
+
+costs = ggplot(newdata, aes(x=cluster, y=Costs))+
+  geom_boxplot()+
+  theme_bw()
+deaths = ggplot(newdata, aes(x=cluster, y=Deaths))+
+  geom_boxplot()+
+  theme_bw()
+doctors = ggplot(newdata, aes(x=cluster, y=Doctors))+
+  geom_boxplot()+
+  theme_bw()
+gdp = ggplot(newdata, aes(x=cluster, y=GDP))+
+  geom_boxplot()+
+  theme_bw()
+
+p1 <- ggarrange(pl1, pl2,pl3,pl4,
+                ncol = 2, nrow = 2)
+p2 <- ggarrange(costs, deaths, doctors, gdp,
+                ncol = 2, nrow = 2)
+ggarrange(ppp,p1, p2, ncol = 1, nrow = 3,heights=c(1.3,2,3))
+}
+getimage2=function(k){
+  fit=kmeans(data[,2:5],k)#строится модель
+  
+  #Добавляем кластер к фрейму данных
+  library(dplyr)
+  newdata=as_data_frame(data)%>%mutate(cluster=factor(fit$cluster))
+  cat("Дисперсионный анализ для каждой переменной,",k,"кластеров \n")
+  cat("Затраты: \n")
+  print(summary(aov(Costs~cluster,newdata)))
+  cat("Смерти: \n")
+  print(summary(aov(Deaths~cluster,newdata)))
+  cat("Врачи: \n")
+  print(summary(aov(Doctors~cluster,newdata)))
+  cat("ВВП: \n")
+  print(summary(aov(GDP~cluster,newdata)))
+  
+  #рисуются кластеры через главные компоненты
+  #library(cluster) 
+  #print(clusplot(newdata, newdata$cluster, color=TRUE, shade=TRUE, labels=2, lines=0))
+  library(factoextra)
+  print( fviz_cluster(fit, data[, -1], ellipse.type = "norm"))
+}
+```
+
+Используем эту функцию для **двух** кластеров:
+```{r, fig.height=10,cache=T,dependson="getimage"}
+getimage(2)
+```
+
+Видно, что исходные наблюдения хорошо разделяются на две группы. Если использовать **три** кластера, такое разделение будет уже сомнительным:
+```{r,fig.height=10, cache=T,dependson="getimage"}
+getimage(3)
+```
+
+Теперь попробуем визуально оценить качество кластеризации через *главные компоненты* (дополнительно делается *дисперсионный анализ* по каждой переменной):
+```{r, cache=T,dependson="getimage"}
+for(i in 2:5) getimage2(i)
+```
+
+
+Ещё один способ оценивать качество разбиения на группы --- **лица Чернова**. Идея состоит в том, чтобы для каждой группы найти какую-то характеристику каждой переменной (например, среднее), а затем на основе вектора таких характеристик постоить лица каждой группы: *чем лица более похожи, тем группы более близки*. Сделаем так **для двух кластеров**:
+```{r getfaces}
+#функция делает анализ dataset по методу k-means с k кластерами, затем добавляет результаты к датасету
+getbykmeans=function(dataset,k){
+  fit=kmeans(dataset,k)#строится модель
+  #Добавляем кластер к фрейму данных
+  library(dplyr)
+  newdata=as_data_frame(dataset)%>%mutate(cluster=factor(fit$cluster))
+}
+#функция считает средние и рисует лица
+getfaces=function(k){
+  #создаем матрицу средних
+means=getbykmeans(data[,2:5],k)%>%group_by(cluster)%>%
+  summarise_all(funs(mean))
+
+library(TeachingDemos)
+faces(means[,2:5])#рисуем лица
+}
+getfaces(2)
+```
+
+Видно, что лица сильно различаются. **Для трёх кластеров**
+```{r, cache=T,dependson="getfaces"}
+getfaces(3)
+```
+
+два лица уже похожи. **Для четырёх кластеров** имеется две пары очень похожих лиц (то есть данные разбиваются на два кластера, а дальнейшее разбиение уже излишнее -- происходит поиск различий там, где их нет):
+```{r, cache=T,dependson="getfaces"}
+getfaces(4)
+```
+
+
+Отсюда **вывод**: достаточно было использовать только два кластера.
+
+
+### Задание 3
+
+Загрузим **данные**:
+```{r}
+datacrude =data.frame(read_excel("Приложение 1.xlsx")) 
+data=datacrude[,-c(1)]
+data=data[,-c(1,2,16,17)]
+data %>% tbl_df()
+```
+
+**Визуализация корреляционной матрицы** заданного набора переменных:
+```{r}
+library(corrplot)
+(matr=cor(data))
+corrplot(matr)
+```
+
+В наборе данных в целом нет значительных корреляций, поэтому сжать его до трёх-четырёх главных компонент без сильной потери информации не получится.
+
+**Результаты аналаза методом главных компонент без вращения**:
+```{r}
+library(psych)
+principal(data,nfactors = 10,rotate = "none") #Создание модели
+```
+
+Здесь *сперва выведена матрица корреляций*, затем **SS loadings** --- это собственные значения каждой компоненты, **Proportion Var** --- доля дисперсий, объясняемых каждой компонентой, **Cumulative Var** --- кумулятивная доля (первая компонента объясняет 18%, первые две вместе --- 32%, первые три --- 43% и т. д.), дальше то же самое, только в пропорции. *По принципу Кайзера* следует выделить только 5 компонент, хотя, судя по объяснённым дисперсиям, и восьми может быть недостаточно.
+
+Построим **диаграмму каменистой осыпи**:
+```{r,message=FALSE,results="hide"}
+fa.parallel(data,fa="pc",show.legend = T,main="Диаграмма каменистой осыпи с параллельным анализом")
+
+```
+
+Здесь, как и ожидалось, не наблюдается резкого убывания собственных значений, поэтому нельзя сказать, сколько конкретно главных компонент следовало бы выделить. Возмём 6 факторов и **проведём анализ с вращением осей**:
+```{r}
+#варимакс с нормализацией
+(vm=principal(apply(data,2,scale),nfactors = 9,rotate = "varimax"))
+```
+
+По результатам анализа видно, что **первая компонента сильно коррелирует с переменной Х14** (фондовооруженность труда), **шестая --- с Y3** (рентабельность) **и Х8** (премии и вознаграждения на одного работника), **третья --- с X4** (трудоемкость единицы продукции), **пятая --- с Х9** (удельный вес потерь от брака), **вторая --- с Х6** (удельный вес покупных изделий), **четвёртая --- с Х11** (среднегодовая численность ППП), **девятая --- с Х13** (среднегодовой фонд заработной платы), **седьмая --- с Х7** (коэффициент сменности оборудования), **восьмая --- с Х5** (удельный вес рабочих в составе ППП).
+
+Также можно увидеть **матрицу весовых коэффициентов**:
+```{r}
+round(unclass(vm$weights),2)#делается округление до второго знака, чтобы не занимала много места
+```
+а *корреляционная матрица для главных компонент показывает их ортогональность*:
+```{r}
+cor(vm$scores)
+```
+
+### Задание 4
+Загрузим **данные**:
+```{r}
+data =data.frame(read_excel("Приложение 2.xlsx")) 
+data$CLASS=factor(data$CLASS)
+data %>% tbl_df()
+```
+**Визуализация**:
+```{r,fig.height=10,fig.width=10}
+pairs(data[,1:7],col=data$CLASS,pch=16)
+```
+
+Напишем несколько вспомогательных функций:
+```{r}
+library(MASS)
+#лица Чернова
+showfaces=function(){
+  newdata=as_data_frame(data)%>%group_by(CLASS)%>%
+    summarise_all(funs(mean))
+  print(faces(newdata[,2:8]))#рисуем лица
+}
+#визуализация кластеров через главные компоненты
+showimage=function(){
+  library(factoextra)
+  print( fviz_cluster(list(data=data[,1:7],cluster=data[,8]), ellipse.type = "norm"))
+}
+
+#матрицы, обратные матрицам ковариации для каждого класса
+covinv=function(df){
+  res=list()
+  for(i in 1:length(levels(df$CLASS)))
+    res[[i]]= tryCatch({df[df$CLASS==i,1:7] %>% as.matrix() %>% cov() %>% solve},error=function(r) NA)
+    #res[[i]]=df[df$CLASS==i,1:7] %>% as.matrix() %>% cov() %>% solve
+  res
+}
+
+#расстояния Махаланобиса от элемента до каждого из классов
+distance=function(means,covs, elem){
+  res=c()
+  for(i in 1:nrow(means)){
+    vec=(means[i,]-elem)
+     res[i]=(vec%*%covs[[i]])%*%vec
+  }
+   
+  return(sqrt(res))
+}
+
+#поиск номера элемента в датафрейме
+find.number=function(df,elem){
+  sm=0
+  i=0
+  len=length(elem)
+  while (sm!=len) {
+    i=i+1
+    v=ifelse(df[i,]==elem,T,F)
+    sm=sum(v)
+  }
+  return(i)
+} 
+  
+```
+
+
+Лица Чернова показывают, что в двух случаях между парами групп сильной разницы нет:
+```{r,results="hide"}
+showfaces()
+```
+
+Проведём обучение через *линейный дискриминантный анализ*:
+```{r, include=FALSE}
+ldadat <- lda(CLASS~.,data,method="moment")
+```
+```{r, eval=FALSE}
+ldadat <- lda(CLASS~.,data,method="moment")
+```
+**Результаты обучения**:
+```{r}
+# Функция вывода результатов классификации
+Out_CTab <- function(model, group) {
+  cat("Таблица неточностей \"Факт/Прогноз\" по обучающей выборке: \n") 
+    classified <- predict(model)$class  
+    t1 <- table(group, classified) 
+    print(t1)
+    # Точность классификации и расстояние Махалонобиса
+    Err_S <- mean(group != classified)
+    mahDist <- dist(model$means %*% model$scaling) 
+    cat("Точность классификации:",1-Err_S[1],'\n')
+    cat("Расстояния Махалонобиса:\n")
+    print(mahDist)
+    
+    # Таблица "Факт/Прогноз" и ошибка при скользящем контроле
+    t2 <-  table(group, update(model, CV = T)$class -> LDA.cv) 
+    Err_CV <- mean(group != LDA.cv) 
+    cat("Ошибка при скользящем контроле:",Err_CV[1],'\n')
+    Err_S.MahD <- c(Err_S, mahDist) 
+    Err_CV.N <- c(Err_CV, length(group)) 
+    cbind(t1, Err_S.MahD, t2, Err_CV.N)
+    
+    cat("Результаты многомерного дисперсионного анализа: \n")
+    ldam <- manova(as.matrix( data[,1:7]) ~ data$CLASS)
+    print(summary(ldam, test="Wilks"))
+  }  
+Out_CTab(ldadat,data$CLASS)
+```
+
+*Точность классификации* достаточно низкая (74%), вдобавок *лямбда Уилкса* (**0.126**) сильно отличается от нуля. Откорректируем классификацию, чтобы добиться стопроцентной точности:
+```{r,cache=T,fig.width=9}
+acc=0#точность
+repeat{ 
+  showimage()
+    
+ldadat <- lda(CLASS~.,data,method="moment")
+means=ldadat$means
+cov.mat=covinv(data)
+
+#для всех неправильно найденных найти расстояния до кластеров, отнесённых экспертами
+prclass=predict(ldadat, data[,1:7])$class
+st=data[data$CLASS!=prclass,]
+acc=1-nrow(st)/nrow(data)
+cat("Точность классификации:",acc,'\n')
+if(near(acc,1)) break
+
+if(nrow(st)==1){
+  number.of.max.distance=1
+}else{
+  distances=c()
+for(i in 1:nrow(st)){
+  cls=as.numeric(st[i,8])
+  vec=(means[cls,]-as.numeric(st[i,1:7]))
+  if(is.na(cov.mat[[cls]])){
+    distances[i]=NA
+  }else{
+  distances[i]=(vec%*%cov.mat[[cls]])%*%vec    
+  }
+}
+distances=sqrt(distances)
+#номер элемента (в таблице неверно отнесённых) с максимальным расстоянием для своего кластера
+number.of.max.distance=which.max(distances)
+}
+
+tt=st[number.of.max.distance,]#сам элемент
+cat("Неправильно отнесённый элемент с максимальным расстоянием (",max(distances,na.rm = T),")\n")
+#номер того же элемента, но в исходном фрейме
+number.of.max.distance.new=find.number(data,tt)
+print(data[number.of.max.distance.new,])
+#сделать замену на кластер с минимальным расстоянием
+data[number.of.max.distance.new,8]=predict(ldadat, tt[,1:7])$class#levels(data$CLASS)[which.min(distance(ldadat$means,cov.mat,as.numeric(tt[,-8])))]  
+cat("Заменяется на\n")
+print(data[number.of.max.distance.new,])
+}
+```
+
+**Результаты для полученной модели**:
+```{r,fig.width=9}
+Out_CTab(ldadat,data$CLASS)
+cat("Групповые средние:\n")
+ldadat$means
+cat("Матрица дискриминантных функций:\n")
+ldadat$scaling
+plot(ldadat)
+
+rf=lda(CLASS~.,data,method="moment")#фиксируется модель для следующего задания
+```
+
+**Исправленная модель**:
+```{r}
+data %>% tbl_df()
+```
+
+  
+Ошибка нулевая, все данные отнесены правильно. *Правило, по которому наблюдение относится в ту или иную группу* примерно сделующее (если попробовать иерархический анализ):
+```{r}
+library(tree)
+datatree <- tree(data[,8] ~ ., data[,-8])
+plot(datatree)
+text(datatree) 
+```
+
+### Задание 5
+
+**Считаем тестовые данные и проведём их классификацию по уже построенной модели**:
+```{r}
+data2 =data.frame(read_excel("Приложение 3.xlsx")) 
+data2= apply(data2,2,as.numeric) %>% as_data_frame()
+data2=data2[31:80,]
+
+cluster=predict(rf, data2)$class
+data2=data.frame(cbind(data2,cluster))
+data2$cluster=factor(data2$cluster)
+
+data2 %>% tbl_df()
+```
+Построим **диаграммы ядерной плотности** для распределения каждой переменной X1-X7 по отнесенным группам, чтобы убедиться в правильности классификации:
+```{r,fig.height=9, cache=TRUE}
+library(ggplot2)
+library(ggpubr)
+
+ggarrange(
+  ggplot(data2,aes(x=X1,fill=cluster))+
+    geom_density(alpha=0.6),
+  ggplot(data2,aes(x=X2,fill=cluster))+
+    geom_density(alpha=0.6),
+  ggplot(data2,aes(x=X3,fill=cluster))+
+    geom_density(alpha=0.6),
+  ggplot(data2,aes(x=X4,fill=cluster))+
+    geom_density(alpha=0.6),
+  ggplot(data2,aes(x=X5,fill=cluster))+
+    geom_density(alpha=0.6),
+  ggplot(data2,aes(x=X6,fill=cluster))+
+    geom_density(alpha=0.6),
+  ggplot(data2,aes(x=X7,fill=cluster))+
+    geom_density(alpha=0.6),
+          ncol = 2, nrow = 4)
+```
+
+Другой вариант --- **ящики с усами**:
+```{r,fig.height=9, cache=TRUE}
+ggarrange(
+  ggplot(data2,aes(x=cluster,y=X1))+
+    geom_boxplot(),
+  ggplot(data2,aes(x=cluster,y=X2))+
+    geom_boxplot(),
+  ggplot(data2,aes(x=cluster,y=X3))+
+    geom_boxplot(),
+  ggplot(data2,aes(x=cluster,y=X4))+
+    geom_boxplot(),
+  ggplot(data2,aes(x=cluster,y=X5))+
+    geom_boxplot(),
+  ggplot(data2,aes(x=cluster,y=X6))+
+    geom_boxplot(),
+  ggplot(data2,aes(x=cluster,y=X7))+
+    geom_boxplot(),
+  ncol = 2, nrow = 4)
+```
+
+Также **лица Чернова**:
+```{r, cache=TRUE}
+newdata=as_data_frame(data2)%>%group_by(cluster)%>%
+    summarise_all(funs(mean))
+  faces(newdata[,2:8])#рисуем лица
+```
+
+**Визуализация через главные компоненты**:
+```{r}
+  print( fviz_cluster(list(data=data2[,1:7],cluster=data2[,8]), ellipse.type = "norm"))
+```
+
+В целом качество такое же, как в обучающей выборке.
+
+
+
+***
+
+## Временные ряды
+Используются две переменные:
+```{r}
+p1 = nchar("Дмитрий")#число букв в имени
+p2 = nchar("Пасько")#число букв в фамилии
+```
+
+### Задание 1
+Прочитаем и обработаем **данные**:
+```{r}
+library(readxl)
+library(dplyr)
+tab=data.frame(t(read_xlsx("Рожь18век.xlsx")))
+names(tab)=sapply( tab[1,], as.character)#поставить правильные названия
+tab=tab[-1,]#удалить строку с именами
+tab=data.frame(Year=sapply(rownames(tab),as.numeric),tab)
+tab=sapply(tab, as.numeric)#факторы перевести в числа
+tab %>% tbl_df()
+```
+Создадим **фрейм со средними по годам для всей страны и её районов**:
+```{r datatime1}
+tmptab=tab[,-1]
+means=list(rowMeans(tmptab,na.rm = T))
+for(i in 1:((ncol(tab)-1)/2)){
+  means[[i+1]]=rowMeans(tmptab[,c(i,i+1)],na.rm = T)
+}
+
+means=sapply(means,function(col)sapply(col, function(row) ifelse(is.nan(row),NA,row)))#Заменить все NaN на NA
+means=data.frame(tab[,1],means)
+names(means)=c("Year","Country","Distrinct1","Distrinct2","Distrinct3","Distrinct4","Distrinct5","Distrinct6","Distrinct7","Distrinct8","Distrinct9")
+means %>% tbl_df()
+```
+Визуализация полученных значений показывает, что *в целом цена ведёт себя одинаково по всем регионам*:
+```{r,fig.height=8, cache=T,dependson="datatime1"}
+library(ggplot2)
+g1=  ggplot(means,aes(x=Year))+
+  geom_line(aes(y=Country),size=1)
+g2=  ggplot(means,aes(x=Year))+
+  geom_line(aes(y=Distrinct1),size=1,col=2)
+g3=  ggplot(means,aes(x=Year))+
+geom_line(aes(y=Distrinct2),size=1,col=3)
+g4=  ggplot(means,aes(x=Year))+
+geom_line(aes(y=Distrinct3),size=1,col=4)
+g5=  ggplot(means,aes(x=Year))+
+geom_line(aes(y=Distrinct4),size=1,col=5)
+g6= ggplot(means,aes(x=Year))+
+geom_line(aes(y=Distrinct5),size=1,col=6)
+g7= ggplot(means,aes(x=Year))+
+geom_line(aes(y=Distrinct6),size=1,col=7)
+g8=  ggplot(means,aes(x=Year))+
+geom_line(aes(y=Distrinct7),size=1,col="chartreuse2")
+g9=  ggplot(means,aes(x=Year))+
+geom_line(aes(y=Distrinct8),size=1,col="chocolate1")
+g10=  ggplot(means,aes(x=Year))+
+  geom_line(aes(y=Distrinct9),size=1,col="plum2")
+library(ggpubr)
+ggarrange(g1,g2,g3,g4,g5,g6,g7,g8,g9,g10,nrow=5,ncol=2)
+```
+
+Зададим **новый временной ряд**:
+```{r}
+price1 = c(
+  40 + p1,43 + p1,40,80,
+  74,40 + p2,55 + p2,42 + p2,
+  42,50,40 + p2,43,43,
+  35 + p1,40 + p1,30,36 + p1,
+  50,30 + p1,29,45 + p1,
+  40,42,40,36,
+  50,30 + p1,24 + p2,
+  25 + p2,40,32 + p1,
+  30,20,30,25,32 + p2
+)
+cat("Длина вектора:",length(price1),"\n")
+summary(price1)#минимальные характеристики
+```
+
+*Тест Стьюдента* для среднего значения (`r mean(price1)`) показывает **значимое отличие среднего ряда от нуля (p-value очень близкое к нулю)**:
+```{r}
+(ts=t.test(price1,conf.level = 0.95))#тест Стьюдента для среднего
+cat("Доверительный интервал: ",ts$conf.int,"\n")
+cat("Стандартная ошибка среднего: ",ts$stderr,"\n")
+```
+а **низкий коэффициент вариации говорит об однородности выборки**
+```{r}
+vart=sd(price1)/mean(price1)*100
+cat("Коэффициент вариации равен",vart,"%\n")
+#так как коэффициент вариации < 30%, выборка достаточно однородная
+```
+
+**Замечание:** в проведённом тесте Стьюдента число степеней свободы было на 1 (а не на 2) меньше числа наблюдений, так как при тесте использовалась одна выборка. Можно считать, что исходная выборка сравнивается с выборкой из единственного элемента 0, поэтому число степеней свободы всего на 1 меньше числа наблюдений. Так же определяется число степеней свободы, например, [здесь](https://statpsy.ru/t-student/primer-t-test-single/).
+
+### Задание 3
+Создадим и визуализируем **временной ряд**:
+```{r}
+library(ggplot2)
+
+yt=c(1133+ p1,	1222,	1354+ p1,	1389,	1342+ p2,	1377,	1491,	1684+ p2)
+data=data.frame(time=1:length(yt),values=yt)
+plot(data,type="b")
+```
+
+В целом, здесь наблюдается линейная составляющая. Построим линейную модель и **регрессионную прямую**:
+```{r}
+fit=lm(values~time,data)#создание модели
+ggplot(data,aes(x=time,y=values))+
+  geom_point()+
+  geom_smooth(method=lm)
+```
+
+Посмотрим **информацию о модели**:
+```{r}
+summary(fit)#информация о модели
+
+confint(fit,level = 0.95)#доверительные интервалы
+```
+Самое важное здесь --- модель описывает более 80% дисперсий (**Adjusted R-squared**), каждый её коэффициент (**Pr(>|t|)**) и она сама (**p-value** в самом низу, в строке с **F-statistic**) статистически значимы (поскольку p-value меньше 0.05). **Estimate** --- это коэффициенты модели, значит сама регресионная прямая имеет вид $$y=1098.57 + 61.93 t$$
+
+Коэффициент при $t$ показывает, на сколько в среднем увеличится $y$ при изменении $t$ на единицу. Дисперсионный анализ можно выполнить и отдельно с тем же результатом: 
+```{r}
+anova(fit)
+```
+
+Теперь выполним [прогноз для среднего и индивидульного значений](http://www.sthda.com/english/articles/40-regression-analysis/166-predict-in-r-model-predictions-and-confidence-intervals/) при $t=9$: 
+```{r}
+#прогноз среднего
+predict(fit,data.frame(time = c(9)), se.fit=TRUE, interval="confidence", level=0.95)$fit
+#прогноз индивидуального
+predict(fit,data.frame(time = c(9)), se.fit=TRUE, interval="prediction", level=0.95)$fit
+```
+
+Здесь первое число --- само предсказанное значение, последующие --- границы доверительного интервала.Итак, само предсказанное значение равно 1655.929, доверительный интервал для среднего: [1518.169,1793.688], для индивидуального: [1431.797,1880.06].
+
+### Задание 4
+Считаем **набор данных** и проведём некоторую обработку:
+```{r time4, message=FALSE,results="hide"}
+library(readxl)
+data=data.frame(read_xlsx("РожьВсеГода.xlsx"))
+data[,-1]=apply(data[,-1], 2, as.numeric)#перевести в числа все строки
+y=t(data[,-1])#транспонирование для удобства
+
+#получить массив лет
+ns=rownames(y)
+x=sapply(ns, function(s) as.numeric(substr(s,2,nchar(s))))
+
+library(mice)#обработать пустые значения
+imp=mice(y,seed=11)
+y=complete(imp,action = 1)
+
+df=data.frame(x=x,y=y[,2])#объединить данные в фрейм
+
+#print(df[sort(sample(1:nrow(df),13)),2,drop=FALSE]) #вывести 13 случайных строк
+```
+
+Получаем: 
+```{r,cache=T,dependson="time4"}
+df %>% tbl_df()
+```
+
+
+При этом пропущенные значения были обработаны по алгоритму [MICE](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.169.5745&rep=rep1&type=pdf), **для дальнейшего исследования был взят второй район**. Визуализировав данные по нему
+```{r}
+library(ggplot2)
+ggplot(df,aes(x=x,y=y))+
+  geom_line(col="green")+
+  geom_point(size=2)+
+  geom_smooth(method = lm)+
+  geom_smooth(se=F,col="red")
+```
+
+приходим к выводу, что в целом поведение цен можно описать линейной моделью, однако для обычной линейной модели здесь явно не будет выполняться требование гомоскедастичности. Попробуем разные **преобразования данных** (качество модели определяется величиной Adjusted R-squared):
+```{r}
+summary(lm(y~x,df))
+summary(lm(sqrt(y)~x,df))
+summary(lm(log(y)~x,df))
+summary(lm(log(y)~log(x),df))
+```
+Видно, что *модель с логарифмами описывает почти 85% дисперсий*, поэтому в дальнейшем будем использовать её. Эта модель имеет вид: $$\log y = -166.5906+22.9125 \log x$$
+а иначе: $$y=e^{-166.5906}x^{22.9125}$$
+
+
+Построим тот же график:
+```{r}
+ggplot(df,aes(x=log(x),y=log(y)))+
+  geom_line(col="green")+
+  geom_point(size=2)+
+  geom_smooth(method = lm)+
+  geom_smooth(se=F,col="red")
+```
+
+**Для остатков полученной модели проведём сглаживание методом k-средних**:
+```{r,fig.width=15,fig.height=8}
+mt=lm(log(y)~log(x),df)
+res=mt$residuals
+#скользящее среднее
+library(caTools)
+k=c(3,5,9)
+plot(x,res,type="l",col="grey")
+for(i in 1:length(k)){
+  lines(x,runmean(res,k[i]),col=i,lwd=2)
+}
+
+legend("topleft",c(paste("k =", k)),col=1:length(k),bty="n",lwd=2)
+```
+
+Построим график этой модели в исходной системе координат:
+```{r}
+ggplot(df,aes(x=x,y=y))+
+  geom_line(col="green")+
+  geom_point(size=2)+
+  geom_line(aes(x=x,y=exp(-166.5906)*x^22.9125),col="red",size=2)
+```
+
+
+
+И последнее: **визуализируем корреляции между всеми исходными районами за последние 60 лет наблюдений по отрезкам в 20 лет**:
+```{r}
+nn=20
+
+for(i in seq(length(x)-60,length(x)-nn,nn)){
+  tmp=i:(i+nn-1)
+  cat("Times:",x[tmp],"\n")
+  data=y[tmp,]
+  cormatrix=cor(data)
+  cat("Матрица корреляций:\n")
+  print(cormatrix)
+  lower=abs(cormatrix[lower.tri(cormatrix)])
+  cat("Статистика по треугольнику корреляционной матрицы \n")
+  print(summary(lower[lower!=0])) 
+  corrplot(cormatrix)
+}
+```
+Наглядно видно, что ближе к концу наблюдений корреляция между переменными возрастает. Проблемы с шестой переменной связаны с тем, что для неё было очень много пропущенных значений.
+
+
+
