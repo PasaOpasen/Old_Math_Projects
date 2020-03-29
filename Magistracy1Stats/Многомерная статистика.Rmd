@@ -1,6 +1,7 @@
 ---
 title: "Лабораторная по многомерной статистике"
 author: "Дмитрий Пасько"
+date: "25 11 2019"
 output:
   html_document:
     df_print: paged
@@ -15,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE,include = TRUE,tidy = TRUE,cache = FALSE,eval 
 
 ```{r,echo=FALSE}
 library(knitr)
-setwd("C:\\Users\\крендель\\Desktop\\MagicCode\\Magistracy1Stats")
+#setwd("C:\\Users\\крендель\\Desktop\\MagicCode\\Magistracy1Stats")
 ```
 
 
@@ -51,7 +52,7 @@ library(factoextra)#графика по главным компонентам
 nv=7#номер варианта
 ```
 Дополнительная информация: [сайт по статистике в R](http://www.sthda.com/english/),
-[огромная статья по построению моделей в R](https://ranalytics.github.io/data-mining/01-Data-Mining-Models-in-R.html), [cтатья по кластерному, факторному и дискриминантному анализу в R](https://rpubs.com/iezepov/e502lec7), [курс по анализу данных в R](https://stepik.org/course/129/syllabus), [курс по основам R как языка программирования](https://stepik.org/course/497/syllabus),  [курс по статистике в R](https://stepik.org/course/524/syllabus), [перечень основых функций языка](https://aakinshin.net/ru/posts/r-functions/),  [математические операции в R](https://ru.wikibooks.org/wiki/Язык_программирования_R/Математика),  [книги по R на моём GitHub](https://github.com/PasaOpasen/LittleHelps/tree/master/книги%20по%20языкам/R), [набор ссылок](https://ru.stackoverflow.com/questions/506597/Книги-и-учебные-ресурсы-по-языку-r), [отличный сайт по R](https://www.statmethods.net).
+[огромная статья по построению моделей в R](https://ranalytics.github.io/data-mining/01-Data-Mining-Models-in-R.html), [cтатья по кластерному, факторному и дискриминантному анализу в R](https://rpubs.com/iezepov/e502lec7), [курс по анализу данных в R](https://stepik.org/course/129/syllabus), [курс по основам R как языка программирования](https://stepik.org/course/497/syllabus),  [курс по статистике в R](https://stepik.org/course/524/syllabus), [перечень основых функций языка](https://aakinshin.net/ru/posts/r-functions/),  [математические операции в R](https://ru.wikibooks.org/wiki/Язык_программирования_R/Математика),  [книги по R на моём GitHub](https://github.com/PasaOpasen/Powerlifting-training-diary-and-articles/tree/master/КНИГИ%20ПО%20ЯЗЫКАМ%20и%20программированию/R), [набор ссылок](https://ru.stackoverflow.com/questions/506597/Книги-и-учебные-ресурсы-по-языку-r), [отличный сайт по R](https://www.statmethods.net).
 
 ***
 ## Многомерный анализ
