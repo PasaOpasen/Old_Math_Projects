@@ -157,10 +157,6 @@
     <None Include="Resources\2015_12_27_21_12_40_2641bb4826a94d44e8a2877100e40989.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\MathClasses\MathClassesLibrary\MathClassesLibrary.csproj">
-      <Project>{0fde78f4-3a21-4db6-a2d8-742495f1fb36}</Project>
-      <Name>MathClassesLibrary</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\MathClasses\Библиотека графики\Библиотека графики.csproj">
       <Project>{ce3c0ed7-208c-4043-89a9-19e93f1e2e46}</Project>
       <Name>Библиотека графики</Name>
