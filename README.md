@@ -2,6 +2,7 @@
 
 My homeworks and simple winforms math-projects including diploma, which were made during 2017-2019 
 
+See a lot of code of methods at ![**math classes library**](https://github.com/PasaOpasen/MathClasses)
 
 ## Use my winforms apps of math tasks including for example
 
@@ -24,7 +25,7 @@ My homeworks and simple winforms math-projects including diploma, which were mad
 ![1](https://github.com/PasaOpasen/Old_Math_CSharpCpp_Projects/blob/master/images/Ordinary%20differential%20equations.PNG)
 ### Simplex method for linear programming tasks
 ![1](https://github.com/PasaOpasen/Old_Math_CSharpCpp_Projects/blob/master/images/Simplex%20method%20for%20linear%20programming%20tasks.PNG)
-### Solve systems of linear equationsSolve differential equations
+### Solve differential equations
 ![1](https://github.com/PasaOpasen/Old_Math_CSharpCpp_Projects/blob/master/images/Solve%20differential%20equations.PNG)
 
 ### Solve systems of linear equations
