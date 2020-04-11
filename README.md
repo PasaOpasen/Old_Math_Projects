@@ -13,6 +13,7 @@ See a lot of code of methods at ![**math classes library**](https://github.com/P
 ![1](https://github.com/PasaOpasen/Old_Math_CSharpCpp_Projects/blob/master/images/Function%20approximation.PNG)
 ### Function interpolation
 ![1](https://github.com/PasaOpasen/Old_Math_CSharpCpp_Projects/blob/master/images/Function%20interpolation.PNG)
+![1](https://github.com/PasaOpasen/Old_Math_CSharpCpp_Projects/blob/master/gifs/polynoms.gif)
 ### Image compression
 ![1](https://github.com/PasaOpasen/Old_Math_CSharpCpp_Projects/blob/master/images/Image%20compression.PNG)
 ### Image recognition
@@ -21,6 +22,7 @@ See a lot of code of methods at ![**math classes library**](https://github.com/P
 ![1](https://github.com/PasaOpasen/Old_Math_CSharpCpp_Projects/blob/master/images/Integration.PNG)
 ### My large graph project
 ![1](https://github.com/PasaOpasen/Old_Math_CSharpCpp_Projects/blob/master/images/My%20large%20graph%20project.PNG)
+![1](https://github.com/PasaOpasen/Old_Math_CSharpCpp_Projects/blob/master/gifs/graphs.gif)
 ### Ordinary differential equations
 ![1](https://github.com/PasaOpasen/Old_Math_CSharpCpp_Projects/blob/master/images/Ordinary%20differential%20equations.PNG)
 ### Simplex method for linear programming tasks
