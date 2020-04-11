@@ -1,6 +1,6 @@
-# Old_Math_CSharpCpp_Projects
+# Old math CSharp/Cpp projects
 
-My homeworks and simple winforms math-projects including diploma, which were made during 2017-2019 
+My homeworks and simple winforms math projects including diploma, which were made during 2017-2019 
 
 See a lot of code of methods at ![**math classes library**](https://github.com/PasaOpasen/MathClasses)
 
