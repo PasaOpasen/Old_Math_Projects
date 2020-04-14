@@ -1,8 +1,10 @@
 # Old math CSharp/Cpp projects
 
-My homeworks and simple winforms math projects including diploma, which were made during 2017-2019 
+My homeworks and simple winforms math projects (C++, Delphi, Mathcad and C#) including diploma, which were made during 2015-2020. 
 
 See a lot of code of methods at [**math classes library**](https://github.com/PasaOpasen/MathClasses)
+
+I've created it only for my myself, so it's not perfect as really apps.
 
 ## Use my winforms apps of math tasks including for example
 
