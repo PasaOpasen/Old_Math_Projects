@@ -1,4 +1,4 @@
-# Old math CSharp/Cpp projects
+# Old math projects
 
 My homeworks and simple winforms math projects (C++, Delphi, Mathcad and C#) including diploma, which were made during 2015-2020. 
 
