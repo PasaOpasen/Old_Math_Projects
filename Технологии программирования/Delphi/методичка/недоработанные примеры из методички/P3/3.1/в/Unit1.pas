@@ -1,0 +1,76 @@
+unit Unit1;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, TeEngine, Series, ExtCtrls, TeeProcs, Chart, StdCtrls, Math;
+
+type
+  TForm1 = class(TForm)
+    Label1: TLabel;
+    Label2: TLabel;
+    Edit1: TEdit;
+    Edit2: TEdit;
+    Button1: TButton;
+    Memo1: TMemo;
+    Chart1: TChart;
+    Series1: TLineSeries;
+    procedure Button1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+procedure TForm1.Button1Click(Sender: TObject);
+var x,y,u:real;
+begin
+  try
+    x:=StrToFloat(Edit1.text);
+    y:=StrToFloat(Edit2.Text);
+  except
+    ShowMessage('Не правильный ввод');
+    exit;
+  end;
+
+  if y=0 then
+    begin
+      ShowMessage('Y не можеть быть 0');
+      exit;
+    end;
+
+  u:=abs(cos(x))+arctan(1/y);
+  Memo1.Lines.Add(FloatToStrF(u,fffixed,8,3));
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+var x,h:real;
+begin
+  h:=0.01;
+  x:=-10;
+  Chart1.LeftAxis.PositionPercent:=50;
+  Chart1.LeftAxis.SetMinMax(-4,4);
+  Chart1.BottomAxis.PositionPercent:=50;
+  while x<10 do
+    begin
+      if (abs(abs(cos(x))+arctan(1/x)-abs(cos(x+h))-arctan(1/(x+h))))>1 then
+        begin
+
+        series1.AddNullXY(x+h,abs(cos(x+h))+arctan(1/(x+h)),'');
+        end
+      else
+      Series1.AddXY(x,abs(cos(x))+arctan(1/x),'',clRed);
+      x:=x+h;
+    end;
+end;
+
+end.

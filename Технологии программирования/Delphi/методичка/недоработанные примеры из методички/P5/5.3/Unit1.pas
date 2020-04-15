@@ -1,0 +1,145 @@
+unit Unit1;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Buttons, Menus;
+
+type
+  TForm1 = class(TForm)
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Edit1: TEdit;
+    ComboBox1: TComboBox;
+    BitBtn1: TBitBtn;
+    OpenDialog1: TOpenDialog;
+    SaveDialog1: TSaveDialog;
+    MainMenu1: TMainMenu;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    procedure ComboBox1Click(Sender: TObject);
+    procedure ComboBox1KeyPress(Sender: TObject; var Key: Char);
+    procedure N1Click(Sender: TObject);
+    procedure N2Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+procedure TForm1.ComboBox1Click(Sender: TObject);
+var i,j,n,nst,min,Chetnoe:integer;
+    a:array [1..10] of real;
+    temp:real;
+    chislo:string;
+    st,ryad:string;
+    flag:boolean;
+begin
+ nst:=ComboBox1.ItemIndex;
+ st:=ComboBox1.Items[nst]+' ';
+ j:=0;
+ chislo:='';
+ 
+ for i:=1 to length(st) do
+  begin
+   if (st[i]<>' ') then
+    begin
+     chislo:=chislo+st[i];
+    end
+   else
+    begin
+     inc(j);
+     a[j]:=StrToFloat(Chislo);
+     Chislo:='';
+     n:=j;
+    end;
+  end;
+
+  for i:=1 to n-1 do
+   begin
+    min:=i;
+    for j:=i+1 to n do
+      if a[j]<a[min] then min:=j;
+    temp:=a[i];
+    a[i]:=a[min];
+    a[min]:=temp;
+   end;
+  ryad:='A) ';
+  for i:=1 to n do ryad:=ryad+FloatToStrF(a[i],fffixed,6,3)+' ';
+
+  ryad:=ryad+'Á) ';
+  flag:=false;
+
+  for i:=1 to Length(ST) do
+    if st[i]<>' ' then
+      begin
+        chislo:=chislo+st[i];
+      end
+    else
+      begin
+        Chetnoe:=StrToInt(st[i-1]);
+
+        if chetnoe mod 2=0 then
+          ryad:=ryad+' '+chislo;
+        chislo:='';
+
+      end;
+
+      
+  Label3.Caption:=ryad;
+end;
+
+procedure TForm1.ComboBox1KeyPress(Sender: TObject; var Key: Char);
+begin
+if key=#13 then
+ begin
+  ComboBox1.Items.Add(Edit1.Text);
+  Edit1.Text:='';
+ end;
+end;
+
+procedure TForm1.N1Click(Sender: TObject);
+var txt:textFile;
+    s:string;
+
+begin
+  if openDialog1.Execute then
+    begin
+      assignFile(txt,OpenDialog1.FileName);
+      reset(txt);
+      while not eof(txt) do
+        begin
+          readln(txt,s);
+          comboBox1.Items.Add(s);
+        end;
+      closeFile(txt);
+    end;
+end;
+
+procedure TForm1.N2Click(Sender: TObject);
+var txt:textFile;
+    nst:integer;
+begin
+  if saveDialog1.Execute then
+    begin
+      assignFile(txt,SaveDialog1.FileName);
+      rewrite(txt);
+      nst:=ComboBox1.ItemIndex;
+      writeln(txt,ComboBox1.Items[nst]);
+      writeln(txt,Label3.Caption);
+
+      closeFile(txt);
+
+    end;
+end;
+
+end.

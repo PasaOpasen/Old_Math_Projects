@@ -1,0 +1,132 @@
+object Form1: TForm1
+  Left = 360
+  Top = 112
+  Width = 928
+  Height = 480
+  Caption = 'Form1'
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  Menu = MainMenu1
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label1: TLabel
+    Left = 72
+    Top = 32
+    Width = 14
+    Height = 13
+    Caption = 'N='
+  end
+  object Label2: TLabel
+    Left = 128
+    Top = 32
+    Width = 15
+    Height = 13
+    Caption = 'M='
+  end
+  object Edit1: TEdit
+    Left = 88
+    Top = 32
+    Width = 33
+    Height = 21
+    TabOrder = 0
+    Text = 'Edit1'
+  end
+  object Edit2: TEdit
+    Left = 144
+    Top = 32
+    Width = 33
+    Height = 21
+    TabOrder = 1
+    Text = 'Edit2'
+  end
+  object Button1: TButton
+    Left = 184
+    Top = 32
+    Width = 209
+    Height = 17
+    Caption = #1047#1072#1076#1072#1090#1100' '#1088#1072#1079#1084#1077#1088#1085#1086#1089#1090#1100
+    TabOrder = 2
+    OnClick = Button1Click
+  end
+  object Button2: TButton
+    Left = 72
+    Top = 56
+    Width = 321
+    Height = 25
+    Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
+    TabOrder = 3
+    OnClick = Button2Click
+  end
+  object StringGrid1: TStringGrid
+    Left = 400
+    Top = 32
+    Width = 409
+    Height = 193
+    ColCount = 4
+    RowCount = 4
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing]
+    TabOrder = 4
+  end
+  object Memo1: TMemo
+    Left = 72
+    Top = 136
+    Width = 321
+    Height = 89
+    Lines.Strings = (
+      'Memo1')
+    ScrollBars = ssBoth
+    TabOrder = 5
+  end
+  object RadioGroup1: TRadioGroup
+    Left = 72
+    Top = 88
+    Width = 321
+    Height = 41
+    Caption = 'RadioGroup1'
+    TabOrder = 6
+  end
+  object RadioButton1: TRadioButton
+    Left = 80
+    Top = 104
+    Width = 113
+    Height = 17
+    Caption = #1040
+    TabOrder = 7
+  end
+  object RadioButton2: TRadioButton
+    Left = 272
+    Top = 104
+    Width = 113
+    Height = 17
+    Caption = #1041
+    TabOrder = 8
+  end
+  object MainMenu1: TMainMenu
+    Left = 832
+    Top = 112
+    object N1: TMenuItem
+      Caption = #1054#1090#1082#1088#1099#1090#1100
+      OnClick = N1Click
+    end
+    object N2: TMenuItem
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+      OnClick = N2Click
+    end
+  end
+  object OpenDialog1: TOpenDialog
+    Filter = 'in|*.txt'
+    Left = 832
+    Top = 32
+  end
+  object SaveDialog1: TSaveDialog
+    Filter = 'save|*.txt'
+    Left = 832
+    Top = 72
+  end
+end

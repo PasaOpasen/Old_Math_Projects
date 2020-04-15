@@ -1,0 +1,50 @@
+unit Unit1;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Buttons, ExtCtrls;
+
+type
+  TForm1 = class(TForm)
+    Panel1: TPanel;
+    bbRun: TBitBtn;
+    bbClose: TBitBtn;
+    edInPut: TEdit;
+    mmOutPut: TMemo;
+    lbOutPut: TLabel;
+    procedure lbOutPutDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
+
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+
+
+
+
+
+
+procedure TForm1.lbOutPutDragOver(Sender, Source: TObject; X, Y: Integer;
+  State: TDragState; var Accept: Boolean);
+begin
+ Accept:=True;
+ lbOutPut.Caption:=(Source as Tcomponent).Name;
+end;
+
+
+
+
+end.
