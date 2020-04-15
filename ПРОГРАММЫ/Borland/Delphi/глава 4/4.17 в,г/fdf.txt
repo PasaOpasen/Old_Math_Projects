@@ -1,0 +1,56 @@
+fz:textfile;
+
+
+{
+//ia?aaioea ia?aoey eeaaeoe "A*b"
+procedure TForm1.Button1Click(Sender: TObject);
+var f:textfile;
+begin
+ assignFile(f,'output.txt');
+ rewrite(f);
+ //au?eneaiey
+ for i:=1 to n do for j:=1 to n do A[i,j]:=StrToFloat(StringGrid1.Cells[j,i]);
+ for i:=1 to n do b[i]:=StrToFloat(StringGrid2.Cells[0,i]);
+ //auaia
+ for i:=1 to n do
+  begin
+    y[i]:=0;
+    for j:=1 to n do y[i]:=y[i]+A[i,j]*b[j];
+    StringGrid3.Cells[0,i]:=FloatToStrf(y[i],fffixed,6,2);
+    Writeln(f,StringGrid3.Cells[0,i]);
+  end;
+  closefile(f);
+end;
+
+   //i?i?anou ec oaeea an?
+procedure TForm1.D1Click(Sender: TObject);
+var a:real; n:integer;
+begin
+  if OpenDialog1.Execute then
+  begin
+    AssignFile(fz,OpenDialog1.Filename);
+    Reset(fz);
+
+    while not seekeof(fz) do
+    begin
+      Read(fz,n);
+      Edit1.Text:=IntToStr(n);
+
+      for i:=1 to n do for j:=1 to n do
+      begin
+        Read(fz,a);
+        StringGrid1.Cells[j,i]:=FloatToStr(a);
+      end;
+
+      for i:=1 to n do
+      begin
+        Read(fz,a);
+        StringGrid2.Cells[0,i]:=FloatToStr(a);
+      end;
+    end;
+
+    closefile(fz);
+  end;
+end;
+}
+
