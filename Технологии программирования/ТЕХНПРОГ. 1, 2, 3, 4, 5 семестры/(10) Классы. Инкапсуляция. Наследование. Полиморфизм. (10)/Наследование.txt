@@ -1,0 +1,32 @@
+01.Type
+02.TMaterial = record
+03.Massa: Integer;
+04.End;
+05.Type
+06.TAnimal = record
+07.Material: TMaterial;
+08.Sort: String;
+09.End;
+10.Type
+11.TMamal = record
+12.Animal: TAnimal;
+13.Family: String;
+14.End;
+15.Type
+16.THuman = record
+17.Mamal: TMamal;
+18.Race: String;
+19.Floor: String;
+20.Name: String;
+21.Family: String;
+22.End;
+23.Type
+24.TProgrammer = record
+25.Human: THuman;
+26.Sertificate: String;
+27.End;
+28.Type
+29.TProgrammer_of_Pascal = record
+30.Programmer: TProgrammer;
+31.IDE: String;
+32.End;

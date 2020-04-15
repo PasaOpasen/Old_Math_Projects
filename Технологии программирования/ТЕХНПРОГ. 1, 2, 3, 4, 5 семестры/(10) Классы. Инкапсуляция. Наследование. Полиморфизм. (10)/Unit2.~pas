@@ -1,0 +1,34 @@
+unit Unit2;
+
+interface
+
+implementation
+
+
+	uses
+		SysUtils,
+		Dialogs;
+
+	type Resident = class
+              apartament : Integer;
+              Surrname : String;
+              function Info (): String;
+      end;
+	function Resident.Info;
+		begin
+			Result := 'житель: ' + Surrname +
+			' квартира №: ' + IntToStr(apartament) + '.';
+		end;
+
+	Var
+		Ivanov : Resident;
+	begin
+		Ivanov := Resident.Create();
+		Ivanov.apartament:=20;
+		Ivanov.Surrname:='Иванов';
+		Showmessage(Ivanov.Info());
+	End.
+
+
+end.
+ 

@@ -1,0 +1,140 @@
+object Form1: TForm1
+  Left = 347
+  Top = 165
+  Width = 392
+  Height = 478
+  Caption = #1055#1040#1057#1068#1050#1054', '#1074#1086#1087#1088#1086#1089' 11'
+  Color = clMoneyGreen
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -10
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 12
+  object Label1: TLabel
+    Left = 260
+    Top = 54
+    Width = 25
+    Height = 23
+    Caption = 'Z='
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 146
+    Top = 54
+    Width = 25
+    Height = 23
+    Caption = 'Y='
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label3: TLabel
+    Left = 26
+    Top = 54
+    Width = 25
+    Height = 23
+    Caption = 'X='
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label4: TLabel
+    Left = 16
+    Top = 16
+    Width = 155
+    Height = 23
+    Caption = #1042#1074#1077#1089#1090#1080' '#1079#1085#1072#1095#1077#1085#1080#1103':'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Edit1: TEdit
+    Left = 62
+    Top = 54
+    Width = 67
+    Height = 31
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 0
+    Text = 'Edit1'
+  end
+  object Edit2: TEdit
+    Left = 182
+    Top = 54
+    Width = 61
+    Height = 31
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 1
+    Text = 'Edit2'
+  end
+  object Edit3: TEdit
+    Left = 290
+    Top = 54
+    Width = 67
+    Height = 31
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 2
+    Text = 'Edit3'
+  end
+  object Memo1: TMemo
+    Left = 20
+    Top = 138
+    Width = 337
+    Height = 287
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ScrollBars = ssBoth
+    TabOrder = 3
+  end
+  object Button1: TButton
+    Left = 20
+    Top = 90
+    Width = 337
+    Height = 43
+    Caption = #1042#1099#1095#1080#1089#1083#1080#1090#1100' u=sec(x+y)+exp(y-z) '
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 4
+    OnClick = Button1Click
+  end
+end

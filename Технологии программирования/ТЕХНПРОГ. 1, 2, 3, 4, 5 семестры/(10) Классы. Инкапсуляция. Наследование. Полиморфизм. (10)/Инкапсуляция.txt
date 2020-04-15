@@ -1,0 +1,88 @@
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+type
+    TDocument = class(TObject)
+    private
+      TName:string;
+      TAuthor:string;
+      TISBN:Integer;
+      TYear:Integer;
+    public
+      constructor Create(var NewTName,NewTAuthor:string;NewTISBN,NewTYear:Integer);
+    end;
+ TBook = class(TDocument)
+    private
+      TCount_page:Integer;
+    public
+      constructor Create(var NewTName,NewTAuthor:string;NewTISBN,NewTYear,NewTCount_page:Integer);overload;
+    end;
+ TMagazine = class(TDocument)
+    private
+      TThems:string;
+    public
+      constructor Create(var NewTName,NewTAuthor:string;NewTISBN,NewTYear:Integer;NewTThems:string);overload;
+    end;
+ TAdvertising = class(TDocument)
+    private
+      Trealm:string;
+    public
+      constructor Create(var NewTName,NewTAuthor,NewTrealm:string;NewTISBN,NewTYear:Integer);overload;
+    end;
+ 
+    TUser = class(TObject)
+    private
+      TUser_name:string;
+      TUser_surname:string;
+      TUser_number:Integer;
+      TUser_akadem_group:Integer;
+      TUser_birthday:TDateTime;
+      TUser_adress:string;
+      TUser_phone:string;
+    public
+      constructor Create(NewTUser_name,NewTUser_surname:string;
+                              NewTUser_number,NewTUser_akadem_group:Integer;
+                              NewTUser_birthday:TDateTime;
+                              NewTUser_adress,NewTUser_phone:string);overload;
+    end;

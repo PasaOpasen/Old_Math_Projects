@@ -1,0 +1,26 @@
+for i  := 0 to Army.SelectedUnitCount-1 do
+begin
+    Army.GetSelectedUnit(i).Attack(x, y);
+end;
+
+
+
+for i := 0 to Army.Goblins.SelectedUnitCount-1 do
+begin
+    Army.Goblins.GetSelectedUnit(i).MoveTo(x, y);
+end;
+
+for i := 0 to Army.Orcs.SelectedUnitCount-1 do
+begin
+    Army.Orcs.GetSelectedUnit(i).MoveTo(x, y);
+end;
+
+for i := 0 to Army.Dwarfs.SelectedUnitCount-1 do
+begin
+    Army.Dwarfs.GetSelectedUnit(i).MoveTo(x, y);
+end;
+
+for i := 0 to Army.Elfs.SelectedUnitCount-1 do
+begin
+    Army.Elfs.GetSelectedUnit(i).MoveTo(x, y);
+end;

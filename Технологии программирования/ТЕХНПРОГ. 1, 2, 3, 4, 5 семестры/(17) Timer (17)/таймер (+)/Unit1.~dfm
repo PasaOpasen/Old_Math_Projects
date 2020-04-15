@@ -1,0 +1,47 @@
+object Form1: TForm1
+  Left = 192
+  Top = 136
+  Width = 928
+  Height = 480
+  Caption = #1057#1077#1082#1091#1085#1076#1086#1084#1077#1088
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 16
+  object Label1: TLabel
+    Left = 152
+    Top = 48
+    Width = 41
+    Height = 16
+    Caption = 'Label1'
+  end
+  object Button1: TButton
+    Left = 40
+    Top = 168
+    Width = 177
+    Height = 65
+    Caption = #1053#1072#1078#1080#1084#1072#1081
+    TabOrder = 0
+    OnClick = Button1Click
+  end
+  object Button2: TButton
+    Left = 272
+    Top = 168
+    Width = 161
+    Height = 65
+    Caption = #1054#1073#1085#1091#1083#1077#1085#1080#1077' '#1074#1088#1077#1084#1077#1085#1080
+    TabOrder = 1
+    OnClick = Button2Click
+  end
+  object Timer1: TTimer
+    OnTimer = Timer1Timer
+    Left = 64
+    Top = 56
+  end
+end

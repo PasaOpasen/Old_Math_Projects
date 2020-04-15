@@ -1,0 +1,63 @@
+object Form1: TForm1
+  Left = 192
+  Top = 134
+  Width = 983
+  Height = 541
+  Caption = 'Form1'
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 16
+  object Label1: TLabel
+    Left = 414
+    Top = 144
+    Width = 3
+    Height = 16
+  end
+  object Label2: TLabel
+    Left = 64
+    Top = 88
+    Width = 106
+    Height = 16
+    Caption = #1042#1074#1077#1076#1080#1090#1077' '#1095#1080#1089#1083#1086' '
+  end
+  object Edit1: TEdit
+    Left = 192
+    Top = 88
+    Width = 241
+    Height = 24
+    TabOrder = 0
+  end
+  object Button1: TButton
+    Left = 120
+    Top = 144
+    Width = 273
+    Height = 33
+    Caption = #1053#1072#1078#1080#1084#1072#1081'!  '#1080' '#1091#1074#1080#1076#1080#1096#1100' '#1095#1080#1089#1083#1086' '#1074' '#1082#1074#1072#1076#1088#1072#1090#1077
+    TabOrder = 1
+    OnClick = Button1Click
+  end
+  object Button2: TButton
+    Left = 128
+    Top = 200
+    Width = 265
+    Height = 33
+    Caption = #1057' '#1087#1086#1084#1086#1097#1100#1102' ShowMessage '
+    TabOrder = 2
+    OnClick = Button2Click
+  end
+  object Button3: TButton
+    Left = 128
+    Top = 264
+    Width = 265
+    Height = 33
+    Caption = #1057' '#1087#1086#1084#1086#1097#1100#1102' MessageDlg '
+    TabOrder = 3
+    OnClick = Button3Click
+  end
+end

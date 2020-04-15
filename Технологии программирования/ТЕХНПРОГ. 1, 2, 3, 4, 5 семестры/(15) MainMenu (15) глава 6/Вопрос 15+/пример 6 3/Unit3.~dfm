@@ -1,0 +1,44 @@
+object Form3: TForm3
+  Left = 360
+  Top = 157
+  BorderStyle = bsDialog
+  Caption = #1053#1077#1084#1086#1076#1072#1083#1100#1085#1086#1077
+  ClientHeight = 430
+  ClientWidth = 912
+  Color = clYellow
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 16
+  object Label1: TLabel
+    Left = 88
+    Top = 160
+    Width = 298
+    Height = 36
+    Caption = #1057#1074#1086#1073#1086#1076#1072' '#1087#1086#1087#1091#1075#1072#1103#1084'!!!'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -31
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentFont = False
+  end
+  object BitBtn1: TBitBtn
+    Left = 112
+    Top = 240
+    Width = 225
+    Height = 81
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold, fsItalic]
+    ParentFont = False
+    TabOrder = 0
+    Kind = bkOK
+  end
+end

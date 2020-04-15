@@ -1,0 +1,138 @@
+object Form1: TForm1
+  Left = 202
+  Top = 198
+  Width = 1165
+  Height = 506
+  Caption = 'Form1'
+  Color = clInactiveCaptionText
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 16
+  object Label1: TLabel
+    Left = 79
+    Top = 89
+    Width = 177
+    Height = 33
+    Caption = #1074#1074#1077#1076#1080#1090#1077' '#1095#1080#1089#1083#1086
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clPurple
+    Font.Height = -29
+    Font.Name = 'Arial Narrow'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 89
+    Top = 158
+    Width = 33
+    Height = 32
+    Caption = 'X='
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -29
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object x: TEdit
+    Left = 138
+    Top = 158
+    Width = 80
+    Height = 40
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -29
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 0
+    Text = '21'
+  end
+  object GroupBox1: TGroupBox
+    Left = 402
+    Top = 89
+    Width = 375
+    Height = 286
+    Caption = #1042#1099#1073#1077#1088#1080#1090#1077' '#1101#1083#1077#1084#1077#1085#1090
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clPurple
+    Font.Height = -29
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 1
+    object CkBx3: TCheckBox
+      Left = 20
+      Top = 69
+      Width = 218
+      Height = 31
+      Caption = #1082#1088#1072#1090#1085#1086' 3'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -29
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 0
+    end
+    object CkBx5: TCheckBox
+      Left = 20
+      Top = 138
+      Width = 208
+      Height = 31
+      Caption = #1082#1088#1072#1090#1085#1086' 5'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -29
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 1
+    end
+    object CkBx7: TCheckBox
+      Left = 20
+      Top = 207
+      Width = 208
+      Height = 31
+      Caption = #1082#1088#1072#1090#1085#1086' 7'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -29
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 2
+    end
+  end
+  object Button1: TButton
+    Left = 866
+    Top = 89
+    Width = 356
+    Height = 40
+    Caption = #1087#1088#1086#1074#1077#1088#1080#1090#1100' '#1082#1088#1072#1090#1085#1086#1089#1090#1100' '#1095#1080#1089#1083#1072' x'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clPurple
+    Font.Height = -23
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 2
+    OnClick = Button1Click
+  end
+  object Memo1: TMemo
+    Left = 866
+    Top = 148
+    Width = 356
+    Height = 227
+    Lines.Strings = (
+      'Memo1')
+    ScrollBars = ssBoth
+    TabOrder = 3
+  end
+end

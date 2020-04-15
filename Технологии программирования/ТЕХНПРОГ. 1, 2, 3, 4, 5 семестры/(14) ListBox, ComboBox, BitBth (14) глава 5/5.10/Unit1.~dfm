@@ -1,0 +1,212 @@
+object Form1: TForm1
+  Left = 194
+  Top = 122
+  Width = 1162
+  Height = 604
+  Caption = #1079#1072#1076#1072#1090#1100' '#1090#1077#1082#1089#1090' '#1080#1079' '#1089#1090#1088#1086#1082
+  Color = clSkyBlue
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 16
+  object Label1: TLabel
+    Left = 438
+    Top = 25
+    Width = 203
+    Height = 18
+    Caption = #1054#1087#1077#1088#1072#1090#1086#1088#1099' '#1094#1080#1082#1083#1072
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clBlack
+    Font.Height = -16
+    Font.Name = 'Monotype Corsiva'
+    Font.Style = [fsBold, fsItalic]
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 904
+    Top = 27
+    Width = 169
+    Height = 18
+    Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1089#1090#1088#1086#1082
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clBlack
+    Font.Height = -16
+    Font.Name = 'Monotype Corsiva'
+    Font.Style = [fsBold, fsItalic]
+    ParentFont = False
+  end
+  object Label3: TLabel
+    Left = 24
+    Top = 24
+    Width = 153
+    Height = 18
+    Caption = #1058#1080#1087#1099' '#1076#1072#1085#1085#1099#1093
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clBlack
+    Font.Height = -16
+    Font.Name = 'Monotype Corsiva'
+    Font.Style = [fsBold, fsItalic]
+    ParentFont = False
+  end
+  object Label4: TLabel
+    Left = 256
+    Top = 24
+    Width = 145
+    Height = 18
+    Caption = #1059#1089#1083#1086#1074#1085#1099#1077' '#1086#1087#1077#1088#1072#1090#1086#1088#1099
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Monotype Corsiva'
+    Font.Style = [fsBold, fsItalic]
+    ParentFont = False
+  end
+  object Label5: TLabel
+    Left = 656
+    Top = 32
+    Width = 219
+    Height = 18
+    Caption = #1055#1088#1086#1094#1077#1076#1091#1088#1099' '#1087#1088#1077#1088#1099#1074#1072#1085#1080#1103' '#1088#1072#1073#1086#1090#1099
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Monotype Corsiva'
+    Font.Style = [fsBold, fsItalic]
+    ParentFont = False
+  end
+  object ComboBox1: TComboBox
+    Left = 446
+    Top = 64
+    Width = 195
+    Height = 27
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Mistral'
+    Font.Style = [fsBold, fsItalic]
+    ItemHeight = 19
+    ParentFont = False
+    TabOrder = 0
+    Text = #1042#1099#1073#1080#1088#1080#1090#1077' '#1086#1087#1077#1088#1072#1090#1086#1088
+    OnChange = ComboBox1Change
+    Items.Strings = (
+      'FOR'
+      'WHILE'
+      'REPEAT')
+  end
+  object ComboBox2: TComboBox
+    Left = 896
+    Top = 60
+    Width = 177
+    Height = 27
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Mistral'
+    Font.Style = [fsBold, fsItalic]
+    ItemHeight = 19
+    ParentFont = False
+    TabOrder = 1
+    Text = #1042#1099#1073#1080#1088#1080#1090#1077' '#1089#1090#1088#1086#1082#1091' '
+    OnChange = ComboBox2Change
+    Items.Strings = (
+      'FUNCTION COPY'
+      'PROCEDURE DELETE'
+      'FUNCTION CONCAT')
+  end
+  object Memo1: TMemo
+    Left = 140
+    Top = 131
+    Width = 779
+    Height = 385
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -20
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    Lines.Strings = (
+      'Memo1')
+    ParentFont = False
+    ReadOnly = True
+    TabOrder = 2
+  end
+  object BitBtn1: TBitBtn
+    Left = 926
+    Top = 591
+    Width = 139
+    Height = 60
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -23
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 3
+    Kind = bkClose
+  end
+  object ComboBox3: TComboBox
+    Left = 24
+    Top = 64
+    Width = 177
+    Height = 27
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Mistral'
+    Font.Style = [fsBold, fsItalic]
+    ItemHeight = 19
+    ParentFont = False
+    TabOrder = 4
+    Text = #1074#1099#1073#1080#1088#1080#1090#1077'  '#1090#1080#1087' '#1076#1072#1085#1085#1099#1093
+    OnChange = ComboBox3Change
+    Items.Strings = (
+      #1062#1045#1051#1067#1045
+      #1042#1045#1065#1045#1057#1058#1042#1045#1053#1053#1067#1045
+      #1051#1054#1043#1048#1063#1045#1057#1050#1048#1045
+      #1052#1040#1057#1057#1048#1042#1067)
+  end
+  object ComboBox4: TComboBox
+    Left = 248
+    Top = 64
+    Width = 161
+    Height = 27
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Mistral'
+    Font.Style = [fsBold, fsItalic]
+    ItemHeight = 19
+    ParentFont = False
+    TabOrder = 5
+    Text = #1074#1099#1073#1080#1088#1080#1090#1077' '#1091#1089#1083'. '#1086#1087#1077#1088#1072#1090#1086#1088
+    OnChange = ComboBox4Change
+    Items.Strings = (
+      'IF'
+      'CASE')
+  end
+  object ComboBox5: TComboBox
+    Left = 672
+    Top = 64
+    Width = 209
+    Height = 27
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Mistral'
+    Font.Style = [fsBold, fsItalic]
+    ItemHeight = 19
+    ParentFont = False
+    TabOrder = 6
+    Text = #1074#1099#1073#1080#1088#1080#1090#1077' '#1087#1088#1086#1094#1077#1076#1091#1088#1091
+    OnChange = ComboBox5Change
+    Items.Strings = (
+      'BREAK'
+      'EXIT'
+      'HALT')
+  end
+end

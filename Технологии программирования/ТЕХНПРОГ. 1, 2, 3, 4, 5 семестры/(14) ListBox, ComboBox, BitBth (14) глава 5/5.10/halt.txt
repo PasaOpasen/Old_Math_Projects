@@ -1,0 +1,14 @@
+ѕроцедура Halt вынуждает резкое завершение текущего приложени€. ѕредупреждение: не гарантируетс€, что ресурсы будут освобождены при вызове halt. ѕеременна€ ExitCode может быть произвольно установлена, передава€ значение ExitValue. Ётот код передаетс€ прерывателю приложени€ как код возврата от приложени€. ≈сли значение ErrorAddr уже было присвоено, перед тем как был вызван Halt, то диалог отображаетс€, показыва€ значение ErrorAddr и ExitCode. ѕосле выполнени€ Halt, перед фактическим завершением программы, выполн€етс€ секци€ модул€ finalization.  
+ѕример кода : ќстанавливает программу с диалогом ошибки
+var
+  i : Integer;
+begin
+  // Set up an error address so that halt shows a termination dialog
+  ErrorAddr := Addr(i);
+
+  // Stop the program with exit code 4
+  Halt(4);
+
+  // The following will not be executed
+  ShowMessage('We do not get this far');
+end;
