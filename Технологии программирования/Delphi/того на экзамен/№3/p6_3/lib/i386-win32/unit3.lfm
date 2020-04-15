@@ -1,0 +1,50 @@
+object Form3: TForm3
+  Left = 509
+  Height = 79
+  Top = 328
+  Width = 323
+  Caption = 'Modeless Dialog Form'
+  ClientHeight = 79
+  ClientWidth = 323
+  Color = 4334666
+  LCLVersion = '1.2.6.0'
+  object Label1: TLabel
+    Left = 40
+    Height = 45
+    Top = 16
+    Width = 136
+    Caption = 'Свобода'
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Color = clRed
+    Font.Height = -37
+    Font.Name = 'Calibri'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentColor = False
+    ParentFont = False
+  end
+  object BitBtn1: TBitBtn
+    Left = 208
+    Height = 45
+    Top = 16
+    Width = 75
+    Action = Action1
+    Caption = 'Ок'
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Color = clBlack
+    Font.Height = -19
+    Font.Name = 'Calibri'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ModalResult = 1
+    ParentFont = False
+    TabOrder = 0
+  end
+  object ActionList1: TActionList
+    object Action1: TAction
+      Caption = 'Action1'
+      OnExecute = Action1Execute
+      ShortCut = 27
+    end
+  end
+end

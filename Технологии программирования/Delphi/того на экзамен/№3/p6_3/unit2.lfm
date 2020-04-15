@@ -1,0 +1,50 @@
+object Form2: TForm2
+  Left = 436
+  Height = 77
+  Top = 445
+  Width = 473
+  Caption = 'Modal Dialog Form'
+  ClientHeight = 77
+  ClientWidth = 473
+  Color = 6793547
+  LCLVersion = '1.2.6.0'
+  object Label1: TLabel
+    Left = 16
+    Height = 45
+    Top = 16
+    Width = 349
+    Caption = 'Сначала закрой меня!'
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Color = clWhite
+    Font.Height = -37
+    Font.Name = 'Calibri'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentColor = False
+    ParentFont = False
+  end
+  object BitBtn1: TBitBtn
+    Left = 384
+    Height = 45
+    Top = 16
+    Width = 75
+    Action = Action1
+    Caption = 'Ок'
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Color = clBlack
+    Font.Height = -19
+    Font.Name = 'Calibri'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ModalResult = 1
+    ParentFont = False
+    TabOrder = 0
+  end
+  object ActionList1: TActionList
+    object Action1: TAction
+      Caption = 'Action1'
+      OnExecute = Action1Execute
+      ShortCut = 27
+    end
+  end
+end

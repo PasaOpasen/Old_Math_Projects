@@ -1,0 +1,73 @@
+object Form1: TForm1
+  Left = 272
+  Height = 404
+  Top = 150
+  Width = 523
+  Caption = '№7'
+  ClientHeight = 404
+  ClientWidth = 523
+  LCLVersion = '1.4.4.0'
+  object Memo1: TMemo
+    Left = 261
+    Height = 404
+    Top = 0
+    Width = 262
+    Align = alRight
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Height = -16
+    Font.Name = 'Times New Roman'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentFont = False
+    ReadOnly = True
+    TabOrder = 0
+  end
+  object Label1: TLabel
+    Left = 16
+    Height = 42
+    Top = 8
+    Width = 217
+    Caption = 'Щелкните по кнопке ОК,'#13#10'чтобы увидеть её свойства'
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentColor = False
+    ParentFont = False
+  end
+  object BitBtn1: TBitBtn
+    Left = 56
+    Height = 46
+    Top = 120
+    Width = 136
+    Default = True
+    DefaultCaption = True
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Kind = bkOK
+    ModalResult = 1
+    OnClick = BitBtn1Click
+    ParentFont = False
+    TabOrder = 1
+  end
+  object BitBtn2: TBitBtn
+    Left = 64
+    Height = 30
+    Top = 296
+    Width = 120
+    DefaultCaption = True
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Kind = bkClose
+    ModalResult = 11
+    ParentFont = False
+    TabOrder = 2
+  end
+end

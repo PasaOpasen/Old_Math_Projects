@@ -1,0 +1,52 @@
+object Form1: TForm1
+  Left = 561
+  Height = 118
+  Top = 170
+  Width = 239
+  Caption = 'Main Form'
+  ClientHeight = 98
+  ClientWidth = 239
+  Color = 5385085
+  Menu = MainMenu1
+  LCLVersion = '1.2.6.0'
+  object BitBtn1: TBitBtn
+    Left = 48
+    Height = 64
+    Top = 16
+    Width = 139
+    Action = Action1
+    Caption = 'Close'
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Color = clBlack
+    Font.Height = -19
+    Font.Name = 'Calibri'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ModalResult = 11
+    ParentFont = False
+    TabOrder = 0
+  end
+  object MainMenu1: TMainMenu
+    object MenuItem1: TMenuItem
+      Caption = 'Окно'
+      object MenuItem2: TMenuItem
+        Caption = 'модальное'
+        ShortCut = 16474
+        OnClick = MenuItem2Click
+      end
+      object MenuItem3: TMenuItem
+        Caption = 'немодальное'
+        ShortCut = 16472
+        OnClick = MenuItem3Click
+      end
+    end
+  end
+  object ActionList1: TActionList
+    left = 32
+    object Action1: TAction
+      Caption = 'Action1'
+      OnExecute = Action1Execute
+      ShortCut = 27
+    end
+  end
+end

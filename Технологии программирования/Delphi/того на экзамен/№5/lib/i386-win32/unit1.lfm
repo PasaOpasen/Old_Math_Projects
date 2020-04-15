@@ -1,0 +1,166 @@
+object Form1: TForm1
+  Left = 399
+  Height = 343
+  Top = 126
+  Width = 699
+  Caption = '№5'
+  ClientHeight = 343
+  ClientWidth = 699
+  LCLVersion = '1.4.4.0'
+  object Button1: TButton
+    Left = 64
+    Height = 31
+    Top = 112
+    Width = 238
+    Action = Rd
+    AutoSize = True
+    Caption = 'Считать файл [Shift+Enter]'
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentFont = False
+    TabOrder = 1
+  end
+  object Button2: TButton
+    Left = 92
+    Height = 31
+    Top = 160
+    Width = 180
+    Action = Sv
+    AutoSize = True
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentFont = False
+    TabOrder = 2
+    Visible = False
+  end
+  object LabeledEdit1: TLabeledEdit
+    Left = 0
+    Height = 32
+    Top = 24
+    Width = 344
+    AutoSize = False
+    EditLabel.AnchorSideLeft.Control = LabeledEdit1
+    EditLabel.AnchorSideRight.Control = LabeledEdit1
+    EditLabel.AnchorSideRight.Side = asrBottom
+    EditLabel.AnchorSideBottom.Control = LabeledEdit1
+    EditLabel.Left = 0
+    EditLabel.Height = 19
+    EditLabel.Top = 2
+    EditLabel.Width = 344
+    EditLabel.Caption = 'Поле ввода адреса файла'
+    EditLabel.ParentColor = False
+    EditLabel.ParentFont = False
+    EditLabel.Font.CharSet = RUSSIAN_CHARSET
+    EditLabel.Font.Height = -16
+    EditLabel.Font.Name = 'Times New Roman'
+    EditLabel.Font.Pitch = fpVariable
+    EditLabel.Font.Quality = fqDraft
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentFont = False
+    TabOrder = 0
+  end
+  object BitBtn1: TBitBtn
+    Left = 120
+    Height = 30
+    Top = 232
+    Width = 138
+    Action = Cls
+    AutoSize = True
+    Caption = 'Закрыть [Esc]'
+    Glyph.Data = {
+      36040000424D3604000000000000360000002800000010000000100000000100
+      2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B7B7
+      B7FFAEAEAEFF3071A9FF2C6EA6FF286BA3FF2468A0FF21669EFF1D639BFF1A61
+      99FF175F97FF145C94FF115B93FF6C6C6CFF6C6C6CFFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF003675ADFF86B6D8FF83B3D7FF81B2D6FF7DAFD5FF7BADD4FF79AB
+      D3FF76AAD2FF74A8D1FF155D95FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF003C79B1FF8BB9DAFF66A2CEFF62A0CDFF5F9DCBFF5B9AC9FF5897
+      C8FF5495C7FF77ABD3FF196098FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00427DB5FF8FBDDCFF6CA7D0FF67A4CFFF64A1CDFF609ECCFF5C9B
+      CAFF5999C9FF7BADD4FF1E649CFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF004882BAFF93C0DDFF71ABD2FF6DA8D1FF69A5CFFF66A2CEFF629F
+      CCFF5E9CCBFF7FB0D5FF23679FFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF004E86BEFF98C3DFFF77AFD5FF73ACD3FF6FA9D2FF6BA7D0FF5BB7
+      E3FF54C2EDFF81B4D7FF286BA3FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00538AC2FF9CC6E1FF7CB3D7FF79B1D5FF75ADD4FF71ABD2FF5FBA
+      E4FF4BD4FFFF7CBBE0FF2E6FA7FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00598EC6FFA0C9E3FF82B8D9FF7EB5D8FF7AB2D6FF77AFD5FF73AC
+      D3FF6DABD4FF8CBADAFF3373ABFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF005E91C9FFA4CCE4FF87BBDBFF84B9DAFF80B6D8FF7CB3D7FF79B0
+      D5FF74ADD4FF8FBDDCFF3977AFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF006395CDFFA8CFE5FF8CBFDDFF88BDDCFF85BADBFF81B7D9FF7EB4
+      D7FF7AB2D6FF94C1DDFF3F7CB4FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF006798D0FFABD1E7FF90C2DFFF8DC0DEFF8ABEDCFF87BBDBFF83B8
+      DAFF80B6D8FF99C4E0FF4580B8FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF006B9BD3FFAED4E8FFABD3E8FFAAD1E7FFA8CFE5FFA5CDE4FFA2CB
+      E4FFA0C9E2FF9DC7E1FF4B84BCFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF006E9DD5FF6C9BD3FF699AD2FF6697CFFF6395CDFF6093CBFF5C90
+      C8FF598EC6FF558BC3FF5188C0FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+    }
+    Kind = bkClose
+    ModalResult = 11
+    TabOrder = 3
+  end
+  object Button3: TButton
+    Left = 0
+    Height = 29
+    Top = 56
+    Width = 166
+    AutoSize = True
+    Caption = 'Файл по умолчанию'
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Height = -16
+    Font.Name = 'Times New Roman'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    OnClick = Button3Click
+    ParentFont = False
+    TabOrder = 4
+  end
+  object Memo1: TMemo
+    Left = 344
+    Height = 344
+    Top = 0
+    Width = 360
+    Align = alRight
+    Lines.Strings = (
+      'Memo1'
+    )
+    TabOrder = 5
+  end
+  object ActionList1: TActionList
+    left = 272
+    top = 230
+    object Rd: TAction
+      Caption = 'Rd'
+      OnExecute = RdExecute
+      ShortCut = 8205
+    end
+    object Sv: TAction
+      Caption = 'Сохранить [Ctrl+S]'
+      OnExecute = SvExecute
+      ShortCut = 16467
+    end
+    object Cls: TAction
+      Caption = 'Закрыть'
+      OnExecute = ClsExecute
+      ShortCut = 27
+    end
+  end
+end

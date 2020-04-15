@@ -1,0 +1,185 @@
+object Form1: TForm1
+  Left = 212
+  Top = 74
+  Width = 671
+  Height = 558
+  Caption = #1055#1088#1080#1084#1077#1088' 1 ('#1043#1091#1088#1080#1085#1086#1074#1080#1095')'
+  Color = clSkyBlue
+  Font.Charset = RUSSIAN_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -19
+  Font.Name = 'Times New Roman'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 21
+  object Label1: TLabel
+    Left = 352
+    Top = 80
+    Width = 172
+    Height = 21
+    Caption = #1042#1074#1077#1076#1080#1090#1077' '#1088#1072#1079#1084#1077#1088#1085#1086#1089#1090#1100
+    Color = clSkyBlue
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clBlue
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
+  end
+  object lbl1: TLabel
+    Left = 147
+    Top = 200
+    Width = 360
+    Height = 21
+    Caption = #1042#1074#1077#1076#1080#1090#1077' '#1082#1086#1084#1087#1086#1085#1077#1085#1090#1099' '#1084#1072#1090#1088#1080#1094#1099' '#1040' '#1080' '#1074#1077#1082#1090#1086#1088#1072' b'
+    Color = clAqua
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clBlue
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
+  end
+  object lbl2: TLabel
+    Left = 91
+    Top = 176
+    Width = 472
+    Height = 21
+    Caption = #1056#1072#1079#1084#1077#1088#1085#1086#1089#1090#1100' '#1084#1072#1090#1088#1080#1094#1099' '#1080' '#1074#1077#1082#1090#1086#1088#1072' '#1085#1077' '#1076#1086#1083#1078#1085#1072' '#1087#1088#1077#1074#1099#1097#1072#1090#1100' 10!'
+    Color = clAqua
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clBlue
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label3: TLabel
+    Left = 313
+    Top = 80
+    Width = 29
+    Height = 21
+    Caption = #1080#1083#1080
+  end
+  object Label2: TLabel
+    Left = 151
+    Top = 8
+    Width = 354
+    Height = 21
+    Caption = #1042#1099#1073#1077#1088#1080#1090#1077' '#1089#1087#1086#1089#1086#1073' '#1074#1074#1086#1076#1072' '#1084#1072#1090#1088#1080#1094#1099' '#1080' '#1074#1077#1082#1090#1086#1088#1072':'
+  end
+  object edt1: TEdit
+    Left = 552
+    Top = 72
+    Width = 41
+    Height = 29
+    TabOrder = 0
+  end
+  object btn1: TButton
+    Left = 352
+    Top = 116
+    Width = 297
+    Height = 25
+    Caption = #1047#1072#1076#1072#1090#1100' '#1088#1072#1079#1084#1077#1088#1085#1086#1089#1090#1100'!'
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clNavy
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 1
+    OnClick = btn1Click
+  end
+  object strngrd1: TStringGrid
+    Left = 21
+    Top = 232
+    Width = 366
+    Height = 275
+    ColCount = 4
+    DefaultColWidth = 32
+    RowCount = 4
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing]
+    ScrollBars = ssNone
+    TabOrder = 2
+  end
+  object strngrd2: TStringGrid
+    Left = 405
+    Top = 232
+    Width = 69
+    Height = 281
+    ColCount = 1
+    FixedCols = 0
+    RowCount = 2
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing]
+    ScrollBars = ssNone
+    TabOrder = 3
+  end
+  object strngrd3: TStringGrid
+    Left = 565
+    Top = 232
+    Width = 69
+    Height = 281
+    ColCount = 1
+    FixedCols = 0
+    RowCount = 2
+    ScrollBars = ssNone
+    TabOrder = 4
+  end
+  object btn2: TButton
+    Left = 485
+    Top = 368
+    Width = 75
+    Height = 49
+    Caption = 'A*b = '
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clBlue
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 5
+    OnClick = btn2Click
+  end
+  object RadioGroup1: TRadioGroup
+    Left = 12
+    Top = 64
+    Width = 293
+    Height = 105
+    Caption = ' '#1042#1099#1073#1077#1088#1080#1090#1077' '#1084#1072#1090#1088#1080#1094#1091' '#1080' '#1074#1077#1082#1090#1086#1088':'
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clBlue
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    Items.Strings = (
+      '3 '#1093' 3 '#1080' 3 '#1093' 1'
+      '4 '#1093' 4 '#1080' 4 '#1093' 1'
+      '5 '#1093' 5 '#1080' 5 '#1093' 1')
+    ParentFont = False
+    TabOrder = 6
+    OnClick = RadioGroup1Click
+  end
+  object btnKeyboard: TButton
+    Left = 352
+    Top = 32
+    Width = 301
+    Height = 25
+    Caption = #1074#1074#1077#1089#1090#1080' '#1089' '#1082#1083#1072#1074#1080#1072#1090#1091#1088#1099':'
+    TabOrder = 7
+    OnClick = btnKeyboardClick
+  end
+  object btnFille: TButton
+    Left = 12
+    Top = 32
+    Width = 293
+    Height = 25
+    Caption = #1057#1095#1080#1090#1072#1090#1100' '#1089' '#1092#1072#1081#1083#1072
+    TabOrder = 8
+    OnClick = btnFilleClick
+  end
+end

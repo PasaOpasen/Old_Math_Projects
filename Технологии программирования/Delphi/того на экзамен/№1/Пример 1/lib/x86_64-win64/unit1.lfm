@@ -1,0 +1,220 @@
+object Form1: TForm1
+  Left = 376
+  Height = 613
+  Top = 146
+  Width = 1351
+  Caption = 'Умножение матрицы на вектор'
+  ClientHeight = 613
+  ClientWidth = 1351
+  Color = clGradientInactiveCaption
+  Font.CharSet = RUSSIAN_CHARSET
+  Font.Height = -23
+  Font.Name = 'Times New Roman'
+  Font.Pitch = fpVariable
+  Font.Quality = fqDraft
+  OnCreate = FormCreate
+  LCLVersion = '1.4.2.0'
+  object StringGrid1: TStringGrid
+    Left = 24
+    Height = 320
+    Top = 232
+    Width = 712
+    ColCount = 1
+    DefaultColWidth = 100
+    RowCount = 1
+    TabOrder = 0
+    TitleFont.CharSet = RUSSIAN_CHARSET
+    TitleFont.Height = -23
+    TitleFont.Name = 'Times New Roman'
+    TitleFont.Pitch = fpVariable
+    TitleFont.Quality = fqDraft
+  end
+  object StringGrid2: TStringGrid
+    Left = 752
+    Height = 320
+    Top = 232
+    Width = 216
+    ColCount = 1
+    DefaultColWidth = 100
+    FixedCols = 0
+    RowCount = 1
+    TabOrder = 1
+    TitleFont.CharSet = RUSSIAN_CHARSET
+    TitleFont.Height = -23
+    TitleFont.Name = 'Times New Roman'
+    TitleFont.Pitch = fpVariable
+    TitleFont.Quality = fqDraft
+  end
+  object Button1: TButton
+    Left = 984
+    Height = 64
+    Top = 352
+    Width = 112
+    Caption = 'A * b ='
+    OnClick = Button1Click
+    TabOrder = 2
+  end
+  object StringGrid3: TStringGrid
+    Left = 1112
+    Height = 320
+    Top = 232
+    Width = 216
+    ColCount = 1
+    DefaultColWidth = 100
+    FixedCols = 0
+    RowCount = 1
+    TabOrder = 3
+    TitleFont.CharSet = RUSSIAN_CHARSET
+    TitleFont.Height = -23
+    TitleFont.Name = 'Times New Roman'
+    TitleFont.Pitch = fpVariable
+    TitleFont.Quality = fqDraft
+  end
+  object FilesSelect: TGroupBox
+    Left = 608
+    Height = 168
+    Top = 24
+    Width = 561
+    Caption = 'Выберите текстовый файл'
+    ClientHeight = 137
+    ClientWidth = 557
+    TabOrder = 4
+    object Matrix: TRadioGroup
+      Left = 6
+      Height = 145
+      Top = -1
+      Width = 274
+      AutoFill = True
+      Caption = 'Размер матрицы'
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.TopBottomSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 114
+      ClientWidth = 270
+      ItemIndex = 0
+      Items.Strings = (
+        '3x3'
+        '5x5'
+        '8x8'
+      )
+      OnClick = MatrixClick
+      TabOrder = 0
+    end
+    object Vector: TRadioGroup
+      Left = 288
+      Height = 145
+      Top = -1
+      Width = 264
+      AutoFill = True
+      Caption = 'Размер вектора'
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.TopBottomSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 114
+      ClientWidth = 260
+      ItemIndex = 0
+      Items.Strings = (
+        '3х1'
+        '5х1'
+        '8х1'
+      )
+      OnClick = VectorClick
+      TabOrder = 1
+    end
+  end
+  object ReadSelect: TGroupBox
+    Left = 608
+    Height = 168
+    Top = 24
+    Width = 561
+    Caption = 'Выберите размерность'
+    ClientHeight = 137
+    ClientWidth = 557
+    TabOrder = 5
+    object Edit1: TEdit
+      Left = 448
+      Height = 34
+      Top = 0
+      Width = 64
+      TabOrder = 0
+      Text = '3'
+    end
+    object Label1: TLabel
+      Left = 14
+      Height = 26
+      Top = 8
+      Width = 421
+      Caption = 'Количество строк----------------------------->'
+      ParentColor = False
+    end
+    object Edit2: TEdit
+      Left = 448
+      Height = 34
+      Top = 48
+      Width = 64
+      TabOrder = 1
+      Text = '2'
+    end
+    object Label2: TLabel
+      Left = 14
+      Height = 26
+      Top = 48
+      Width = 424
+      Caption = 'Количество столбцов------------------------->'
+      ParentColor = False
+    end
+    object SaveRazm: TButton
+      Left = 14
+      Height = 40
+      Top = 88
+      Width = 160
+      Caption = 'Применить'
+      OnClick = SaveRazmClick
+      TabOrder = 2
+    end
+  end
+  object Clear: TButton
+    Left = 1192
+    Height = 56
+    Top = 80
+    Width = 136
+    Caption = 'Очистка'
+    OnClick = ClearClick
+    TabOrder = 6
+  end
+  object SelectDo: TRadioGroup
+    Left = 24
+    Height = 168
+    Top = 24
+    Width = 561
+    AutoFill = True
+    Caption = 'Выберите способ решения'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 137
+    ClientWidth = 557
+    ItemIndex = 1
+    Items.Strings = (
+      'Выбор из файлов'
+      'Свободный ввод'
+    )
+    OnClick = SelectDoClick
+    TabOrder = 7
+  end
+end

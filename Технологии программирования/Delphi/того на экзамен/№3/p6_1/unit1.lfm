@@ -1,0 +1,56 @@
+object Form1: TForm1
+  Left = 498
+  Height = 118
+  Top = 236
+  Width = 462
+  Caption = 'Main Form'
+  ClientHeight = 118
+  ClientWidth = 462
+  Color = 5421879
+  LCLVersion = '1.2.6.0'
+  object Button1: TButton
+    Left = 16
+    Height = 64
+    Top = 24
+    Width = 268
+    Action = Action1
+    Caption = 'Вызов модальной формы'
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Color = clBlack
+    Font.Height = -19
+    Font.Name = 'Calibri'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentFont = False
+    TabOrder = 0
+  end
+  object BitBtn1: TBitBtn
+    Left = 304
+    Height = 64
+    Top = 24
+    Width = 139
+    Action = Action2
+    Caption = 'Close'
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Color = clBlack
+    Font.Height = -19
+    Font.Name = 'Calibri'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ModalResult = 11
+    ParentFont = False
+    TabOrder = 1
+  end
+  object ActionList1: TActionList
+    object Action1: TAction
+      Caption = 'Action1'
+      OnExecute = Action1Execute
+      ShortCut = 32
+    end
+    object Action2: TAction
+      Caption = 'Action2'
+      OnExecute = Action2Execute
+      ShortCut = 27
+    end
+  end
+end
