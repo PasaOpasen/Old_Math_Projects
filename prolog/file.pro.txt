@@ -1,0 +1,48 @@
+/* Программа: Служащие */
+/* Назначение: Демонстрация использования селектирующих правил на основе ОПН-метода (откат после неудачи)*/
+domains
+  name, sex, department = symbol
+  pay_rate = real
+
+predicates
+  employee(name,sex,department,pay_rate)
+  show_part_time
+  show_male_part_time
+
+
+
+clauses
+  employee("John Walker ","M","ACCT",3.50).
+  employee("Tom Sellack ","M","OPER",4.50).
+  employee("Betty Lue ","F","DATA",5.00).
+  employee("Jack Hunter ","M","ADVE",4.50).
+  employee("Sam Ray ","M","DATA",6.00).
+  employee("Sheila Burton ","F","ADVE",5.00).
+  employee("Kelly Smith ","F","ACCT",5.00).
+  employee("Diana Prince ","F","DATA",5.00).
+
+
+  /* Правило для генерации списка служащих любого пола */
+  show_part_time :-
+    employee(Name, _, Dept, Pay_rate),
+    write(Name, Dept, "$", Pay_rate),
+    nl,
+    fail.
+
+  /* Правило для генерации списка служащих мужского пола */
+  show_male_part_time :-
+    employee(Name, "M", Dept, Pay_rate),
+    write(Name, Dept, "$", Pay_rate),
+    nl,
+    fail.
+
+
+
+goal
+  write("Служащие с почасовой оплатой"),
+  nl, nl,
+  show_part_time.
+
+  write("Служащие мужского пола с почасовой оплатой"),
+  nl, nl,
+  show_male_part_time.
