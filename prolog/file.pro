@@ -1,7 +1,10 @@
 /* Программа: Служащие */
-/* Назначение: Демонстрация использования селектирующих правил на основе ОПН-метода (откат после неудачи)*/
+/* Назначение: 
+Демонстрация использования селектирующих правил на основе ОПН-метода 
+(ОНП = откат после неудачи)*/
+
 domains
-  name, sex, department = symbol
+  name, sex, department = symbol %имя, пол, место работы
   pay_rate = real %ставка оплаты труда
 
 predicates
@@ -10,8 +13,8 @@ predicates
   show_employees_male
 
 
-
 clauses
+%используется очень мало записей, чтобы ответы поместились в окошко Turbo Prolog 
   employee("Presley Perry","Male","ACCT",133.50).
   employee("Noelle Carter","Female","DATA",145.00).
   employee("Kye Coleman","Male","DATA",346.00).
@@ -21,9 +24,8 @@ clauses
   /* Правило для генерации списка служащих любого пола */
   show_employees :-
     employee(Name, Sex, Dept, Pay_rate),
-    %pr=1.0,
-    write(Name," Sex: ",Sex," Department: ", Dept, " Pay by hour($): ", Pay_rate),%30 дней по 24 часа
-    nl,nl,
+    write(Name," Sex: ",Sex," Department: ", Dept, " Pay by hour($): ", Pay_rate),
+    nl,nl, % nl = переход на следующую строку
     fail.
 
   /* Правило для генерации списка служащих мужского пола */
@@ -36,11 +38,10 @@ clauses
 
 
 goal
- % write("Employees with their pay rate:"),
- % nl, nl,
-  %show_employees.%,
- % nl,
- % nl,
+ write("Employees with their pay rate:"),
+ nl, nl,
+ show_employees,
+ nl, nl,
  write("Employees with their pay rate (only men):"),
  nl, nl,
  show_employees_male.
