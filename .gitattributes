@@ -68,7 +68,7 @@
 *.fs linguist-vendored=false
 *.js linguist-vendored=false
 *.cpp linguist-vendored=false
-*.eps linguist-vendored=false
+*.pas linguist-vendored=false
 *.d linguist-vendored=false
 *.tex linguist-vendored=false
 *.pro linguist-vendored=false
