@@ -60,7 +60,14 @@ namespace MullerConsole
                 result.Add($"Формула {fc} была прочитана как {fm}");
                 result.Add("-----------Корни (округлённые):");
 
-                var r = Optimization.MullerTryMany((c)=>f(c), xmin, xmax, ymin, ymax, out var rs, eps, count);
+                var time = DateTime.Now;
+                var r = Optimization.MullerTryMany((c)=>f(c), xmin, xmax, ymin, ymax, out var rs, eps, count);               
+                var rg = DateTime.Now - time;
+
+                time = DateTime.Now;
+                r = Optimization.MullerTryManyParallel((c) => f(c), xmin, xmax, ymin, ymax, out rs, eps, count);
+                var rg2 = DateTime.Now - time;
+
                 if (r)
                 {
                     // это просто божественное решение проблемы кластеризации корней с учётом погрешностей, но оно ещё как работает!
@@ -69,6 +76,7 @@ namespace MullerConsole
                         .Select(t => $"----> root = {t.Round(4)}   \t|f(root)| = {f(t).Abs}"));
                 }
                 else result.Add($"Для функции {fm} корней не найдено. Попробуйте изменить гиперпараметры и начать снова");
+                  
 
 
                 foreach (var st in result)
@@ -76,7 +84,7 @@ namespace MullerConsole
                     st.Show();
                     wr.WriteLine(st);
                 }
-
+                   Console.WriteLine($" time =  not_parallel: {rg.TotalSeconds}    parallel: {rg2.TotalSeconds}");
 
                 result = new List<string>(50);
             }
