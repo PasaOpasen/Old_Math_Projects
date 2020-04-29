@@ -62,4 +62,13 @@
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
 
-*.rtf linguist-vendored=true
+* linguist-vendored
+*.c linguist-vendored=false
+*.cs linguist-vendored=false
+*.fs linguist-vendored=false
+*.js linguist-vendored=false
+*.cpp linguist-vendored=false
+*.eps linguist-vendored=false
+*.d linguist-vendored=false
+*.tex linguist-vendored=false
+*.pro linguist-vendored=false
