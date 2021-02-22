@@ -1,0 +1,70 @@
+
+
+/*
+
+media="all and (min-height: 810px)"
+
+
+*/
+
+
+/*  gradient --------------------------------------*/
+
+#gradient-div1 
+{
+
+background-image: -webkit-gradient(
+	linear,
+	left top,
+	left bottom,
+	color-stop(0, #F6F4F7),
+	color-stop(0.39, #FFFCFF),
+	color-stop(1, #ECEBF0)
+);
+background-image: -o-linear-gradient(bottom, #F6F4F7 0%, #FFFCFF 39%, #ECEBF0 100%);
+background-image: -moz-linear-gradient(bottom, #F6F4F7 0%, #FFFCFF 39%, #ECEBF0 100%);
+background-image: -webkit-linear-gradient(bottom, #F6F4F7 0%, #FFFCFF 39%, #ECEBF0 100%);
+background-image: -ms-linear-gradient(bottom, #F6F4F7 0%, #FFFCFF 39%, #ECEBF0 100%);
+background-image: linear-gradient(to bottom, #F6F4F7 0%, #FFFCFF 39%, #ECEBF0 100%);
+
+height: 231px;   /*240*/
+  
+}
+
+/*  fonts -----------------------------------------*/
+
+hh3
+{
+    font-size: 30px;
+    font-family: verdana;
+    color: #004466;
+    font-weight: bold;
+}
+ 
+hh4
+{
+    font-size: 15px;
+    font-family: verdana;
+    font-weight: normal;
+    color: #222222;
+}
+
+
+.tbl_style_h
+{
+     width: 100%;
+ 
+}
+
+.tbl_style_text
+{
+    height:30px;    
+}
+
+/* image -----------------------------------------------------*/
+
+.imgw
+{
+     width: 170px;
+}
+

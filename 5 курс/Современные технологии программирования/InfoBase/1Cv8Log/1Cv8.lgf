@@ -1,0 +1,16 @@
+﻿1CV8LOG(ver 2.0)
+8635e414-cb61-4941-93d9-1aec978349bb
+{1,071523a4-516f-4fce-ba4b-0d11ab7a1893,"",1},
+{2,"DESKTOP-TNROSOF",1},
+{3,"Designer",1},
+{4,"_$Session$_.Authentication",1},
+{11,
+{0},1},
+{12,
+{0},1},
+{13,1,1},
+{4,"_$Session$_.Start",2},
+{3,"1CV8C",2},
+{4,"_$Session$_.Finish",3},
+{4,"_$Transaction$_.Begin",4},
+{4,"_$Transaction$_.Commit",5}
