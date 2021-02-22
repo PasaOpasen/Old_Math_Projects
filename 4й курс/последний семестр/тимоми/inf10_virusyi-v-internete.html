@@ -1,0 +1,823 @@
+<!-- gentest v1.00 -->
+<!-- 
+UTU_4900_765_17_11_11_28_9_2017
+ -->
+<!-- newtime
+9-1-2018 17:30:29
+ -->
+<html>
+<head>
+<meta content="text/html; charset=windows-1251" http-equiv="content-type">
+<Script Language="JavaScript">  
+<!-- Начало сценария 
+var rez=[14,2,4,2,1,1,3,1,2,1,2,3,1,1,2,1];
+var vinq=[4,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3];
+var kfQ=[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+var kfS=[];
+var kfFalse=[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2];
+var svob=[ [] ];
+// PerVop
+var mix=true;
+</script>  
+<!--####################################################################################################################################-->
+<style>
+body {
+    font-family: verdana,arial,helvetica;
+    color: #008000;
+	background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDoAABSCAABFVgAADqXAAAXb9daH5AAAAA0SURBVHjaYvz///9/BiqC1MX/GJgYaABGDR01dNTQUUNHDR1phrKkLv5HdUMBAAAA//8DAHdWCDRrphytAAAAAElFTkSuQmCC") repeat;
+	margin: 30px auto;
+    width: 700px;
+}
+.onetest {
+    position: relative;
+    box-shadow: 0 0 6px #00C036;
+    border-radius: 6px 6px 6px 6px;  
+    padding: 15px 20px;
+    margin-bottom: 15px;
+	background-color: #FFFFFF;
+	
+}
+.onetest img {
+max-width:600px;
+}
+.onetest a {
+color: #008000;
+text-decoration:none;
+}
+.testname {
+    font: 22px 'Arial';  
+}
+.testdescription {
+    font: 12px/16px 'Arial';
+	margin: 10px 0 0 0px;
+}
+.testline {
+    background-color: #00B000;
+    height: 1px;
+    margin: 15px 0px 0;
+}
+.testclass {
+    font: italic 11px 'Arial';
+	margin: 2px 0 0 0px;
+}
+.otv {
+    left: 150px;
+    position: absolute;
+    top: 15px;
+}
+#winotv {
+    background-color: #FFFFFF;
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 0 0 6px #00C036;
+    display: none;
+    margin: 0 auto;
+    padding: 15px 50px 15px 50px;
+    width: 435px;
+	text-align: center;
+}
+#rezbutton {
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 0 0 6px #00C036;
+    height: 65px;
+    margin: 0 auto;
+    width: 300px;
+    display: block;
+}
+#rezbutton input {
+    background-color: #FFFFFF;
+    border: medium none;
+    border-radius: 6px 6px 6px 6px;
+    cursor: pointer;
+    height: 100%;
+    width: 100%;
+    font: 22px 'Arial';
+    color: #008000;
+    text-align: center;
+}
+.svob {
+	font-style: italic;
+	font-weight: bold;
+	font-size: 12px;
+}
+.aspan:hover {
+	color: #00D000;
+	text-shadow: 0 0 6px;
+	cursor: pointer;
+}
+#teacher {
+	position: fixed;
+	box-shadow: 0 0 6px #00C036;
+	border-radius: 6px 6px 6px 6px;
+	padding: 15px 20px;
+	background-color: #FFFFFF;
+	width: 1000px;
+	margin: 100px -150px;
+	z-index: 1;
+	top: 0px;
+	height: 700px;
+}
+.otv .imgtrue {
+	background: url("data:image/png;base64,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") no-repeat;
+	height: 53px;
+    width: 200px;
+}
+.otv .imgfalse {
+	background: url("data:image/png;base64,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") no-repeat;
+	height: 53px;
+    width: 253px;
+}
+.otv .img_nearly_true {
+    background: url("data:image/png;base64,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") no-repeat;
+    height: 53px;
+    width: 321px;
+}
+</style>
+
+<!--####################################################################################################################################-->
+<!--####################################################################################################################################-->
+<!--####################################################################################################################################-->
+<Script Language="JavaScript">
+function isNumeric(n) {return !isNaN(parseFloat(n)) && isFinite(n);}
+function getchecked(a,b){
+	var tt = document.getElementsByName("Q"+a);
+	if(tt[b].checked) tt[b].checked = false;
+	else tt[b].checked = true;}
+function code(strIn){	
+	var strOut=[],ii,jj;
+	for(ii=0; ii<strIn.length; ii++) {
+		var strTmp=[];
+		for(jj=0; jj<strIn[ii].length; jj++){strTmp[jj] = strIn[ii].charCodeAt(jj)-1;if (strTmp[jj]==1039) {strTmp[jj]=1103};}
+		strOut[ii]='';
+		for(jj=0; jj<strTmp.length; jj++){strOut[ii] += String.fromCharCode(strTmp[jj]);}}
+	return strOut;}
+function check_me(){
+	var otv=[],i,j,tmp,str1,names,vah=false,totaltrueQ=[],totalS=[],total=0,totalQAll=0,totalSAll=0,answerQ=[],answerTrue=0;
+	if(document.getElementById("torf1") != null){
+		for(i=0;i<vinq.length;i++){
+			otv[i]=[];
+			for(j=0;j<vinq[i];j++){
+				names=document.getElementsByName("Q"+(i+1));
+				if(names[j].checked)otv[i][j]=1;
+				else otv[i][j]=0;}
+			if(parseInt(otv[i].join(''),2)==0)vah=true;}}
+	if(document.getElementById("svobod1") != null){
+		for(i=0;i<svob.length;i++){
+			names=document.getElementsByName("S"+(i+1));
+			if(names[0].value=='')vah=true;}}
+	if(vah) alert("Вы выполнили не все задания. Проверьте себя.");
+	else{
+		if(document.getElementById("torf1") != null){
+			for(i=0;i<rez.length;i++){
+				str1 = rez[i].toString(2);
+				while(str1.length < vinq[i]) str1="0"+str1;
+				totaltrueQ[i]=0;
+				for(j=0;j<str1.length;j++){totaltrueQ[i] += parseInt(str1[j]);}
+				totalQAll += kfQ[i];
+				if(parseInt(otv[i].join(''),2)==rez[i])	{
+					document.getElementById("torf"+(i+1)).innerHTML='<div class="imgtrue"></div>';
+					total += kfQ[i];
+					answerTrue += kfQ[i];}
+				else {
+					for(j=0;j<str1.length;j++){
+						answerQ[j] = otv[i][j]/parseInt(str1[j]);
+						if(isNaN(answerQ[j])) answerQ[j]=2;}
+					if(!isNumeric(answerQ.join(''))) {
+						document.getElementById("torf"+(i+1)).innerHTML='<div class="imgfalse"></div>';
+						tmp=0;
+						for(j=0;j<answerQ.length;j++){
+							if(answerQ[j]<2) tmp += answerQ[j];
+							if(answerQ[j]>2) tmp -= kfFalse[i];}
+						if(tmp<0) tmp=0;
+						answerTrue += kfQ[i]*tmp/totaltrueQ[i];}
+					else {
+						document.getElementById("torf"+(i+1)).innerHTML='<div class="img_nearly_true"></div>';
+						tmp=0;
+						for(j=0;j<answerQ.length;j++){if(answerQ[j]<2) tmp += answerQ[j];}
+						total += kfQ[i]*tmp/totaltrueQ[i];
+						answerTrue += kfQ[i]*tmp/totaltrueQ[i];}}}}
+		if(document.getElementById("svobod1") != null){
+			for(i=0;i<svob.length;i++){
+				totalS[i]=0;
+				names=document.getElementsByName("S"+(i+1));
+				var names1 = names[0].value;
+				names1 = names1.replace("ё", "е");
+				names1 = names1.replace("Ё", "Е");
+				truerez = code(svob[i]);
+				for(j=0;j<truerez.length;j++){if(names1==truerez[j]){totalS[i]=1;}}
+				totalSAll += kfS[i];
+				if(totalS[i]==1){
+					document.getElementById("svobod"+(i+1)).innerHTML="<div class=imgtrue></div>";
+					total += kfS[i];
+					answerTrue += kfS[i];}
+				else document.getElementById("svobod"+(i+1)).innerHTML="<div class=imgfalse></div>";}}
+		showResult(totalQAll + totalSAll, answerTrue, total);}}
+function showResult(totalQS, answerTrue, total){
+	var i,maxQS=0,vv,ii,jj,ss;
+	for(i=0;i<kfQ.length;i++) maxQS += kfQ[i];
+	for(i=0;i<kfS.length;i++) maxQS += kfS[i];
+	vv = total*100/maxQS;
+	document.getElementById("winotv").innerHTML='<span style="font-size: 22px;">Вы набрали</span><br/><b>'+answerTrue.toFixed(1)+'</b> баллов из <b>'+totalQS.toFixed(1)+'</b> возможных<br>Тест пройден на <b>'+vv.toFixed(0)+'%</b>';
+	document.getElementById("rezbutton").style.display="none"; 
+	document.getElementById("winotv").style.display="block"; 
+	aspan = document.getElementsByName("aspan");
+	for(i=0;i<aspan.length;i++)	{
+		aspan[i].onclick = '';
+		aspan[i].className = '';}
+	if(document.getElementById("svobod1") != null){
+		for(i=0;i<svob.length;i++){
+			names=document.getElementsByName("S"+(i+1));
+			names[0].disabled = true;}}
+	if(document.getElementById("torf1") != null){
+		for (ii=1;ii<=rez.length;ii++){ 
+			ss = document.getElementsByName("Q"+ii.toString());
+			for (jj=0;jj < ss.length;jj++){ss[jj].disabled = "disabled";}}}
+	if(vv==100) document.getElementById("winotv").style.backgroundColor="#E1FFE1";   
+	else { 
+		document.getElementById("winotv").style.color="#FF0000";
+		document.getElementById("winotv").style.boxShadow="0 0 6px #FF0000"; 
+		document.getElementById("winotv").style.backgroundColor="#FFE1E1";}}
+Array.prototype.shuffle = function( deep ){
+  var i = this.length, j, t;
+  while(i){
+   j = Math.floor( (i--) * Math.random() );
+   t = deep && typeof this[i].shuffle!=='undefined' ? this[i].shuffle():this[i];
+   this[i] = this[j];
+   this[j] = t;}
+  return this;};
+<!--Окончание сценария -->
+</script>
+<!--####################################################################################################################################-->
+<!--####################################################################################################################################-->
+<!--####################################################################################################################################-->
+</head>
+<body>
+<div class="onetest">
+<div class="testname">
+<span class="aspan" style="font-size:7pt;float:right;"><a href="http://testedu.ru/" target="_blank">TestEdu v1.17</a></span>
+<!-- name -->
+"Вирусы в Интернете"
+</div>
+<div class="testdescription">
+<!-- opisan -->
+Тест по информационной безопасности поможет Вам проверить и закрепить свои знания по этой теме. В тесте можно выбирать сразу несколько ответов на вопрос.
+
+<!-- opisan end -->
+</div>
+<div class="testline"></div>
+<div class="testclass">
+<!-- predmet -->
+Информатика
+ 
+<!-- klass -->
+10 класс
+&nbsp; | &nbsp;
+Дата: 21.01.2018
+&nbsp; | &nbsp;
+Вопросов: 16
+&nbsp; | &nbsp;
+Автор: 
+<!-- avtor -->
+Шабанова Валерия
+
+<!-- email
+1233
+-->
+</div>
+</div>
+
+<!-- kol vop
+16
+kol vop end-->
+
+<form name="test" method="post">
+<!-- vopr i otveti -->
+<div class="onetest" name="onetest"><font size="4" color="000099"><b>
+<!-- nom vopr -->Вопрос № 
+1
+<!-- vopros
+По каким признакам можно понять, что компьютер заражен вирусом?
+Укажите все верные ответы.
+
+vopros end -->
+
+<!-- otvet
+1
+4
+1
+14
+Вирус может никак не проявлять своего присутствия. Лучше всего просмотреть отчет антивирусной программы.
+Компьютер стал работать медленнее.
+С компьютера отпраляются письма, которые вы не отправляли.
+Друзья жалуются, что вы отправляете им спам-письма, хотя вы этого не делаете.
+
+
+
+
+
+otvet end -->
+</b></font><br />
+
+</div>
+<div class="onetest" name="onetest"><font size="4" color="000099"><b>
+<!-- nom vopr -->Вопрос № 
+2
+<!-- vopros
+Что вирус может сделать с компьютером?
+
+vopros end -->
+
+<!-- otvet
+1
+3
+0
+6
+Ничего особенного, вирус - это просто такая игрушка.
+Вирус может делать с компьютером все что угодно - удалять данные, отправлять с него сообщения вашим друзьям в социальных сетях, выключать компьютер. 
+Даже самый страшный вирус ничего не сможет сделать, пока ему не разрешить. 
+
+
+
+
+otvet end -->
+</b></font><br />
+
+</div>
+<div class="onetest" name="onetest"><font size="4" color="000099"><b>
+<!-- nom vopr -->Вопрос № 
+3
+<!-- vopros
+Ваши друзья говорят, что вы рассылаете им спам-сообщения. Что делать?
+
+vopros end -->
+
+<!-- otvet
+1
+3
+0
+7
+Проверить компютер с помощью антивирусной программы, сменить пароль к аккаунту в социальной сети.
+Ничего не делать, такое бывает и потом само проходит. 
+Наверняка друзья просто шутят.
+
+
+
+
+otvet end -->
+</b></font><br />
+
+</div>
+<div class="onetest" name="onetest"><font size="4" color="000099"><b>
+<!-- nom vopr -->Вопрос № 
+4
+<!-- vopros
+При загрузке компьютера появляется сообщение: "Ваша операционная система заблокирована. Отправьте СМС на номер ХХХХ и получите код для снятия блокировки". Как вы поступите?
+
+vopros end -->
+
+<!-- otvet
+1
+3
+0
+6
+Перезагружу компьютер - возможно, само пройдет. 
+Скачаю на съемный носитель специальную антивирусную программу, а затем проверю и вылечу с ее помощью компьютер.
+Отправлю СМС на указанный номер, получу код и сниму блокировку.
+
+
+
+
+otvet end -->
+</b></font><br />
+
+</div>
+<div class="onetest" name="onetest"><font size="4" color="000099"><b>
+<!-- nom vopr -->Вопрос № 
+5
+<!-- vopros
+Вам пришло письмо: "Чтобы выиграть миллион в нашей лотерее, вам нужно зарегистрироваться на этом сайте (ссыка на сайт). Регистрация закрывается завтра. Не пропустите!". Что вы сделаете?
+
+vopros end -->
+
+<!-- otvet
+1
+3
+0
+5
+Зайду на сайт и посмотрю, что за лотерея. 
+Напишу в ответ письмо, где попрошу прислать подробности о лотерее.
+Удалю письмо. Я ничего не знаю об этом сайте и авторе письма. Скорее всего, это спам.
+
+
+
+
+otvet end -->
+</b></font><br />
+
+</div>
+<div class="onetest" name="onetest"><font size="4" color="000099"><b>
+<!-- nom vopr -->Вопрос № 
+6
+<!-- vopros
+Вам пришло письмо: "Новые снимки на сервисе Яндекс.Фотки. Открой и увидишь! www.fotoyandex123.ru". Как вы поступите?
+
+vopros end -->
+
+<!-- otvet
+1
+3
+0
+5
+Обязательно посмотрю фотографии.
+Поделюсь ссылкой с друзьям.
+Удалю письмо. Скорее всего, его прислали мошенники: доменный адрес сайта отличается от настоящего адреса Яндекса.Фоток. Вполне вероятно, что сайт заражен.
+
+
+
+
+otvet end -->
+</b></font><br />
+
+</div>
+<div class="onetest" name="onetest"><font size="4" color="000099"><b>
+<!-- nom vopr -->Вопрос № 
+7
+<!-- vopros
+Вы получили письмо: "15 сентября пройдет Московский марафон. Примите участие, зарегистрировавшись на сайте. Взнос участника - 500 рублей. Подробности на сайте: moscowmarathon.org". Что вы сделаете?
+Укажите все верные ответы.
+
+vopros end -->
+
+<!-- otvet
+1
+3
+1
+3
+Перейду на сайт по ссылке в письме.
+Внимательно изучу письмо и ссылку на сайт. Если они не вызывают подозрений, перейду по ссылке.
+Найду сайт Московского марафона в поисковике и сравню его с тем, что в письме.
+
+
+
+
+
+
+otvet end -->
+</b></font><br />
+
+</div>
+<div class="onetest" name="onetest"><font size="4" color="000099"><b>
+<!-- nom vopr -->Вопрос № 
+8
+<!-- vopros
+Ваш друг по ВКонтакте прислал вам файл и сообщение: "Привет! В этом файле наши с тобой летние фотки. Смотри!". Но лето вы провели в разных местах. Как вы поступите?
+
+vopros end -->
+
+<!-- otvet
+1
+3
+0
+5
+Открою файл и посмотрю фотографии.
+Прежде чем открыть файл, зайду во ВКонтакте и спрошу у друга, что это за фотки.
+Попробую выяснить у друга, не взломан ли его аккаунт. Например, позвоню ему или задам вопрос, ответ на который знает только он.
+
+
+
+
+otvet end -->
+</b></font><br />
+
+</div>
+<div class="onetest" name="onetest"><font size="4" color="000099"><b>
+<!-- nom vopr -->Вопрос № 
+9
+<!-- vopros
+Вам пришло сообщение из ВКонтакте от незнакомого человека:"Мы открыли новую группу коллекционеров марок. Присоединяйся!". В сообщении есть ссылка на группу. Как вы отреагируете?
+
+vopros end -->
+
+<!-- otvet
+1
+3
+0
+6
+Перейду по ссылке. Марки - это интересно. 
+Попробую найти эту группу с помощью поиска по ВКонтакте. Вдруг ссылка в сообщении поддельная.
+Меня не интересуют марки - вот если бы Angry Birds.
+
+
+
+
+otvet end -->
+</b></font><br />
+
+</div>
+<div class="onetest" name="onetest"><font size="4" color="000099"><b>
+<!-- nom vopr -->Вопрос № 
+10
+<!-- vopros
+Вам пришло письмо: "Добрый день! Мы предлагаем вам учиться за рубежом! В Америке, Европе, Австралии - на ваш выбор. Обучение, проживание, перелет - за наш счет. Нужно только оплатить пересылку документов - 1000 рублей. Не упустите свой шанс!". В письме есть реквизиты. Как вы поступите?
+
+vopros end -->
+
+<!-- otvet
+1
+3
+0
+5
+Я не против бесплатно слетать в Америку.
+Уточню, нет ли у них программы обучения в Китае. Меня больше интересует Азия.
+Удалю письмо: непонятно, откуда у людей мои контакты, и само письмо выглядит подозрительно 
+
+
+
+
+otvet end -->
+</b></font><br />
+
+</div>
+<div class="onetest" name="onetest"><font size="4" color="000099"><b>
+<!-- nom vopr -->Вопрос № 
+11
+<!-- vopros
+ВКонтакте вдруг просит повторно ввести ваши логин и пароль, чего раньше никогда не было. Что вы сделаете?
+
+vopros end -->
+
+<!-- otvet
+1
+3
+0
+6
+Введу, раз нужно.
+Проверю доменный адрес сайта. Если он не совпадает с настоящим, закрою сайт. 
+Введу данные, так как мой аккаунт во ВКонтакте привязан к мобильному номеру, а значит, защищен от любого мошенничества.
+
+
+
+
+otvet end -->
+</b></font><br />
+
+</div>
+<div class="onetest" name="onetest"><font size="4" color="000099"><b>
+<!-- nom vopr -->Вопрос № 
+12
+<!-- vopros
+Как злоумышленник может украсть ваш пароль?
+Укажите все верные варианты.
+
+vopros end -->
+
+<!-- otvet
+1
+3
+1
+3
+Если не записывать пароль на бумаге, то никак.
+Если пароль достаточно легкий, его можно просто угадать.
+Злоумышленник может использовать поддельный сайт (например, внешне похожий на ВКонтакте), и заставить меня ввести на нем пароль. 
+
+
+
+
+
+
+otvet end -->
+</b></font><br />
+
+</div>
+<div class="onetest" name="onetest"><font size="4" color="000099"><b>
+<!-- nom vopr -->Вопрос № 
+13
+<!-- vopros
+Браузер предупреждает, что сайт, на который вы хотите перейти, заражен вирусом. Ваши действия?
+
+vopros end -->
+
+<!-- otvet
+1
+3
+0
+5
+Все равно перейду на сайт: браузер не может такого знать.
+Перейду на сайт: браузер не антивирус и может ошибаться.
+Не стану переходить на сайт: обычно у браузеров есть большая база вирусов.
+
+
+
+
+otvet end -->
+</b></font><br />
+
+</div>
+<div class="onetest" name="onetest"><font size="4" color="000099"><b>
+<!-- nom vopr -->Вопрос № 
+14
+<!-- vopros
+В поисковой строке появляется предупреждение, что сайт, на который вы хотите перейти, заражен вирусом. Что вы сделаете?
+
+vopros end -->
+
+<!-- otvet
+1
+3
+0
+5
+Проигнорирую предупреждение.
+Перейду на сайт, если он очень известный. Вряд ли такой сайт может быть заражен.
+Не стану переходить на сайт, так как даже самые известные сайты иногда оказываются зараженными, и поисковые сиситемы умеют это определять.
+
+
+
+
+otvet end -->
+</b></font><br />
+
+</div>
+<div class="onetest" name="onetest"><font size="4" color="000099"><b>
+<!-- nom vopr -->Вопрос № 
+15
+<!-- vopros
+Какой пароль является самым сложным?
+
+vopros end -->
+
+<!-- otvet
+1
+3
+0
+6
+Natalia1993
+Mar!nA_1993
+veronica93
+
+
+
+
+otvet end -->
+</b></font><br />
+
+</div>
+<div class="onetest" name="onetest"><font size="4" color="000099"><b>
+<!-- nom vopr -->Вопрос № 
+16
+<!-- vopros
+ВКонтакте просит ввести ваш мобильный номер для подтверждения аккаунта. Как вы поступите?
+
+vopros end -->
+
+<!-- otvet
+1
+3
+0
+5
+Откажусь. Вдруг мне будут присылать смс-спам.
+Откажусь:мне удобнее вводить логин, чем номер телефона.
+Введу свой номер, чтобы в случае кражи аккаунта его можно было восстановить с помощью мобильного номера.
+
+
+
+
+otvet end -->
+</b></font><br />
+
+</div>
+<div id="winotv"></div>
+<div id="rezbutton">
+<input type="button" name="simb" onclick="check_me()" value="Проверить результат">
+</div>
+</form>
+<Script Language="JavaScript">
+var vopr_otv = [
+'<font color="#333333" saze="3"><p>\r\n'+
+'По каким признакам можно понять, что компьютер заражен вирусом?'+
+'<br>'+
+'Укажите все верные ответы.'+
+'</p></font><div class="otv" id="torf1"></div>'+
+'\<!-- otvet--\>\r\n'+
+'<input type=checkbox name=Q1 class="niceCheck"><span name="aspan" class="aspan" onclick="getchecked(1,0)"> Вирус может никак не проявлять своего присутствия. Лучше всего просмотреть отчет антивирусной программы.</span><br>'
++'<input type=checkbox name=Q1 class="niceCheck"><span name="aspan" class="aspan" onclick="getchecked(1,1)"> Компьютер стал работать медленнее.</span><br>'
++'<input type=checkbox name=Q1 class="niceCheck"><span name="aspan" class="aspan" onclick="getchecked(1,2)"> С компьютера отпраляются письма, которые вы не отправляли.</span><br>'
++'<input type=checkbox name=Q1 class="niceCheck"><span name="aspan" class="aspan" onclick="getchecked(1,3)"> Друзья жалуются, что вы отправляете им спам-письма, хотя вы этого не делаете.</span><br>'
+,
+'<font color="#333333" saze="3"><p>\r\n'+
+'Что вирус может сделать с компьютером?'+
+'</p></font><div class="otv" id="torf2"></div>'+
+'<input type=radio name=Q2><span name="aspan" class="aspan" onclick="getchecked(2,0)"> Ничего особенного, вирус - это просто такая игрушка.</span><br>'
++'<input type=radio name=Q2><span name="aspan" class="aspan" onclick="getchecked(2,1)"> Вирус может делать с компьютером все что угодно - удалять данные, отправлять с него сообщения вашим друзьям в социальных сетях, выключать компьютер. </span><br>'
++'<input type=radio name=Q2><span name="aspan" class="aspan" onclick="getchecked(2,2)"> Даже самый страшный вирус ничего не сможет сделать, пока ему не разрешить. </span><br>'
+,
+'<font color="#333333" saze="3"><p>\r\n'+
+'Ваши друзья говорят, что вы рассылаете им спам-сообщения. Что делать?'+
+'</p></font><div class="otv" id="torf3"></div>'+
+'<input type=radio name=Q3><span name="aspan" class="aspan" onclick="getchecked(3,0)"> Проверить компютер с помощью антивирусной программы, сменить пароль к аккаунту в социальной сети.</span><br>'
++'<input type=radio name=Q3><span name="aspan" class="aspan" onclick="getchecked(3,1)"> Ничего не делать, такое бывает и потом само проходит. </span><br>'
++'<input type=radio name=Q3><span name="aspan" class="aspan" onclick="getchecked(3,2)"> Наверняка друзья просто шутят.</span><br>'
+,
+'<font color="#333333" saze="3"><p>\r\n'+
+'При загрузке компьютера появляется сообщение: "Ваша операционная система заблокирована. Отправьте СМС на номер ХХХХ и получите код для снятия блокировки". Как вы поступите?'+
+'</p></font><div class="otv" id="torf4"></div>'+
+'<input type=radio name=Q4><span name="aspan" class="aspan" onclick="getchecked(4,0)"> Перезагружу компьютер - возможно, само пройдет. </span><br>'
++'<input type=radio name=Q4><span name="aspan" class="aspan" onclick="getchecked(4,1)"> Скачаю на съемный носитель специальную антивирусную программу, а затем проверю и вылечу с ее помощью компьютер.</span><br>'
++'<input type=radio name=Q4><span name="aspan" class="aspan" onclick="getchecked(4,2)"> Отправлю СМС на указанный номер, получу код и сниму блокировку.</span><br>'
+,
+'<font color="#333333" saze="3"><p>\r\n'+
+'Вам пришло письмо: "Чтобы выиграть миллион в нашей лотерее, вам нужно зарегистрироваться на этом сайте (ссыка на сайт). Регистрация закрывается завтра. Не пропустите!". Что вы сделаете?'+
+'</p></font><div class="otv" id="torf5"></div>'+
+'<input type=radio name=Q5><span name="aspan" class="aspan" onclick="getchecked(5,0)"> Зайду на сайт и посмотрю, что за лотерея. </span><br>'
++'<input type=radio name=Q5><span name="aspan" class="aspan" onclick="getchecked(5,1)"> Напишу в ответ письмо, где попрошу прислать подробности о лотерее.</span><br>'
++'<input type=radio name=Q5><span name="aspan" class="aspan" onclick="getchecked(5,2)"> Удалю письмо. Я ничего не знаю об этом сайте и авторе письма. Скорее всего, это спам.</span><br>'
+,
+'<font color="#333333" saze="3"><p>\r\n'+
+'Вам пришло письмо: "Новые снимки на сервисе Яндекс.Фотки. Открой и увидишь! www.fotoyandex123.ru". Как вы поступите?'+
+'</p></font><div class="otv" id="torf6"></div>'+
+'<input type=radio name=Q6><span name="aspan" class="aspan" onclick="getchecked(6,0)"> Обязательно посмотрю фотографии.</span><br>'
++'<input type=radio name=Q6><span name="aspan" class="aspan" onclick="getchecked(6,1)"> Поделюсь ссылкой с друзьям.</span><br>'
++'<input type=radio name=Q6><span name="aspan" class="aspan" onclick="getchecked(6,2)"> Удалю письмо. Скорее всего, его прислали мошенники: доменный адрес сайта отличается от настоящего адреса Яндекса.Фоток. Вполне вероятно, что сайт заражен.</span><br>'
+,
+'<font color="#333333" saze="3"><p>\r\n'+
+'Вы получили письмо: "15 сентября пройдет Московский марафон. Примите участие, зарегистрировавшись на сайте. Взнос участника - 500 рублей. Подробности на сайте: moscowmarathon.org". Что вы сделаете?'+
+'<br>'+
+'Укажите все верные ответы.'+
+'</p></font><div class="otv" id="torf7"></div>'+
+'\<!-- otvet--\>\r\n'+
+'<input type=checkbox name=Q7 class="niceCheck"><span name="aspan" class="aspan" onclick="getchecked(7,0)"> Перейду на сайт по ссылке в письме.</span><br>'
++'<input type=checkbox name=Q7 class="niceCheck"><span name="aspan" class="aspan" onclick="getchecked(7,1)"> Внимательно изучу письмо и ссылку на сайт. Если они не вызывают подозрений, перейду по ссылке.</span><br>'
++'<input type=checkbox name=Q7 class="niceCheck"><span name="aspan" class="aspan" onclick="getchecked(7,2)"> Найду сайт Московского марафона в поисковике и сравню его с тем, что в письме.</span><br>'
+,
+'<font color="#333333" saze="3"><p>\r\n'+
+'Ваш друг по ВКонтакте прислал вам файл и сообщение: "Привет! В этом файле наши с тобой летние фотки. Смотри!". Но лето вы провели в разных местах. Как вы поступите?'+
+'</p></font><div class="otv" id="torf8"></div>'+
+'<input type=radio name=Q8><span name="aspan" class="aspan" onclick="getchecked(8,0)"> Открою файл и посмотрю фотографии.</span><br>'
++'<input type=radio name=Q8><span name="aspan" class="aspan" onclick="getchecked(8,1)"> Прежде чем открыть файл, зайду во ВКонтакте и спрошу у друга, что это за фотки.</span><br>'
++'<input type=radio name=Q8><span name="aspan" class="aspan" onclick="getchecked(8,2)"> Попробую выяснить у друга, не взломан ли его аккаунт. Например, позвоню ему или задам вопрос, ответ на который знает только он.</span><br>'
+,
+'<font color="#333333" saze="3"><p>\r\n'+
+'Вам пришло сообщение из ВКонтакте от незнакомого человека:"Мы открыли новую группу коллекционеров марок. Присоединяйся!". В сообщении есть ссылка на группу. Как вы отреагируете?'+
+'</p></font><div class="otv" id="torf9"></div>'+
+'<input type=radio name=Q9><span name="aspan" class="aspan" onclick="getchecked(9,0)"> Перейду по ссылке. Марки - это интересно. </span><br>'
++'<input type=radio name=Q9><span name="aspan" class="aspan" onclick="getchecked(9,1)"> Попробую найти эту группу с помощью поиска по ВКонтакте. Вдруг ссылка в сообщении поддельная.</span><br>'
++'<input type=radio name=Q9><span name="aspan" class="aspan" onclick="getchecked(9,2)"> Меня не интересуют марки - вот если бы Angry Birds.</span><br>'
+,
+'<font color="#333333" saze="3"><p>\r\n'+
+'Вам пришло письмо: "Добрый день! Мы предлагаем вам учиться за рубежом! В Америке, Европе, Австралии - на ваш выбор. Обучение, проживание, перелет - за наш счет. Нужно только оплатить пересылку документов - 1000 рублей. Не упустите свой шанс!". В письме есть реквизиты. Как вы поступите?'+
+'</p></font><div class="otv" id="torf10"></div>'+
+'<input type=radio name=Q10><span name="aspan" class="aspan" onclick="getchecked(10,0)"> Я не против бесплатно слетать в Америку.</span><br>'
++'<input type=radio name=Q10><span name="aspan" class="aspan" onclick="getchecked(10,1)"> Уточню, нет ли у них программы обучения в Китае. Меня больше интересует Азия.</span><br>'
++'<input type=radio name=Q10><span name="aspan" class="aspan" onclick="getchecked(10,2)"> Удалю письмо: непонятно, откуда у людей мои контакты, и само письмо выглядит подозрительно </span><br>'
+,
+'<font color="#333333" saze="3"><p>\r\n'+
+'ВКонтакте вдруг просит повторно ввести ваши логин и пароль, чего раньше никогда не было. Что вы сделаете?'+
+'</p></font><div class="otv" id="torf11"></div>'+
+'<input type=radio name=Q11><span name="aspan" class="aspan" onclick="getchecked(11,0)"> Введу, раз нужно.</span><br>'
++'<input type=radio name=Q11><span name="aspan" class="aspan" onclick="getchecked(11,1)"> Проверю доменный адрес сайта. Если он не совпадает с настоящим, закрою сайт. </span><br>'
++'<input type=radio name=Q11><span name="aspan" class="aspan" onclick="getchecked(11,2)"> Введу данные, так как мой аккаунт во ВКонтакте привязан к мобильному номеру, а значит, защищен от любого мошенничества.</span><br>'
+,
+'<font color="#333333" saze="3"><p>\r\n'+
+'Как злоумышленник может украсть ваш пароль?'+
+'<br>'+
+'Укажите все верные варианты.'+
+'</p></font><div class="otv" id="torf12"></div>'+
+'\<!-- otvet--\>\r\n'+
+'<input type=checkbox name=Q12 class="niceCheck"><span name="aspan" class="aspan" onclick="getchecked(12,0)"> Если не записывать пароль на бумаге, то никак.</span><br>'
++'<input type=checkbox name=Q12 class="niceCheck"><span name="aspan" class="aspan" onclick="getchecked(12,1)"> Если пароль достаточно легкий, его можно просто угадать.</span><br>'
++'<input type=checkbox name=Q12 class="niceCheck"><span name="aspan" class="aspan" onclick="getchecked(12,2)"> Злоумышленник может использовать поддельный сайт (например, внешне похожий на ВКонтакте), и заставить меня ввести на нем пароль. </span><br>'
+,
+'<font color="#333333" saze="3"><p>\r\n'+
+'Браузер предупреждает, что сайт, на который вы хотите перейти, заражен вирусом. Ваши действия?'+
+'</p></font><div class="otv" id="torf13"></div>'+
+'<input type=radio name=Q13><span name="aspan" class="aspan" onclick="getchecked(13,0)"> Все равно перейду на сайт: браузер не может такого знать.</span><br>'
++'<input type=radio name=Q13><span name="aspan" class="aspan" onclick="getchecked(13,1)"> Перейду на сайт: браузер не антивирус и может ошибаться.</span><br>'
++'<input type=radio name=Q13><span name="aspan" class="aspan" onclick="getchecked(13,2)"> Не стану переходить на сайт: обычно у браузеров есть большая база вирусов.</span><br>'
+,
+'<font color="#333333" saze="3"><p>\r\n'+
+'В поисковой строке появляется предупреждение, что сайт, на который вы хотите перейти, заражен вирусом. Что вы сделаете?'+
+'</p></font><div class="otv" id="torf14"></div>'+
+'<input type=radio name=Q14><span name="aspan" class="aspan" onclick="getchecked(14,0)"> Проигнорирую предупреждение.</span><br>'
++'<input type=radio name=Q14><span name="aspan" class="aspan" onclick="getchecked(14,1)"> Перейду на сайт, если он очень известный. Вряд ли такой сайт может быть заражен.</span><br>'
++'<input type=radio name=Q14><span name="aspan" class="aspan" onclick="getchecked(14,2)"> Не стану переходить на сайт, так как даже самые известные сайты иногда оказываются зараженными, и поисковые сиситемы умеют это определять.</span><br>'
+,
+'<font color="#333333" saze="3"><p>\r\n'+
+'Какой пароль является самым сложным?'+
+'</p></font><div class="otv" id="torf15"></div>'+
+'<input type=radio name=Q15><span name="aspan" class="aspan" onclick="getchecked(15,0)"> Natalia1993</span><br>'
++'<input type=radio name=Q15><span name="aspan" class="aspan" onclick="getchecked(15,1)"> Mar!nA_1993</span><br>'
++'<input type=radio name=Q15><span name="aspan" class="aspan" onclick="getchecked(15,2)"> veronica93</span><br>'
+,
+'<font color="#333333" saze="3"><p>\r\n'+
+'ВКонтакте просит ввести ваш мобильный номер для подтверждения аккаунта. Как вы поступите?'+
+'</p></font><div class="otv" id="torf16"></div>'+
+'<input type=radio name=Q16><span name="aspan" class="aspan" onclick="getchecked(16,0)"> Откажусь. Вдруг мне будут присылать смс-спам.</span><br>'
++'<input type=radio name=Q16><span name="aspan" class="aspan" onclick="getchecked(16,1)"> Откажусь:мне удобнее вводить логин, чем номер телефона.</span><br>'
++'<input type=radio name=Q16><span name="aspan" class="aspan" onclick="getchecked(16,2)"> Введу свой номер, чтобы в случае кражи аккаунта его можно было восстановить с помощью мобильного номера.</span><br>'
+];
+kodvopr = document.getElementsByName("onetest");
+if(mix)vopr_otv.shuffle();
+for (jj=0;jj<kodvopr.length;jj++){kodvopr[jj].innerHTML += vopr_otv[jj];}
+</script>
+<!--####################################################################################################################################-->
+<a href="http://testedu.ru" style="font-size: 1px;">.</a>
+</body>
+</html>

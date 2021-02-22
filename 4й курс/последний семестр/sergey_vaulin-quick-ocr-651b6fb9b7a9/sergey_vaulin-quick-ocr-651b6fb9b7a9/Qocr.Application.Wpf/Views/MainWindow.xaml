@@ -1,0 +1,84 @@
+﻿<Window x:Class="Qocr.Application.Wpf.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:Qocr.Application.Wpf.ViewModels"
+        xmlns:converters="clr-namespace:Qocr.Application.Wpf.Converters"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:behaviors="clr-namespace:Qocr.Application.Wpf.Behaviors"
+        mc:Ignorable="d"
+        Title="Application Example" Height="775" Width="768"
+        d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Themes/Metro/Light/Metro.MSControls.Core.Implicit.xaml" />
+                <ResourceDictionary Source="../Themes/Metro/Light/Metro.MSControls.Toolkit.Implicit.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
+            <converters:AnyToBoolConverter x:Key="AnyToBoolConverter" />
+            <converters:CultureNameConverter x:Key="CultureNameConverter" />
+            
+            <Style TargetType="{x:Type Border}" x:Key="ControlBorder">
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="Black" />
+                <Setter Property="Background" Value="White"/>
+            </Style>
+            
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1.3*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="0.6*"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="New image" HorizontalAlignment="Left" Command="{Binding OpenCommand}" Margin="5"/>
+                <CheckBox Margin="5" IsChecked="{Binding IsBlackAndWhite}" Content="Black &amp; White" IsEnabled="{Binding SourceImage, Converter={StaticResource AnyToBoolConverter}}" />
+                <Label Content="Scale:" Margin="10,0"/>
+                <Slider Width="200" Minimum="0.0" Maximum="8.0" LargeChange="0.25" SmallChange="0.01"  Value="1.0" 
+                        x:Name="ImageSizeSlider" IsEnabled="{Binding SourceImage, Converter={StaticResource AnyToBoolConverter}}" />
+            </StackPanel>
+        </Grid>
+        <Border Grid.Row="1" Style="{StaticResource ControlBorder}">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <i:Interaction.Behaviors>
+                    <behaviors:ScrollOnMouseDragBehavior />
+                </i:Interaction.Behaviors>
+                <StackPanel>
+                    <StackPanel.LayoutTransform>
+                        <ScaleTransform ScaleX="{Binding ElementName=ImageSizeSlider, Path=Value}" ScaleY="{Binding ElementName=ImageSizeSlider, Path=Value}" />
+                    </StackPanel.LayoutTransform>
+                    <Image Source="{Binding SourceImage}" x:Name="SourceImage" />
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <Button Content="Recognize" Command="{Binding Recognize}" Margin="5" />
+
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Language:"/>
+                <ComboBox ItemsSource="{Binding Languages}" SelectedValue="{Binding SelectedLanguage}" IsSynchronizedWithCurrentItem="True" Margin="5">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <Run Text="{Binding Path=., Converter={StaticResource CultureNameConverter}}"/> (<Run Text="{Binding Path=.}" />)
+                            </TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+            <Label Margin="5" Content="Duration:" />
+            <Label Margin="5" Content="{Binding RecognitionTime}" />
+        </StackPanel>
+        <Border Grid.Row="3" Style="{StaticResource ControlBorder}">
+            <TextBox Text="{Binding RecognitionResult}" Background="White"  />    
+        </Border>
+        
+    </Grid>
+</Window>
